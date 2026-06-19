@@ -3,7 +3,7 @@ uses
 	plugin/pcre,
 	Core/SSL;
 
-library(POSIX) "SDL2 SDL2_mixer";
+library(POSIX) "SDL2_mixer";
 
 library(WIN32) "SDL2 SDL2_mixer";
 

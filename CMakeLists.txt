@@ -22,7 +22,14 @@ set(CROON_BOOTSTRAPPED_UMK "${CROON_UPP_ROOT}/umk")
 set(CROON_UMK_MAKEFILE "${CROON_UPP_ROOT}/umkMakefile")
 set(CROON_UMK_EXECUTABLE "")
 set(CROON_PACKAGE_NEST "${CMAKE_CURRENT_BINARY_DIR}/upp-nest")
-set(CROON_PACKAGE_LINK "${CROON_PACKAGE_NEST}/Croon")
+set(CROON_PACKAGE_DIR "${CROON_PACKAGE_NEST}/Croon")
+file(GLOB CROON_PACKAGE_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.upp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.lay"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.iml"
+)
 
 if(UPP_UMK)
     set(CROON_UMK_EXECUTABLE "${UPP_UMK}")
@@ -82,15 +89,19 @@ add_test(
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/validate_cmake_umk_contract.py" "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-add_custom_command(
-    OUTPUT "${CROON_PACKAGE_LINK}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${CROON_PACKAGE_NEST}"
-    COMMAND "${CMAKE_COMMAND}" -E rm -rf "${CROON_PACKAGE_LINK}"
-    COMMAND "${CMAKE_COMMAND}" -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}" "${CROON_PACKAGE_LINK}"
+add_custom_target(croon_package_nest
+    COMMAND "${CMAKE_COMMAND}" -E rm -rf "${CROON_PACKAGE_DIR}"
+    COMMAND "${CMAKE_COMMAND}"
+        "-DCROON_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+        "-DCROON_PACKAGE_DIR=${CROON_PACKAGE_DIR}"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sync_upp_package.cmake"
+    SOURCES
+        ${CROON_PACKAGE_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sync_upp_package.cmake"
     COMMENT "Creating build-local U++ Croon nest"
     VERBATIM
 )
-add_custom_target(croon_package_nest DEPENDS "${CROON_PACKAGE_LINK}")
 
 set(CROON_NESTS "${CROON_PACKAGE_NEST},${CROON_UPPSRC}")
 

@@ -35,6 +35,12 @@ def main() -> None:
     legacy_product = "Mu" + "se"
     if f"{legacy_product}." in upp or f"{legacy_product}Img" in upp:
         fail("Croon.upp still contains legacy package references")
+    if 'library(POSIX) "SDL2_mixer";' not in upp:
+        fail("Croon.upp should link SDL2_mixer explicitly on POSIX")
+    if "pkg_config\n\tsdl2;" not in upp:
+        fail("Croon.upp should resolve SDL2 through pkg-config")
+    if 'library(POSIX) "SDL2 SDL2_mixer";' in upp:
+        fail("Croon.upp links SDL2 twice on POSIX")
 
     header = (root / "Croon.h").read_text()
     if "CroonImg" not in header:
