@@ -7,7 +7,8 @@ file
 	CroonCoreTests.cpp,
 	KarData.cpp,
 	CroonCoreTestSupport.cpp,
-	CroonLyricsTestSupport.cpp;
+	CroonLyricsTestSupport.cpp,
+	CroonAssTestSupport.cpp;
 
 mainconfig
 	"" = "";
