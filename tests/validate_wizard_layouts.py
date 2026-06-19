@@ -14,15 +14,29 @@ def main() -> None:
 
     root = Path(sys.argv[1])
     lay = (root / "Croon.lay").read_text()
+    shell_lay = (root / "CroonWizardShell.lay").read_text()
     for layout in [
         "LAYOUT(CroonWizardPage1Layout",
         "LAYOUT(CroonWizardPage2Layout",
         "LAYOUT(CroonWizardPage3Layout",
-        "LAYOUT(CroonWizardLayout",
         "ITEM(TabCtrl, tab",
     ]:
         if layout not in lay:
             fail(f"missing {layout}")
+
+    for layout in [
+        "LAYOUT(CroonWizardLayout",
+        "ITEM(Page1, page1",
+        "ITEM(Page2, page2",
+        "ITEM(Page3, page3",
+        "ITEM(Label, pageName",
+        "ITEM(Button, cancelBtn",
+    ]:
+        if layout not in shell_lay:
+            fail(f"missing {layout}")
+
+    if "LAYOUT(CroonWizardLayout" in lay:
+        fail("Croon.lay still defines CroonWizardLayout")
 
     expected_bases = {
         "Page1.h": "WithCroonWizardPage1Layout<Page>",
@@ -49,6 +63,21 @@ def main() -> None:
     page3_header = (root / "Page3.h").read_text()
     if "TabCtrl tab;" in page3_header:
         fail("Page3.h still declares layout member TabCtrl tab")
+
+    wizard_header = (root / "WizardDlg.h").read_text()
+    for layout_member in ["Page1 page1;", "Page2 page2;", "Page3 page3;"]:
+        if layout_member in wizard_header:
+            fail(f"WizardDlg.h still declares layout member {layout_member}")
+
+    wizard_impl = (root / "WizardDlg.cpp").read_text()
+    constructor_body = wizard_impl.split("WizardDlg::WizardDlg()", 1)[-1].split("\n}\n", 1)[0]
+    for line in constructor_body.splitlines():
+        if "*this <<" in line and "GetPrevButton" not in line and "GetNextButton" not in line and "GatherButton" not in line:
+            fail("WizardDlg still hardcodes non-navigation child placement")
+
+    croon_h = (root / "Croon.h").read_text()
+    if croon_h.find('#include "Page3.h"') > croon_h.find("<Croon/CroonWizardShell.lay>"):
+        fail("Croon.h includes wizard shell layout before Page3 declaration")
 
 
 if __name__ == "__main__":

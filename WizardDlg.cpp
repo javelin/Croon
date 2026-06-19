@@ -5,17 +5,16 @@
 
 #include "Croon.h"
 
-WizardDlg::WizardDlg() : page3("WizardDlg"), pages{&page1, &page2, &page3}, currPage(0) {
+WizardDlg::WizardDlg() : pages{&page1, &page2, &page3}, currPage(0) {
     CtrlLayout(*this, "Create Project");
     NoZoomable().Sizeable();
     CenterScreen();
+    cancelBtn.Cancel();
     pageName.SetLabel(page1.GetPageName());
     
-    // Add all pages to the window (they will be stacked)
     for (int i = 0; i < maxPages; ++i) {
         auto page = pages[i];
         *this << page->GetPrevButton().LeftPosZ(5, 100).TopPosZ(5, 25)
-            << page->HSizePosZ(5, 5).VSizePosZ(32, 45)
             << page->GetNextButton().RightPosZ(5, 100).TopPosZ(5, 25);
         page->Hide();
         page->Disable();

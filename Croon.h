@@ -83,6 +83,10 @@ typedef struct Visualization VIZ;
 #include <CtrlCore/lay.h>
 
 #include "MainWindow.h"
+
+#define LAYOUTFILE <Croon/CroonWizardShell.lay>
+#include <CtrlCore/lay.h>
+
 #include "WizardDlg.h"
 
 GatherDlg& GetGatherDlg();
