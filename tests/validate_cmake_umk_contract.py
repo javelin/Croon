@@ -23,7 +23,9 @@ def main() -> None:
         'set(CROON_BOOTSTRAPPED_UMK "${CROON_UPP_ROOT}/umk")',
         'set(CROON_UMK_MAKEFILE "${CROON_UPP_ROOT}/umkMakefile")',
         'set(CROON_PACKAGE_NEST "${CMAKE_CURRENT_BINARY_DIR}/upp-nest")',
-        'set(CROON_PACKAGE_LINK "${CROON_PACKAGE_NEST}/Croon")',
+        'set(CROON_PACKAGE_DIR "${CROON_PACKAGE_NEST}/Croon")',
+        "file(GLOB CROON_PACKAGE_SOURCES CONFIGURE_DEPENDS",
+        'cmake/sync_upp_package.cmake',
         "add_custom_target(croon_package_nest",
         'set(CROON_NESTS "${CROON_PACKAGE_NEST},${CROON_UPPSRC}")',
         "add_custom_target(croon_umk",
@@ -39,6 +41,7 @@ def main() -> None:
         "/Users/mdoc/Dev/u++/upp",
         "-brs",
         "build/upp-nest/Croon",
+        "build-local package copy",
         "umkMakefile",
         "-DUPP_UMK=/path/to/umk",
     ]:
