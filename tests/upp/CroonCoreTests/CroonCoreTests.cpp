@@ -127,6 +127,96 @@ CONSOLE_APP_MAIN
 	Check(wrapped[1].lyrics == "{60}" + String('a', MaxLineLength + 1),
 		"RawToUntimedLyrics keeps decoration with overlong first word");
 
+	KarData metaData;
+	metaData.title = "Song (Title)";
+	metaData.artist = "Artist";
+	String titleLine = "@Title";
+	ReplaceMetadata(titleLine, metaData);
+	Check(titleLine == "Song \\(Title\\)", "ReplaceMetadata escapes parentheses in title");
+	String dashLine = "-";
+	ReplaceMetadata(dashLine, metaData);
+	Check(dashLine == "\u00A0", "ReplaceMetadata converts dash placeholder to nbsp");
+
+	Vector<Tuple<int, bool, bool, bool>> vocalParts;
+	vocalParts.Add(MakeTuple(1, true, false, true));
+	vocalParts.Add(MakeTuple(2, false, true, true));
+	vocalParts.Add(MakeTuple(3, true, true, true));
+	Check(ResolveVocalPart(-1, vocalParts) == VP_V1, "ResolveVocalPart defaults missing index to V1");
+	Check(ResolveVocalPart(1, vocalParts) == VP_V1, "ResolveVocalPart maps V1-only part");
+	Check(ResolveVocalPart(2, vocalParts) == VP_V2, "ResolveVocalPart maps V2-only part");
+	Check(ResolveVocalPart(3, vocalParts) == VP_B, "ResolveVocalPart maps dual-voice part");
+
+	Check(ResolveCountInStyle(VP_V2, "Sing now") == "CountInV2", "ResolveCountInStyle uses vocal part color");
+	Check(ResolveCountInStyle(VP_V1, "~echo") == "BUC", "ResolveCountInStyle honors backup override");
+
+	String backupLine = "~echo";
+	Check(ResolveStyle(VP_V1, backupLine, false) == "BUC", "ResolveStyle maps backup vocals to BUC");
+	Check(backupLine.Find("{\\i1}") >= 0, "ResolveStyle wraps backup vocals in italic");
+
+	String miscLine = "(note)";
+	Check(ResolveStyle(VP_V1, miscLine, false) == "MC", "ResolveStyle maps parenthetical lines to MC");
+
+	String metaLine = "@Title";
+	Check(ResolveStyle(VP_V1, metaLine, false, "", true) == "MC", "ResolveStyle maps metadata to MC");
+	Check(!metaLine.StartsWith("@"), "ResolveStyle strips metadata prefix");
+
+	KarData processed;
+	processed.duration = 20.0;
+	processed.title = "My Title";
+	processed.timedLyrics.Add({processed.duration, ""});
+	processed.timedLyrics.Add({10.0, ">>>{60} First line"});
+	processed.timedLyrics.Add({15.0, "@Title"});
+	Vector<TimeLyrics> processedLines;
+	ProcessMetadata(processed, processedLines, 4);
+	Check(processedLines.GetCount() >= 4, "ProcessMetadata inserts blanks and count-in lines");
+	bool foundCountIn = false;
+	bool foundMeta = false;
+	for(const TimeLyrics& line : processedLines) {
+		if(line.lyrics.Find("@CountIn") >= 0)
+			foundCountIn = true;
+		if(line.isMeta && line.lyrics == processed.title)
+			foundMeta = true;
+	}
+	Check(foundCountIn, "ProcessMetadata emits count-in marker");
+	Check(foundMeta, "ProcessMetadata resolves @Title metadata");
+
+	KarData emptyAss;
+	Check(TimedToASS(emptyAss).IsEmpty(), "TimedToASS returns empty output without timed lyrics");
+
+	KarData exportData;
+	exportData.duration = 10.0;
+	exportData.title = "Export Song";
+	exportData.artist = "Export Artist";
+	exportData.fontSize = 72;
+	exportData.timedLyrics.Add({exportData.duration, ""});
+	exportData.timedLyrics.Add({1.0, "Sing along"});
+	exportData.parts.Add(MakeTuple(1, true, false, true));
+	String ass = TimedToASS(exportData, 2);
+	Check(ass.Find("[Script Info]") >= 0, "TimedToASS emits script info section");
+	Check(ass.Find("Export Song by Export Artist") >= 0, "TimedToASS includes project title");
+	Check(ass.Find("Style: V1,") >= 0, "TimedToASS defines V1 style");
+	Check(ass.Find("Dialogue: 0,0:00:01.00") >= 0, "TimedToASS emits timed dialogue");
+	Check(ass.Find(",V1,,0,0,0,,Sing along") >= 0, "TimedToASS uses V1 style for default vocal part");
+
+	KarData v2Data;
+	v2Data.duration = 10.0;
+	v2Data.title = "Export Song";
+	v2Data.artist = "Export Artist";
+	v2Data.fontSize = 72;
+	v2Data.timedLyrics.Add({v2Data.duration, ""});
+	v2Data.timedLyrics.Add({1.0, "Sing along"});
+	v2Data.parts.Add(MakeTuple(1, false, true, true));
+	Check(TimedToASS(v2Data, 2).Find(",V2,") >= 0, "TimedToASS uses V2 style for second vocal part");
+
+	KarData bucData;
+	bucData.duration = 10.0;
+	bucData.title = "Export Song";
+	bucData.artist = "Export Artist";
+	bucData.fontSize = 72;
+	bucData.timedLyrics.Add({bucData.duration, ""});
+	bucData.timedLyrics.Add({1.0, "~echo"});
+	Check(TimedToASS(bucData, 2).Find(",BUC,") >= 0, "TimedToASS uses BUC style for backup vocals");
+
 	if(failures)
 		SetExitCode(1);
 }
