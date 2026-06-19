@@ -1,0 +1,93 @@
+LAYOUT(ProgressLayout, 450, 93)
+	ITEM(Label, monitor, AlignCenter().HSizePosZ(10, 10).TopPosZ(10, 18))
+	ITEM(ProgressIndicator, progress, SetTotal(100).HSizePosZ(10, 10).TopPosZ(29, 18))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).Cancel().HCenterPosZ(64, 0).TopPosZ(55, 25))
+END_LAYOUT
+
+LAYOUT(SettingsLayout, 420, 347)
+	ITEM(Label, ffmpegLbl, SetLabel(t_("Ffmpeg Executable:")).HSizePosZ(10, 10).TopPosZ(10, 18))
+	ITEM(EditString, ffmpegEd, MaxLen(1024).SetReadOnly().HSizePosZ(10, 42).TopPosZ(30, 24))
+	ITEM(Button, ffmpegBtn, SetLabel(t_("...")).RightPosZ(10, 32).TopPosZ(30, 24))
+	ITEM(Label, prefixLbl, SetLabel(t_("Lyrics Prefix:")).HSizePosZ(10, 10).TopPosZ(57, 24))
+	ITEM(DocEdit, prefixEd, HSizePosZ(10, 10).TopPosZ(81, 80))
+	ITEM(Label, suffixLbl, SetLabel(t_("Lyrics Suffix:")).HSizePosZ(10, 10).TopPosZ(164, 24))
+	ITEM(DocEdit, suffixEd, HSizePosZ(10, 10).TopPosZ(190, 80))
+	ITEM(Label, fontSizeLbl, SetLabel(t_("Font Size:")).LeftPosZ(10, 50).TopPosZ(273, 24))
+	ITEM(EditIntSpin, fontSizeEd, SetInc(2).MinMax(Config::MinFontSize, Config::MaxFontSize).AlignRight().LeftPosZ(63, 50).TopPosZ(273, 25))
+	ITEM(Button, closeBtn, Ok().SetLabel(t_("Close")).RightPosZ(10, 70).BottomPosZ(10, 25))
+END_LAYOUT
+
+LAYOUT(TimingLineLayout, 350, 80)
+	ITEM(EditString, decorEd, MaxLen(MaxDecorLength).LeftPosZ(10, 40).TopPosZ(10, 25))
+	ITEM(EditString, lyricsEd, MaxLen(MaxLineLength).HSizePosZ(55, 10).TopPosZ(10, 25))
+	ITEM(Button, okBtn, Ok().SetLabel(t_("OK")).RightPosZ(95, 80).BottomPosZ(10, 25))
+	ITEM(Button, cancelBtn, Cancel().SetLabel(t_("Cancel")).RightPosZ(10, 80).BottomPosZ(10, 25))
+END_LAYOUT
+
+LAYOUT(LyricsPartsLayout, 400, 800)
+	ITEM(LyricsPartsCtrl, lpCtrl, HSizePosZ(10, 10).VSizePosZ(10, 40))
+	ITEM(Button, clearBtn, SetLabel(t_("Clear")).LeftPosZ(10, 80).BottomPosZ(10, 25))
+	ITEM(Button, okBtn, Ok().SetLabel(t_("OK")).RightPosZ(95, 80).BottomPosZ(10, 25))
+	ITEM(Button, cancelBtn, Cancel().SetLabel(t_("Cancel")).RightPosZ(10, 80).BottomPosZ(10, 25))
+END_LAYOUT
+
+LAYOUT(WizardPage1Layout, 440, 473)
+	ITEM(Label, titleLbl, SetLabel(t_("Title")).LeftPosZ(5, 34).TopPosZ(10, 20))
+	ITEM(WithDropChoice<EditString>, titleEd, HSizePosZ(40, 5).TopPosZ(10, 20))
+	ITEM(Label, artistLbl, SetLabel(t_("Artist")).LeftPosZ(5, 34).TopPosZ(35, 20))
+	ITEM(WithDropChoice<EditString>, artistEd, HSizePosZ(40, 5).TopPosZ(35, 20))
+	ITEM(Label, yearLbl, SetLabel(t_("Year")).LeftPosZ(5, 34).TopPosZ(60, 20))
+	ITEM(EditIntSpin, yearEd, LeftPosZ(40, 70).TopPosZ(60, 20))
+	ITEM(Label, genreLbl, SetLabel(t_("Genre")).LeftPosZ(5, 34).TopPosZ(85, 20))
+	ITEM(WithDropChoice<EditString>, genreEd, HSizePosZ(40, 5).TopPosZ(85, 20))
+	ITEM(Label, writerLbl, SetLabel(t_("Writer")).LeftPosZ(5, 34).TopPosZ(110, 20))
+	ITEM(WithDropChoice<EditString>, writerEd, HSizePosZ(40, 5).TopPosZ(110, 20))
+	ITEM(Label, ownerLbl, SetLabel(t_("Owner")).LeftPosZ(5, 34).TopPosZ(135, 20))
+	ITEM(WithDropChoice<EditString>, ownerEd, HSizePosZ(40, 5).TopPosZ(135, 20))
+	ITEM(Label, loadedAudioLbl, AlignCenter().AlignBottom().HSizePosZ().BottomPosZ(10, 50))
+END_LAYOUT
+
+LAYOUT(WizardPage2Layout, 440, 473)
+	ITEM(DocEdit, lyricsEd, HSizePosZ(5, 5).VSizePosZ(5, 5))
+END_LAYOUT
+
+LAYOUT(WizardLayout, 450, 550)
+	ITEM(Label, pageName, SetAlign(ALIGN_CENTER).HSizePosZ(110, 110).TopPosZ(5, 25))
+	ITEM(Button, cancelBtn, Cancel().SetLabel(t_("Cancel")).RightPosZ(5, 100).BottomPosZ(15, 25))
+END_LAYOUT
+
+LAYOUT(ProjectListLayout, 640, 490)
+	ITEM(Button, newBtn, SetLabel(t_("New Project")).LeftPosZ(10, 100).TopPosZ(10, 25))
+	ITEM(Button, openBtn, SetLabel(t_("Open Project")).LeftPosZ(120, 100).TopPosZ(10, 25))
+	ITEM(Button, clearBtn, SetLabel(t_("Clear Projects")).RightPosZ(10, 100).TopPosZ(10, 25))
+	ITEM(ListCtrl, projectLst, HSizePosZ(10, 10).VSizePosZ(40, 38))
+	ITEM(ProjectLoader, loader, HSizePosZ(10, 10).BottomPosZ(10, 18))
+END_LAYOUT
+
+LAYOUT(ProjectLayout, 900, 640)
+	ITEM(Label, titleLbl, SetLabel(t_("Title")).LeftPosZ(10, 34).TopPosZ(10, 20))
+	ITEM(WithDropChoice<EditString>, titleEd, HSizePos(Zx(54), Zx(20) + 250).TopPosZ(10, 20))
+	ITEM(Label, artistLbl, SetLabel(t_("Artist")).LeftPosZ(10, 34).TopPosZ(33, 20))
+	ITEM(WithDropChoice<EditString>, artistEd, HSizePos(Zx(54), Zx(20) + 250).TopPosZ(33, 20))
+	ITEM(Label, yearLbl, SetLabel(t_("Year")).LeftPosZ(10, 34).TopPosZ(56, 20))
+	ITEM(EditIntSpin, yearEd, Min(1).LeftPosZ(54, 50).TopPosZ(56, 20))
+	ITEM(Label, genreLbl, SetLabel(t_("Genre")).LeftPosZ(120, 34).TopPosZ(56, 20))
+	ITEM(WithDropChoice<EditString>, genreEd, HSizePos(Zx(153), Zx(220) + 250).TopPosZ(56, 20))
+	ITEM(Option, dehissOpt, SetLabel(t_("De-hiss")).RightPos(Zx(20) + 250, Zx(50)).TopPosZ(56, 20))
+	ITEM(Label, fontSizeLbl, SetLabel(t_("Font Size")).RightPos(Zx(138) + 250, Zx(50)).TopPosZ(56, 20))
+	ITEM(EditIntSpin, fontSizeEd, SetInc(2).MinMax(Config::MinFontSize, Config::MaxFontSize).AlignRight().RightPos(Zx(88) + 250, Zx(50)).TopPosZ(56, 20))
+	ITEM(Label, writerLbl, SetLabel(t_("Writer")).LeftPosZ(10, 34).TopPosZ(79, 20))
+	ITEM(WithDropChoice<EditString>, writerEd, HSizePos(Zx(54), Zx(20) + 250).TopPosZ(79, 20))
+	ITEM(Label, ownerLbl, SetLabel(t_("Owner")).LeftPosZ(10, 34).TopPosZ(102, 20))
+	ITEM(WithDropChoice<EditString>, ownerEd, HSizePos(Zx(54), Zx(20) + 250).TopPosZ(102, 20))
+	ITEM(ImageCtrl, videoImg, SetImage(CroonImg::GrayMic256()).RightPos(Zx(10), 250).TopPos(Zy(10), 250))
+	ITEM(Button, videoBtn, SetLabel(t_("Choose Video")).RightPos(Zx(10), 250).TopPos(Zy(13) + 250, Zy(28)))
+	ITEM(TabCtrl, tab, HSizePos(Zx(10), Zx(20) + 250).VSizePosZ(135, 10))
+	ITEM(Button, timingBtn, SetLabel(t_("Timing")).RightPos(Zx(10), 250).BottomPosZ(155, 28))
+	ITEM(Button, partsBtn, SetLabel(t_("Parts")).RightPos(Zx(10), 250).BottomPosZ(126, 28))
+	ITEM(LabelBox, exportBox, RightPos(Zx(7), 250 + Zx(6)).BottomPosZ(43, 58))
+	ITEM(Button, exportBtn, SetLabel(t_("Export")).RightPos(Zx(10), 250).BottomPosZ(68, 28))
+	ITEM(DropList, exportOpts, RightPos(Zx(11), 250 - Zx(2)).BottomPosZ(47, 20))
+	ITEM(Button, saveBtn, SetLabel(t_("Save")).RightPos(Zx(10), 250).BottomPosZ(10, 28))
+END_LAYOUT
+

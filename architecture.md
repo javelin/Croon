@@ -1,0 +1,23 @@
+# Croon Architecture
+
+Croon is an Ultimate++ desktop application for karaoke authoring. It is being migrated in small, validated phases while preserving TheIDE compatibility and adding a CMake entry point that drives the U++ `umk` builder.
+
+## System Shape
+
+- `Croon.upp` is the authoritative U++ package definition for source files, package dependencies, and TheIDE loading.
+- `CMakeLists.txt` is a build convenience layer that configures paths and invokes `umk`; it does not replace the U++ package graph.
+- `ffmpeg` is an external runtime executable. Croon constructs command arguments and launches the configured executable rather than linking libav libraries.
+- Static form layouts should live in U++ Designer `.lay` files. Runtime-populated lists, custom-painted controls, timing rows, and menu wiring may remain in C++.
+- Deterministic behavior should be isolated behind testable services before or during UI migration.
+
+## Primary Flows
+
+1. Import or open a Croon project.
+2. Convert or extract media through external `ffmpeg` commands.
+3. Edit metadata, lyrics, timing, vocal parts, and video/visualization settings.
+4. Save a `.croon` project artifact.
+5. Export preview or final video with generated subtitles.
+
+## Migration Principle
+
+Each phase must keep the repository buildable or intentionally build-neutral, add validation for the behavior introduced in that phase, and avoid implementing future-phase behavior early.

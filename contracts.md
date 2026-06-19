@@ -1,0 +1,27 @@
+# Croon Contracts
+
+## Project Artifacts
+
+- Primary project extension: `.croon`.
+- Project metadata attachment name: `croon.info`.
+- Runtime app data directory name: `Croon`.
+- Temporary file prefixes should use `Croon_`.
+
+## Build Contracts
+
+- TheIDE loads `Croon.upp`.
+- CMake configures from the repository root and invokes `umk` for application builds.
+- The U++ source nest must include this repository and the U++ `uppsrc` directory.
+
+## Runtime Contracts
+
+- `ffmpeg` is discovered from configuration or defaults to `ffmpeg` on `PATH`.
+- Missing or invalid `ffmpeg` must be reported before media workflows run.
+- Media commands are represented as argument vectors, not shell-concatenated strings.
+
+## Test Contracts
+
+- Tests must avoid launching the GUI.
+- Tests must not require real media files unless a phase explicitly adds fixtures.
+- Command-generation tests should validate executable arguments without spawning `ffmpeg`.
+- Serialization tests should validate round-trip behavior and Croon artifact names.
