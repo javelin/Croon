@@ -6,6 +6,8 @@
 #ifndef _Croon_Util_h_
 #define _Croon_Util_h_
 
+#include "SubtitleLineProcessor.h"
+
 struct RTHelper {
     RTHelper& Clear() { vs.Clear(); return *this; }
     RTHelper& Fmt(String s) { vs.Add(Format("[%s ", s)); return *this; }
@@ -32,12 +34,6 @@ String TimedToASS(const KarData& data, int linesToDisplay=DefaultASSDisplayLines
 String TimedToRichASS(const KarData& data, int linesToDisplay=DefaultASSDisplayLines, int resX=1920, int resY=1080);
 Vector<String> GetPaths(String dir, String pattern);
 bool DownloadLyrics(String title, String artist, String& lyrics);
-
-enum VocalPart {
-    VP_V1,
-    VP_V2,
-    VP_B
-};
 
 VocalPart ResolveVocalPart(int partIndex,
                                    const Vector<Tuple<int,bool,bool,bool>>& parts);

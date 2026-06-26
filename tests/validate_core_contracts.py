@@ -76,6 +76,16 @@ def main() -> None:
     require(lyrics_transformer_cpp, "MaxLineLength", "LyricsTransformer wrapping contract")
     require(lyrics_transformer_cpp, "removeMetadata", "LyricsTransformer metadata removal contract")
 
+    subtitle_line_processor_h = (root / "SubtitleLineProcessor.h").read_text()
+    require(subtitle_line_processor_h, "ProcessMetadata", "SubtitleLineProcessor metadata contract")
+    require(subtitle_line_processor_h, "ResolveVocalPart", "SubtitleLineProcessor vocal-part contract")
+    require(subtitle_line_processor_h, "ResolveStyle", "SubtitleLineProcessor style contract")
+
+    subtitle_line_processor_cpp = (root / "SubtitleLineProcessor.cpp").read_text()
+    require(subtitle_line_processor_cpp, "CountInDuration", "SubtitleLineProcessor count-in contract")
+    require(subtitle_line_processor_cpp, "ReplaceMetadata", "SubtitleLineProcessor metadata replacement")
+    require(subtitle_line_processor_cpp, "LookaheadVocalPart", "SubtitleLineProcessor count-in lookahead")
+
     subtitle_generator_h = (root / "SubtitleGenerator.h").read_text()
     require(subtitle_generator_h, "ToAss", "SubtitleGenerator ASS contract")
     require(subtitle_generator_h, "ToRichAss", "SubtitleGenerator rich ASS contract")
@@ -99,8 +109,16 @@ def main() -> None:
     require(util_cpp, "return LyricsTransformer::SplitDecorations", "SplitLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::RawToUntimed", "RawToUntimedLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::TimedToRaw", "TimedLyricsToRaw compatibility wrapper")
+    require(util_cpp, "return SubtitleLineProcessor::ReplaceMetadata", "ReplaceMetadata compatibility wrapper")
+    require(util_cpp, "SubtitleLineProcessor::ProcessMetadata", "ProcessMetadata compatibility wrapper")
+    require(util_cpp, "return SubtitleLineProcessor::ResolveVocalPart", "ResolveVocalPart compatibility wrapper")
+    require(util_cpp, "return SubtitleLineProcessor::ResolveStyle", "ResolveStyle compatibility wrapper")
+    require(util_cpp, "return SubtitleLineProcessor::ResolveDimStyle", "ResolveDimStyle compatibility wrapper")
     require(util_cpp, "return SubtitleGenerator::ToAss", "TimedToASS compatibility wrapper")
     require(util_cpp, "return SubtitleGenerator::ToRichAss", "TimedToRichASS compatibility wrapper")
+
+    util_h = (root / "Util.h").read_text()
+    require(util_h, '#include "SubtitleLineProcessor.h"', "Util.h subtitle type dependency")
 
     kar_data_cpp = (root / "KarData.cpp").read_text()
     require(kar_data_cpp, "ProjectSerializer::ToJson(*this)", "KarData serialization delegation")
