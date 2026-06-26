@@ -5,6 +5,7 @@ This file records service boundaries expected during migration. Some services be
 ## Extracted Services
 
 - `AppIdentity`: product name, version, project extension, app data name, temp prefixes, and metadata attachment names.
+- `AppPaths`: runtime data directory creation and simple file discovery helpers.
 - `ConfigService`: persisted Croon settings and default values.
 - `ProjectSerializer`: versioned JSON serialization and deserialization for Croon project metadata.
 - `LyricsTransformer`: deterministic conversion between raw lyric text and Croon timed lyric rows.

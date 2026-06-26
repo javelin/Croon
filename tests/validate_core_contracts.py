@@ -37,9 +37,11 @@ def main() -> None:
     ]:
         require(identity_h, needle, "AppIdentity contract")
 
-    util_cpp = (root / "Util.cpp").read_text()
-    require(util_cpp, "AppIdentity::PosixDataDirectory", "POSIX app data contract")
-    require(util_cpp, "AppIdentity::DataDirectory", "non-POSIX app data contract")
+    app_paths_cpp = (root / "AppPaths.cpp").read_text()
+    require(app_paths_cpp, "AppIdentity::PosixDataDirectory", "POSIX app data contract")
+    require(app_paths_cpp, "AppIdentity::DataDirectory", "non-POSIX app data contract")
+    require(app_paths_cpp, "DirectoryCreate(dataDir)", "AppPaths data directory creation")
+    require(app_paths_cpp, "PatternMatchMulti(pattern, ff.GetName())", "AppPaths file discovery")
 
     config_h = (root / "Config.h").read_text()
     require(config_h, "ConfigService::Get(key, defaultValue)", "Config get delegation")
@@ -106,6 +108,8 @@ def main() -> None:
     require(subtitle_generator_cpp, "String SubtitleGenerator::ToRichAss", "SubtitleGenerator rich ASS implementation")
 
     util_cpp = (root / "Util.cpp").read_text()
+    require(util_cpp, "return AppPaths::DataDirectory", "GetDataDirectory compatibility wrapper")
+    require(util_cpp, "return AppPaths::FindFiles", "GetPaths compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::SplitDecorations", "SplitLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::RawToUntimed", "RawToUntimedLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::TimedToRaw", "TimedLyricsToRaw compatibility wrapper")

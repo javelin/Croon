@@ -35,6 +35,7 @@ typedef struct Visualization VIZ;
 
 #include "Constants.h"
 #include "AppIdentity.h"
+#include "AppPaths.h"
 #include "KarData.h"
 #include "ProjectSerializer.h"
 #include "LyricsTransformer.h"

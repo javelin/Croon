@@ -21,6 +21,8 @@ file
 	CroonWizardShell.lay,
 	main.cpp,
 	AppIdentity.h,
+	AppPaths.cpp,
+	AppPaths.h,
 	AudioPlayer.h,
 	AudioPlayerBase.h,
 	Config.cpp,
