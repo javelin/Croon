@@ -8,15 +8,7 @@
 #define SRT_PATTERN "(\\d+)\n(.+) -->.+\n(.+)\n"
 
 String GetDataDirectory() {
-    static String dataDir = AppendFileName(GetAppDataFolder(),
-#ifdef PLATFORM_POSIX
-                                           AppIdentity::PosixDataDirectory()
-#else
-                                           AppIdentity::DataDirectory()
-#endif
-                                           );
-    if (!DirectoryExists(dataDir)) DirectoryCreate(dataDir);
-    return dataDir;
+    return AppPaths::DataDirectory();
 }
 
 String SplitLyrics(String& line) {
@@ -72,14 +64,7 @@ String TimedToRichASS(const KarData& data, int linesToDisplay, int resX, int res
 }
 
 Vector<String> GetPaths(String dir, String pattern) {
-    Vector<String> paths;
-    for (FindFile ff(dir + "/*.*"); ff; ff++) {
-        String p = ff.GetPath();
-        if(PatternMatchMulti(pattern, ff.GetName()) && ff.IsFile()) {
-            paths.Add(ff.GetPath());
-        }
-    }
-    return paths;
+    return AppPaths::FindFiles(dir, pattern);
 }
 
 bool DownloadLyrics(String title, String artist, String& lyrics) {
