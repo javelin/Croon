@@ -41,6 +41,26 @@ def main() -> None:
     require(util_cpp, "AppIdentity::PosixDataDirectory", "POSIX app data contract")
     require(util_cpp, "AppIdentity::DataDirectory", "non-POSIX app data contract")
 
+    config_h = (root / "Config.h").read_text()
+    require(config_h, "ConfigService::Get(key, defaultValue)", "Config get delegation")
+    require(config_h, "ConfigService::Set(key, value)", "Config set delegation")
+    require(config_h, "ConfigService::GetInt(key, defaultValue)", "Config int get delegation")
+    require(config_h, "ConfigService::GetFontSize()", "Config font-size delegation")
+
+    config_service_cpp = (root / "ConfigService.cpp").read_text()
+    for key in [
+        "FFMPEG_LOCATION",
+        "FONT_SIZE",
+        "MUSIC_DIR",
+        "PROJECT_DIR",
+        "PROJECT_LIST",
+        "WIN_X",
+        "WIN_H",
+    ]:
+        require(config_service_cpp, key, "ConfigService registered key contract")
+    require(config_service_cpp, "SerializeGlobalConfigs", "ConfigService persistence contract")
+    require(config_service_cpp, "std::max(MinFontSize, std::min(MaxFontSize", "ConfigService font-size clamp")
+
     kar_data_cpp = (root / "KarData.cpp").read_text()
     require(kar_data_cpp, "ProjectSerializer::ToJson(*this)", "KarData serialization delegation")
     require(kar_data_cpp, "ProjectSerializer::FromJson(JSONStr)", "KarData deserialization delegation")

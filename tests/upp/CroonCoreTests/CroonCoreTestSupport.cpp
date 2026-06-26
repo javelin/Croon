@@ -9,17 +9,25 @@ using namespace Upp;
 #include <Croon/Constants.h>
 #include <Croon/KarData.h>
 #include <Croon/Util.h>
+#include <Croon/ConfigService.h>
 #include <Croon/Config.h>
+
+const int ConfigService::DefaultFontSize = 72;
+const int ConfigService::MinFontSize = 70;
+const int ConfigService::MaxFontSize = 100;
 
 const int Config::DefaultFontSize = 72;
 const int Config::MinFontSize = 70;
 const int Config::MaxFontSize = 100;
 
-String Config::Get(const String&, const String& defaultValue) {
+String ConfigService::Get(const String&, const String& defaultValue) {
 	return defaultValue;
 }
 
-int Config::GetInt(const String&, int defaultValue) {
+int ConfigService::GetInt(const String&, int defaultValue) {
 	return defaultValue;
 }
 
+int ConfigService::GetFontSize() {
+	return DefaultFontSize;
+}

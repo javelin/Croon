@@ -11,6 +11,7 @@ using namespace Upp;
 #include <Croon/KarData.h>
 #include <Croon/ProjectSerializer.h>
 #include <Croon/Util.h>
+#include <Croon/ConfigService.h>
 #include <Croon/Config.h>
 #include <Croon/Visualization.h>
 
@@ -93,6 +94,7 @@ CONSOLE_APP_MAIN
 	Check(freqFilter.Find("showfreqs") >= 0, "freq visualization uses showfreqs");
 	Check(freqFilter.Find("subtitles=subtitles.ass") >= 0, "freq visualization includes subtitles filter");
 	Check(Visualization::Filter("@@unknown", "subtitles.ass", true).IsVoid(), "unknown visualization returns void");
+	Check(Config::GetFontSize() == ConfigService::DefaultFontSize, "Config facade preserves default font size");
 
 	KarData song;
 	song.version = "9.9";

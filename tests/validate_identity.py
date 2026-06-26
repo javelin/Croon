@@ -19,6 +19,8 @@ def main() -> None:
         "Croon.cpp",
         "Croon.iml",
         "AppIdentity.h",
+        "ConfigService.cpp",
+        "ConfigService.h",
         "ProjectSerializer.cpp",
         "ProjectSerializer.h",
         "main.cpp",
@@ -37,6 +39,8 @@ def main() -> None:
         "Croon.h" not in upp or
         "Croon.iml" not in upp or
         "AppIdentity.h" not in upp or
+        "ConfigService.cpp" not in upp or
+        "ConfigService.h" not in upp or
         "ProjectSerializer.cpp" not in upp or
         "ProjectSerializer.h" not in upp
     ):
@@ -54,6 +58,8 @@ def main() -> None:
     header = (root / "Croon.h").read_text()
     if '#include "AppIdentity.h"' not in header:
         fail("Croon.h does not include AppIdentity.h")
+    if '#include "ConfigService.h"' not in header:
+        fail("Croon.h does not include ConfigService.h")
     if '#include "ProjectSerializer.h"' not in header:
         fail("Croon.h does not include ProjectSerializer.h")
     if "CroonImg" not in header:
