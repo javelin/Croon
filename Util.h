@@ -7,6 +7,7 @@
 #define _Croon_Util_h_
 
 #include "SubtitleLineProcessor.h"
+#include "TimeFormatter.h"
 
 struct RTHelper {
     RTHelper& Clear() { vs.Clear(); return *this; }
@@ -22,8 +23,7 @@ private:
 
 String GetDataDirectory();
 inline double CountInDuration(int bpm) {
-    auto dur = 60.0f/bpm;
-    return std::round(dur*100.0f)/100.0f;
+    return TimeFormatter::CountInDuration(bpm);
 }
 String SplitLyrics(String& lyrics);
 String TimedLyricsToRaw(const Vector<TimeLyrics>& vtl, bool removeMetadata=false);
@@ -46,27 +46,19 @@ VocalPart LookaheadVocalPart(const Vector<TimeLyrics>& vtl, int startIdx,
                                      String& outLyrics);
 
 inline String FormatTime(double seconds, bool roundMs=false, char decimal='.') {
-    int hr = (int)seconds/3600;
-    int min = ((int)seconds / 60) % 60;
-    double sec = std::fmod(seconds, 60);
-    int ms = (sec - floor(sec))*(roundMs ? 100:1000);
-    String tm = Format("%02d:%02d:%02d%c%0*d", hr, min, (int)sec, decimal, roundMs ? 2:3, ms);
-    return tm;
+    return TimeFormatter::Format(seconds, roundMs, decimal);
 }
 
 inline String FormatTimeASS(double seconds) {
-	return FormatTime(seconds, true).Mid(1);
+    return TimeFormatter::Ass(seconds);
 }
 
 inline String FormatTimeSRT(double seconds) {
-    return FormatTime(seconds, true, ',');
+    return TimeFormatter::Srt(seconds);
 }
 
 inline String FormatTime2(double seconds) {
-    int hr = (int)seconds/3600;
-    int min = ((int)seconds / 60) % 60;
-    int sec = (int)seconds%60;
-    return Format("%02d:%02d:%02d", hr, min, sec);
+    return TimeFormatter::Clock(seconds);
 }
 
 inline String CleanSpacing(const String& s) {

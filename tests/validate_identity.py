@@ -37,6 +37,8 @@ def main() -> None:
         "SubtitleLineProcessor.h",
         "SubtitleGenerator.cpp",
         "SubtitleGenerator.h",
+        "TimeFormatter.cpp",
+        "TimeFormatter.h",
         "MediaProcessRunner.h",
         "main.cpp",
         "architecture.md",
@@ -72,6 +74,8 @@ def main() -> None:
         "SubtitleLineProcessor.h" not in upp or
         "SubtitleGenerator.cpp" not in upp or
         "SubtitleGenerator.h" not in upp or
+        "TimeFormatter.cpp" not in upp or
+        "TimeFormatter.h" not in upp or
         "MediaProcessRunner.h" not in upp
     ):
         fail("Croon.upp does not list package-level Croon files")
@@ -106,6 +110,8 @@ def main() -> None:
         fail("Croon.h does not include RecentProjectService.h")
     if '#include "SubtitleGenerator.h"' not in header:
         fail("Croon.h does not include SubtitleGenerator.h")
+    if '#include "TimeFormatter.h"' not in header:
+        fail("Croon.h does not include TimeFormatter.h")
     if '#include "MediaProcessRunner.h"' not in header:
         fail("Croon.h does not include MediaProcessRunner.h")
     if "CroonImg" not in header:
