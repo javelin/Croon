@@ -25,6 +25,7 @@ def main() -> None:
         "ProjectSerializer.h",
         "RecentProjectService.cpp",
         "RecentProjectService.h",
+        "SubtitleGenerator.cpp",
         "SubtitleGenerator.h",
         "MediaProcessRunner.h",
         "main.cpp",
@@ -49,6 +50,7 @@ def main() -> None:
         "ProjectSerializer.h" not in upp or
         "RecentProjectService.cpp" not in upp or
         "RecentProjectService.h" not in upp or
+        "SubtitleGenerator.cpp" not in upp or
         "SubtitleGenerator.h" not in upp or
         "MediaProcessRunner.h" not in upp
     ):

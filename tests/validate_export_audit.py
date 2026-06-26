@@ -37,8 +37,11 @@ def main() -> None:
             fail(f"ExportDlg.cpp missing {needle}")
 
     util_cpp = (root / "Util.cpp").read_text()
+    if "String TimedToASS(" not in util_cpp:
+        fail("Util.cpp missing TimedToASS compatibility wrapper")
+
+    subtitle_generator_cpp = (root / "SubtitleGenerator.cpp").read_text()
     for needle in [
-        "String TimedToASS(",
         "[Script Info]",
         "[V4+ Styles]",
         "[Events]",
@@ -46,8 +49,8 @@ def main() -> None:
         "CountInV1",
         "Grayed",
     ]:
-        if needle not in util_cpp:
-            fail(f"Util.cpp missing ASS generation token {needle}")
+        if needle not in subtitle_generator_cpp:
+            fail(f"SubtitleGenerator.cpp missing ASS generation token {needle}")
 
     legacy_product = "Mu" + "se"
     legacy_lower = "mu" + "se"
