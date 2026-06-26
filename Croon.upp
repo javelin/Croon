@@ -25,6 +25,8 @@ file
 	AudioPlayerBase.h,
 	Config.cpp,
 	Config.h,
+	ConfigService.cpp,
+	ConfigService.h,
 	Constants.h,
 	ConvertDlg.cpp,
 	ConvertDlg.h,
