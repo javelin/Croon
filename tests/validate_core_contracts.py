@@ -82,9 +82,11 @@ def main() -> None:
         require(media_process_runner_h, method, "MediaProcessRunner process boundary")
     require(media_process_runner_h, "LocalProcess process", "MediaProcessRunner local process ownership")
 
+    subtitle_generator_cpp = (root / "SubtitleGenerator.cpp").read_text()
+    require(subtitle_generator_cpp, "String SubtitleGenerator::ToAss", "SubtitleGenerator ASS implementation")
+    require(subtitle_generator_cpp, "String SubtitleGenerator::ToRichAss", "SubtitleGenerator rich ASS implementation")
+
     util_cpp = (root / "Util.cpp").read_text()
-    require(util_cpp, "String SubtitleGenerator::ToAss", "SubtitleGenerator ASS implementation")
-    require(util_cpp, "String SubtitleGenerator::ToRichAss", "SubtitleGenerator rich ASS implementation")
     require(util_cpp, "return SubtitleGenerator::ToAss", "TimedToASS compatibility wrapper")
     require(util_cpp, "return SubtitleGenerator::ToRichAss", "TimedToRichASS compatibility wrapper")
 
