@@ -107,6 +107,15 @@ def main() -> None:
     require(subtitle_generator_cpp, "String SubtitleGenerator::ToAss", "SubtitleGenerator ASS implementation")
     require(subtitle_generator_cpp, "String SubtitleGenerator::ToRichAss", "SubtitleGenerator rich ASS implementation")
 
+    time_formatter_h = (root / "TimeFormatter.h").read_text()
+    for method in ["CountInDuration", "Format", "Ass", "Srt", "Clock"]:
+        require(time_formatter_h, method, "TimeFormatter contract")
+
+    time_formatter_cpp = (root / "TimeFormatter.cpp").read_text()
+    require(time_formatter_cpp, "std::round(dur*100.0f)/100.0f", "TimeFormatter count-in rounding")
+    require(time_formatter_cpp, "decimal", "TimeFormatter decimal separator contract")
+    require(time_formatter_cpp, "Mid(1)", "TimeFormatter ASS timestamp contract")
+
     util_cpp = (root / "Util.cpp").read_text()
     require(util_cpp, "return AppPaths::DataDirectory", "GetDataDirectory compatibility wrapper")
     require(util_cpp, "return AppPaths::FindFiles", "GetPaths compatibility wrapper")
@@ -123,6 +132,12 @@ def main() -> None:
 
     util_h = (root / "Util.h").read_text()
     require(util_h, '#include "SubtitleLineProcessor.h"', "Util.h subtitle type dependency")
+    require(util_h, '#include "TimeFormatter.h"', "Util.h time type dependency")
+    require(util_h, "return TimeFormatter::CountInDuration", "CountInDuration compatibility wrapper")
+    require(util_h, "return TimeFormatter::Format", "FormatTime compatibility wrapper")
+    require(util_h, "return TimeFormatter::Ass", "FormatTimeASS compatibility wrapper")
+    require(util_h, "return TimeFormatter::Srt", "FormatTimeSRT compatibility wrapper")
+    require(util_h, "return TimeFormatter::Clock", "FormatTime2 compatibility wrapper")
 
     kar_data_cpp = (root / "KarData.cpp").read_text()
     require(kar_data_cpp, "ProjectSerializer::ToJson(*this)", "KarData serialization delegation")

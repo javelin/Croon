@@ -41,6 +41,7 @@ typedef struct Visualization VIZ;
 #include "LyricsTransformer.h"
 #include "SubtitleLineProcessor.h"
 #include "SubtitleGenerator.h"
+#include "TimeFormatter.h"
 #include "Util.h"
 #include "AudioPlayerBase.h"
 #include "ConfigService.h"
