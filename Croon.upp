@@ -40,7 +40,6 @@ file
 	FfmpegCommandBuilder.h,
 	FfmpegProgressParser.cpp,
 	FfmpegProgressParser.h,
-	Ffmpeg.h,
 	GatherDlg.cpp,
 	GatherDlg.h,
 	GenreCatalog.cpp,

@@ -23,7 +23,7 @@ def main() -> None:
         "subtitles=%s[v]",
     ]:
         if needle not in ffmpeg_h:
-            fail(f"Ffmpeg.h missing {needle}")
+            fail(f"FfmpegCommandBuilder.h missing {needle}")
 
     export_cpp = (root / "ExportDlg.cpp").read_text()
     for needle in [
