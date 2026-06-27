@@ -9,7 +9,7 @@ Page3::Page3(String gatherKey) : vidCount(0), gatherKey(gatherKey) {
     pageName = "Background Video";
     CtrlLayout(*this);
     nextBtn.SetLabel("Save");
-    videoLst.SetOrientation(ListCtrl::VerticalGrid, _Zx(200), _Zy(200));
+    videoLst.SetOrientation(ListCtrl::VerticalGrid, UiScaler::X(200), UiScaler::Y(200));
     tab.Add(videoLst.HSizePosZ(5, 5).VSizePosZ(5, 5), "Videos");
     String videoDir = Config::Get(VIDEO_DIR, GetHomeDirectory());
     Vector<String> paths = AppPaths::FindFiles(videoDir, "*.mp4");
@@ -26,7 +26,7 @@ Page3::Page3(String gatherKey) : vidCount(0), gatherKey(gatherKey) {
     }
     videoLst.Highlight(0);
     
-    vizLst.SetOrientation(ListCtrl::VerticalGrid, _Zx(200), _Zy(200));
+    vizLst.SetOrientation(ListCtrl::VerticalGrid, UiScaler::X(200), UiScaler::Y(200));
     tab.Add(vizLst.HSizePosZ(5, 5).VSizePosZ(5, 5), "Vizualizations");
     AddVideoItem(&vizLst, "@@freqs", "", VIZ::Thumbnail("@@freqs"), &videoLst);
     AddVideoItem(&vizLst, "@@spectrum", "", VIZ::Thumbnail("@@spectrum"), &videoLst);
@@ -75,8 +75,8 @@ void Page3::Layout() {
     Page::Layout();
     if (!rehint) return;
     auto hw = (videoLst.GetSize().cx - 40)/4;
-    videoLst.SetSizeHint(_Zx(hw), _Zy(hw));
-    vizLst.SetSizeHint(_Zx(hw), _Zy(hw));
+    videoLst.SetSizeHint(UiScaler::X(hw), UiScaler::Y(hw));
+    vizLst.SetSizeHint(UiScaler::X(hw), UiScaler::Y(hw));
 }
 
 bool Page3::SetPath(String path) {
@@ -109,7 +109,7 @@ void Page3::GatherVideos() {
 }
 
 void Page3::AddVideoItem(ListCtrl* list, String path, String tnPath, Image img, ListCtrl* other) {
-    //auto& item = list->AddChild(*(new VidThumbnail(path, Rescale(img, Size(_Zx(200), _Zy(200))))));
+    //auto& item = list->AddChild(*(new VidThumbnail(path, Rescale(img, Size(UiScaler::X(200), UiScaler::Y(200))))));
     auto& item = list->AddChild(*(new VidThumbnail(path, img)), false);
     auto* vt = dynamic_cast<VidThumbnail*>(item.GetCtrl());
     vt->WhenSelected << [=] (String path) {

@@ -347,6 +347,18 @@ def main() -> None:
         ]:
             reject(text, wrapper, f"{rel} path/catalog utility wrapper dependency")
 
+    direct_ui_scaler_dependencies = [
+        "ListCtrl.cpp",
+        "ListCtrl.h",
+        "Page3.cpp",
+        "ProjectList.h",
+    ]
+    for rel in direct_ui_scaler_dependencies:
+        text = (root / rel).read_text()
+        require(text, "UiScaler::", f"{rel} direct UI scaler dependency")
+        reject(text, "_Zx(", f"{rel} UI scaler utility wrapper dependency")
+        reject(text, "_Zy(", f"{rel} UI scaler utility wrapper dependency")
+
 
 if __name__ == "__main__":
     main()

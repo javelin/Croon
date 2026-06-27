@@ -48,7 +48,7 @@ ListCtrl::ListCtrl() : margin(DefaultMargin) {
     scrollBar.Vert().AutoHide();
     AddFrame(scrollBar);
     scrollBar.WhenScroll = [=] { Scroll(); };
-    SetOrientation(Vertical, 0, _Zy(DefaultDim));
+    SetOrientation(Vertical, 0, UiScaler::Y(DefaultDim));
     WantFocus().SetFocus();
     focusItem = 0;
     Highlight(focusItem, true);
@@ -127,17 +127,17 @@ bool ListCtrl::Key(dword key, int count) {
 
 void ListCtrl::SetSizeHint(int hintW, int hintH) {
     if (IsGrid()) {
-        hintW = hintW == 0 ? _Zx(DefaultDim):hintW;
-        hintH = hintH == 0 ? _Zy(DefaultDim):hintH;
+        hintW = hintW == 0 ? UiScaler::X(DefaultDim):hintW;
+        hintH = hintH == 0 ? UiScaler::Y(DefaultDim):hintH;
     }
     else {
         hintW = max(hintW, 0);
         hintH = max(hintH, 0);
         if (IsVertical() && hintH < 1) {
-            hintH = _Zy(DefaultDim);
+            hintH = UiScaler::Y(DefaultDim);
         }
         else if (!IsVertical() && hintW < 1) {
-            hintW = _Zx(DefaultDim);
+            hintW = UiScaler::X(DefaultDim);
         }
     }
     sizeHint.cx = hintW;
