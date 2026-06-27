@@ -95,13 +95,13 @@ struct FfmpegCommandBuilder {
         assFn.Replace("\\", "/");
         assFn.Replace(":", "\\\\:");
 #endif
-        auto filter = VIZ::Filter(data.videoFilePath, assFn, preview);
+        auto filter = Visualization::Filter(data.videoFilePath, assFn, preview);
         
         return filter.IsVoid() ? Vector<String>{} : Vector<String>{
             "-f",
             "lavfi",
             "-i",
-            Format("color=black:s=%s", VIZ::Reso(preview, 'x')),
+            Format("color=black:s=%s", Visualization::Reso(preview, 'x')),
             "-i",
             audioFilepath.IsEmpty() ? data.audioFilePath:audioFilepath,
             "-filter_complex",

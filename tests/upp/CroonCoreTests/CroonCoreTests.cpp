@@ -17,8 +17,6 @@ using namespace Upp;
 #include <Croon/RecentProjectService.h>
 #include <Croon/Visualization.h>
 
-typedef struct Visualization VIZ;
-
 #include <Croon/FfmpegCommandBuilder.h>
 
 namespace {

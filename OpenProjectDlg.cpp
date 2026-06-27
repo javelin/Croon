@@ -27,7 +27,7 @@ OpenProjectDlg::OpenProjectDlg() : phase(Audio) {
                 *data = pick(temp);
                 if (data->origVideoFile.StartsWith("@@")) {
                     data->videoFilePath = data->origVideoFile;
-                    data->videoThumbnail = VIZ::Thumbnail(data->origVideoFile);
+                    data->videoThumbnail = Visualization::Thumbnail(data->origVideoFile);
                     phase = Finished;
                     return false;
                 }
