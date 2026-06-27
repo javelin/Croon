@@ -112,6 +112,13 @@ def main() -> None:
 
     audio_player_h = (root / "AudioPlayer.h").read_text()
     require(audio_player_h, "bool Reopen() override { return player.Reopen(); }", "AudioPlayer reopen delegation")
+    audio_player_base_h = (root / "AudioPlayerBase.h").read_text()
+    reject(audio_player_base_h, "bool opened", "AudioPlayerBase dead opened flag")
+    reject(audio_player_base_h, "bool playing", "AudioPlayerBase dead playing flag")
+    sdl_mixer_audio_player_h = (root / "SDLMixerAudioPlayer.h").read_text()
+    sdl_mixer_audio_player_cpp = (root / "SDLMixerAudioPlayer.cpp").read_text()
+    reject(sdl_mixer_audio_player_h, "initialized", "SDLMixerAudioPlayer dead initialized flag")
+    reject(sdl_mixer_audio_player_cpp, "initialized", "SDLMixerAudioPlayer dead initialized storage")
 
     recent_project_service_cpp = (root / "RecentProjectService.cpp").read_text()
     require(recent_project_service_cpp, "ConfigService::Get(PROJECT_LIST)", "RecentProjectService load contract")

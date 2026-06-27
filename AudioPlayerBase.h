@@ -65,8 +65,6 @@ protected:
 	
 protected:
     String lastError;
-    bool opened;
-    bool playing;
 };
 
 #endif
