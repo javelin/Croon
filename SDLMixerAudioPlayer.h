@@ -9,7 +9,7 @@
 class SDLMixerAudioPlayer : public AudioPlayerBase {
 public:
     static void InitPlayer() {}
-    static void DeInitPlayer() { SDL_Quit(); initialized = false; }
+    static void DeInitPlayer() { SDL_Quit(); }
     static SDLMixerAudioPlayer& GetPlayer() { return player; }
     SDLMixerAudioPlayer() : state(Closed), music(nullptr) {}
     virtual ~SDLMixerAudioPlayer() { if (music) { Mix_FreeMusic(music); Mix_CloseAudio(); } }
@@ -28,7 +28,6 @@ public:
     String GetPath() const override { return path; }
     
 private:
-    static bool initialized;
     static SDLMixerAudioPlayer player;
     std::atomic<AudioPlayerState> state;
     Mix_Music* music;

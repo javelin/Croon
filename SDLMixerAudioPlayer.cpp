@@ -5,7 +5,6 @@
 
 #include "Croon.h"
 
-bool SDLMixerAudioPlayer::initialized = false;
 SDLMixerAudioPlayer SDLMixerAudioPlayer::player;
 
 bool SDLMixerAudioPlayer::Open(const String& filename) {
