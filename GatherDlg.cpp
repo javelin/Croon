@@ -85,7 +85,7 @@ GatherDlg::GatherDlg() {
             monitor.SetLabel("");
         }
         else {
-            monitor.SetLabel(Format("Adding %s", ShortenMiddle(paths[curPath], 60)));
+            monitor.SetLabel(Format("Adding %s", TextTools::ShortenMiddle(paths[curPath], 60)));
         }
     };
 }
