@@ -104,6 +104,8 @@ def main() -> None:
         fail("Croon.upp should resolve SDL2 through pkg-config")
     if 'library(POSIX) "SDL2 SDL2_mixer";' in upp:
         fail("Croon.upp links SDL2 twice on POSIX")
+    if "\tFfmpeg.h," in upp:
+        fail("Croon.upp should not list obsolete Ffmpeg.h alias")
 
     header = (root / "Croon.h").read_text()
     if '#include "AppIdentity.h"' not in header:
