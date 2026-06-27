@@ -285,8 +285,10 @@ def main() -> None:
 
     direct_lyrics_dependencies = {
         "ExportDlg.cpp": ["SubtitleGenerator::ToAss"],
+        "GatherDlg.cpp": ["TextTools::ShortenMiddle"],
         "OpenProjectDlg.cpp": ["LyricsTransformer::TimedToRaw"],
         "Page2.cpp": ["LyricsDownloadService::Download", "TextTools::CleanSpacing"],
+        "Page3.cpp": ["LyricsTransformer::RawToUntimed"],
         "Project.cpp": ["LyricsTransformer::RawToUntimed", "SubtitleGenerator::ToRichAss"],
         "ProjectList.cpp": ["LyricsTransformer::TimedToRaw", "TextTools::ShortenMiddle"],
         "ProjectLoader.cpp": ["LyricsTransformer::TimedToRaw"],

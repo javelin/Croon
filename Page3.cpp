@@ -48,7 +48,7 @@ Page3::Page3(String gatherKey) : vidCount(0), gatherKey(gatherKey) {
     
     nextBtn << [=] {
         auto& data = KarData::GetGlobal();
-        data.timedLyrics = RawToUntimedLyrics(data);
+        data.timedLyrics = LyricsTransformer::RawToUntimed(data);
         data.infoFilePath = AppIdentity::TempFileName(".json");
         
         FileSel fsel;
