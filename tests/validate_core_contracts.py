@@ -123,6 +123,13 @@ def main() -> None:
     reject(sdl_mixer_audio_player_h, "GetPosition", "SDLMixerAudioPlayer dead position declaration")
     reject(sdl_mixer_audio_player_cpp, "initialized", "SDLMixerAudioPlayer dead initialized storage")
 
+    croon_h = (root / "Croon.h").read_text()
+    reject(croon_h, "typedef struct Visualization VIZ", "Croon.h visualization alias")
+    page3_cpp = (root / "Page3.cpp").read_text()
+    open_project_dlg_cpp = (root / "OpenProjectDlg.cpp").read_text()
+    reject(page3_cpp, "VIZ::", "Page3 visualization alias dependency")
+    reject(open_project_dlg_cpp, "VIZ::", "OpenProjectDlg visualization alias dependency")
+
     recent_project_service_cpp = (root / "RecentProjectService.cpp").read_text()
     require(recent_project_service_cpp, "ConfigService::Get(PROJECT_LIST)", "RecentProjectService load contract")
     require(recent_project_service_cpp, "ConfigService::Set(PROJECT_LIST", "RecentProjectService save contract")
@@ -295,6 +302,7 @@ def main() -> None:
     require(project_serializer_h, "SupportsVersion", "ProjectSerializer version-support contract")
 
     ffmpeg_h = (root / "FfmpegCommandBuilder.h").read_text()
+    reject(ffmpeg_h, "VIZ::", "ffmpeg visualization alias dependency")
     require(ffmpeg_h, '#include "LyricsTransformer.h"', "ffmpeg lyrics transformer dependency")
     require(ffmpeg_h, '#include "TimeFormatter.h"', "ffmpeg time formatter dependency")
     require(ffmpeg_h, "AppIdentity::ProjectAttachmentMetadata()", "project attachment contract")

@@ -31,7 +31,6 @@ using namespace Upp;
 #include <Draw/iml_header.h>
 
 #include "Visualization.h"
-typedef struct Visualization VIZ;
 
 #include "Constants.h"
 #include "AppIdentity.h"

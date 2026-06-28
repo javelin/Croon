@@ -28,11 +28,11 @@ Page3::Page3(String gatherKey) : vidCount(0), gatherKey(gatherKey) {
     
     vizLst.SetOrientation(ListCtrl::VerticalGrid, UiScaler::X(200), UiScaler::Y(200));
     tab.Add(vizLst.HSizePosZ(5, 5).VSizePosZ(5, 5), "Vizualizations");
-    AddVideoItem(&vizLst, "@@freqs", "", VIZ::Thumbnail("@@freqs"), &videoLst);
-    AddVideoItem(&vizLst, "@@spectrum", "", VIZ::Thumbnail("@@spectrum"), &videoLst);
-    AddVideoItem(&vizLst, "@@vectorscopedot", "", VIZ::Thumbnail("@@vectorscopedot"), &videoLst);
-    AddVideoItem(&vizLst, "@@vectorscopeline", "", VIZ::Thumbnail("@@vectorscopeline"), &videoLst);
-    AddVideoItem(&vizLst, "@@waves", "", VIZ::Thumbnail("@@waves"), &videoLst);
+    AddVideoItem(&vizLst, "@@freqs", "", Visualization::Thumbnail("@@freqs"), &videoLst);
+    AddVideoItem(&vizLst, "@@spectrum", "", Visualization::Thumbnail("@@spectrum"), &videoLst);
+    AddVideoItem(&vizLst, "@@vectorscopedot", "", Visualization::Thumbnail("@@vectorscopedot"), &videoLst);
+    AddVideoItem(&vizLst, "@@vectorscopeline", "", Visualization::Thumbnail("@@vectorscopeline"), &videoLst);
+    AddVideoItem(&vizLst, "@@waves", "", Visualization::Thumbnail("@@waves"), &videoLst);
     vizLst.Highlight(0);
     gatherBtn << [=] { GatherVideos(); };
     gatherBtn.Disable();
