@@ -268,8 +268,9 @@ CONSOLE_APP_MAIN
 	Check(ass.Find("Style: V1,") >= 0, "SubtitleGenerator defines V1 style");
 	Check(ass.Find("Dialogue: 0,0:00:01.00") >= 0, "SubtitleGenerator emits timed dialogue");
 	Check(ass.Find(",V1,,0,0,0,,Sing along") >= 0, "SubtitleGenerator uses V1 style for default vocal part");
-	Check(SubtitleGenerator::ToRichAss(exportData, 2).Find("[Script Info]") >= 0,
-		"SubtitleGenerator emits rich ASS preview");
+	String richAss = SubtitleGenerator::ToRichAss(exportData, 2);
+	Check(richAss.Find("@4") >= 0, "SubtitleGenerator emits rich ASS formatting");
+	Check(richAss.Find("Script Info") >= 0, "SubtitleGenerator emits rich ASS script info");
 
 	KarData v2Data;
 	v2Data.duration = 10.0;

@@ -207,6 +207,10 @@ def main() -> None:
     subtitle_generator_cpp = (root / "SubtitleGenerator.cpp").read_text()
     require(subtitle_generator_cpp, "String SubtitleGenerator::ToAss", "SubtitleGenerator ASS implementation")
     require(subtitle_generator_cpp, "String SubtitleGenerator::ToRichAss", "SubtitleGenerator rich ASS implementation")
+    reject(subtitle_generator_cpp, '#include "Croon.h"', "SubtitleGenerator app shell dependency")
+    require(subtitle_generator_cpp, '#include "SubtitleGenerator.h"', "SubtitleGenerator direct self dependency")
+    require(subtitle_generator_cpp, '#include "SubtitleLineProcessor.h"', "SubtitleGenerator direct line processor dependency")
+    require(subtitle_generator_cpp, '#include "TimeFormatter.h"', "SubtitleGenerator direct time formatter dependency")
     require(subtitle_generator_cpp, "SubtitleLineProcessor::ProcessMetadata", "SubtitleGenerator direct metadata dependency")
     require(subtitle_generator_cpp, "SubtitleLineProcessor::ResolveStyle", "SubtitleGenerator direct style dependency")
     require(subtitle_generator_cpp, "TimeFormatter::Ass", "SubtitleGenerator direct ASS time formatting")
@@ -241,7 +245,6 @@ def main() -> None:
 
     core_tests_cpp = (root / "tests" / "upp" / "CroonCoreTests" / "CroonCoreTests.cpp").read_text()
     core_tests_upp = (root / "tests" / "upp" / "CroonCoreTests" / "CroonCoreTests.upp").read_text()
-    ass_test_support_cpp = (root / "tests" / "upp" / "CroonCoreTests" / "CroonAssTestSupport.cpp").read_text()
     core_test_support_cpp = (root / "tests" / "upp" / "CroonCoreTests" / "CroonCoreTestSupport.cpp").read_text()
     require(core_tests_cpp, "TimeFormatter::CountInDuration", "core tests direct time formatter dependency")
     require(core_tests_cpp, "TimeFormatter::Clock", "core tests direct clock formatter dependency")
@@ -256,9 +259,12 @@ def main() -> None:
     require(core_tests_cpp, "SubtitleLineProcessor::ProcessMetadata", "core tests direct metadata processing dependency")
     require(core_tests_cpp, "SubtitleGenerator::ToAss", "core tests direct ASS generator dependency")
     require(core_tests_cpp, "SubtitleGenerator::ToRichAss", "core tests direct rich ASS generator dependency")
+    require(core_tests_cpp, 'richAss.Find("@4")', "core tests rich ASS formatting assertion")
     require(core_tests_upp, "LyricsTransformer.cpp", "core tests lyrics transformer implementation")
+    require(core_tests_upp, "SubtitleGenerator.cpp", "core tests subtitle generator implementation")
     require(core_tests_upp, "SubtitleLineProcessor.cpp", "core tests subtitle line processor implementation")
     reject(core_tests_upp, "CroonLyricsTestSupport.cpp", "core tests orphan lyric compatibility support")
+    reject(core_tests_upp, "CroonAssTestSupport.cpp", "core tests orphan ASS compatibility support")
     reject(core_tests_cpp, "#include <Croon/Util.h>", "core tests compatibility facade include")
     for wrapper in ["Check(CountInDuration(", "Check(FormatTime2(", "Check(FormatTimeASS(", "Check(StripNonAlnum("]:
         reject(core_tests_cpp, wrapper, "core tests time/text compatibility wrapper dependency")
@@ -269,14 +275,8 @@ def main() -> None:
     for wrapper in ["ReplaceMetadata(", "ResolveVocalPart(", "ResolveCountInStyle(", "ResolveStyle(", "ProcessMetadata("]:
         reject(core_tests_cpp, "Check(" + wrapper, "core tests subtitle-line compatibility wrapper dependency")
         reject(core_tests_cpp, "\t" + wrapper, "core tests subtitle-line compatibility wrapper dependency")
-    require(ass_test_support_cpp, "TimeFormatter::CountInDuration", "ASS test support direct count-in dependency")
-    require(ass_test_support_cpp, "TimeFormatter::Ass", "ASS test support direct time formatter dependency")
-    for wrapper in ["auto countIn = CountInDuration(", "FormatTimeASS("]:
-        reject(ass_test_support_cpp, wrapper, "ASS test support time compatibility wrapper dependency")
-    require(ass_test_support_cpp, "#include <Croon/SubtitleLineProcessor.h>", "ASS test support direct subtitle line dependency")
     for rel, text in {
         "CroonCoreTestSupport.cpp": core_test_support_cpp,
-        "CroonAssTestSupport.cpp": ass_test_support_cpp,
     }.items():
         reject(text, "#include <Croon/Util.h>", f"{rel} compatibility facade include")
 
