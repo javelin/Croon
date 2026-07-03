@@ -3,7 +3,16 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
+#include "Constants.h"
+#include "KarData.h"
+#include "RichTextBuilder.h"
+#include "SubtitleGenerator.h"
+#include "SubtitleLineProcessor.h"
+#include "TimeFormatter.h"
 
 // Reds
 #define RED_H               "&H000000FF"

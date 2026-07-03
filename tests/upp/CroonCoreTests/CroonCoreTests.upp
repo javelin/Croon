@@ -9,11 +9,11 @@ file
 	ProjectSerializer.cpp,
 	RecentProjectService.cpp,
 	LyricsTransformer.cpp,
+	SubtitleGenerator.cpp,
 	SubtitleLineProcessor.cpp,
 	TextTools.cpp,
 	TimeFormatter.cpp,
-	CroonCoreTestSupport.cpp,
-	CroonAssTestSupport.cpp;
+	CroonCoreTestSupport.cpp;
 
 mainconfig
 	"" = "";
