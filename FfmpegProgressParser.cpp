@@ -3,7 +3,11 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#include "FfmpegProgressParser.h"
 
 bool FfmpegProgressParser::ParseTimestamp(String output, double& seconds, String& formatted, String key) {
     TrimBoth(output);
