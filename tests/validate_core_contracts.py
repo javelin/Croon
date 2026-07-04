@@ -131,6 +131,9 @@ def main() -> None:
     reject(open_project_dlg_cpp, "VIZ::", "OpenProjectDlg visualization alias dependency")
 
     recent_project_service_cpp = (root / "RecentProjectService.cpp").read_text()
+    reject(recent_project_service_cpp, '#include "Croon.h"', "RecentProjectService app shell dependency")
+    require(recent_project_service_cpp, '#include "RecentProjectService.h"', "RecentProjectService direct self dependency")
+    require(recent_project_service_cpp, '#include "ConfigService.h"\n#include "Config.h"', "RecentProjectService ordered config dependencies")
     require(recent_project_service_cpp, "ConfigService::Get(PROJECT_LIST)", "RecentProjectService load contract")
     require(recent_project_service_cpp, "ConfigService::Set(PROJECT_LIST", "RecentProjectService save contract")
     require(recent_project_service_cpp, "TrimBoth(path)", "RecentProjectService path normalization")
