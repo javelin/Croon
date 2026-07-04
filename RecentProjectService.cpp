@@ -3,7 +3,13 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#include "ConfigService.h"
+#include "Config.h"
+#include "RecentProjectService.h"
 
 Vector<String> RecentProjectService::NormalizePaths(const Vector<String>& paths) {
     Vector<String> normalized;
