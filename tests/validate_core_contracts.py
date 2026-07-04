@@ -374,6 +374,8 @@ def main() -> None:
     require(ffmpeg_progress_parser_h, "ParseTimestamp", "ffmpeg progress parser contract")
 
     ffmpeg_progress_parser_cpp = (root / "FfmpegProgressParser.cpp").read_text()
+    reject(ffmpeg_progress_parser_cpp, '#include "Croon.h"', "ffmpeg progress parser app shell dependency")
+    require(ffmpeg_progress_parser_cpp, '#include "FfmpegProgressParser.h"', "ffmpeg progress parser direct self dependency")
     require(ffmpeg_progress_parser_cpp, "output.Find(key)", "ffmpeg progress key lookup")
     require(ffmpeg_progress_parser_cpp, "Split(tsStr, ':')", "ffmpeg progress timestamp split")
     require(ffmpeg_progress_parser_cpp, "formatted = output.Mid", "ffmpeg progress formatted timestamp")
