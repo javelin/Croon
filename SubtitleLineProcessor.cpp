@@ -3,7 +3,15 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <Draw/Draw.h>
+#include <plugin/pcre/Pcre.h>
+
+using namespace Upp;
+
+#include "Constants.h"
+#include "KarData.h"
+#include "SubtitleLineProcessor.h"
+#include "TimeFormatter.h"
 
 String& SubtitleLineProcessor::ReplaceMetadata(String& line, const KarData& data, bool replaceDash) {
     auto copyright{data.owner.IsEmpty() ? String(""):
