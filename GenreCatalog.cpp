@@ -3,7 +3,11 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#include "GenreCatalog.h"
 
 const Vector<String>& GenreCatalog::List() {
     static Vector<String> genre{
