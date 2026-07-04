@@ -189,6 +189,11 @@ def main() -> None:
     require(subtitle_line_processor_h, "ResolveStyle", "SubtitleLineProcessor style contract")
 
     subtitle_line_processor_cpp = (root / "SubtitleLineProcessor.cpp").read_text()
+    reject(subtitle_line_processor_cpp, '#include "Croon.h"', "SubtitleLineProcessor app shell dependency")
+    require(subtitle_line_processor_cpp, "#include <Draw/Draw.h>", "SubtitleLineProcessor direct image type dependency")
+    require(subtitle_line_processor_cpp, '#include "SubtitleLineProcessor.h"', "SubtitleLineProcessor direct self dependency")
+    require(subtitle_line_processor_cpp, '#include "KarData.h"', "SubtitleLineProcessor direct data dependency")
+    require(subtitle_line_processor_cpp, '#include "TimeFormatter.h"', "SubtitleLineProcessor direct time formatter dependency")
     require(subtitle_line_processor_cpp, "TimeFormatter::CountInDuration", "SubtitleLineProcessor count-in contract")
     require(subtitle_line_processor_cpp, "ReplaceMetadata", "SubtitleLineProcessor metadata replacement")
     require(subtitle_line_processor_cpp, "LookaheadVocalPart", "SubtitleLineProcessor count-in lookahead")
