@@ -3,7 +3,14 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <CtrlLib/CtrlLib.h>
+
+#include <cmath>
+
+using namespace Upp;
+
+#include "UiScaler.h"
+#include "ListCtrl.h"
 
 ListChildCtrl::ListChildCtrl() {
     child = nullptr;

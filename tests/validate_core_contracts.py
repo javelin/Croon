@@ -572,6 +572,25 @@ def main() -> None:
         reject(text, "Zx(", f"{rel} raw horizontal scaler dependency")
         reject(text, "Zy(", f"{rel} raw vertical scaler dependency")
 
+    list_ctrl_cpp = (root / "ListCtrl.cpp").read_text()
+    reject(list_ctrl_cpp, '#include "Croon.h"', "ListCtrl app shell dependency")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#include <cmath>",
+        '#include "UiScaler.h"',
+        '#include "ListCtrl.h"',
+    ]:
+        require(list_ctrl_cpp, needle, "ListCtrl direct dependency")
+    for needle in [
+        "scrollBar.WhenScroll",
+        "SetOrientation(Vertical",
+        "ListCtrl::Key",
+        "ListCtrl::AddChild",
+        "ListCtrl::LayCtrlsGrid",
+        "ScrollToItemAndCenter",
+    ]:
+        require(list_ctrl_cpp, needle, "ListCtrl behavior contract")
+
 
 if __name__ == "__main__":
     main()
