@@ -100,6 +100,10 @@ def main() -> None:
     require(config_h, "ConfigService::GetFontSize()", "Config font-size delegation")
 
     config_service_cpp = (root / "ConfigService.cpp").read_text()
+    reject(config_service_cpp, '#include "Croon.h"', "ConfigService app shell dependency")
+    require(config_service_cpp, '#include "AppPaths.h"', "ConfigService direct app paths dependency")
+    require(config_service_cpp, '#include "ConfigService.h"\n#include "Config.h"', "ConfigService ordered config dependencies")
+    require(config_service_cpp, "#include <algorithm>", "ConfigService direct clamp dependency")
     for key in [
         "FFMPEG_LOCATION",
         "FONT_SIZE",

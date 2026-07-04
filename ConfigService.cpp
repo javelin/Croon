@@ -3,7 +3,15 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <Core/Core.h>
+
+#include <algorithm>
+
+using namespace Upp;
+
+#include "AppPaths.h"
+#include "ConfigService.h"
+#include "Config.h"
 
 #define CONFIG_FILE "config"
 
