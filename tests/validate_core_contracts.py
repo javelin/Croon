@@ -390,6 +390,8 @@ def main() -> None:
     require(genre_catalog_h, "List()", "GenreCatalog list contract")
 
     genre_catalog_cpp = (root / "GenreCatalog.cpp").read_text()
+    reject(genre_catalog_cpp, '#include "Croon.h"', "GenreCatalog app shell dependency")
+    require(genre_catalog_cpp, '#include "GenreCatalog.h"', "GenreCatalog direct self dependency")
     for genre in ["Ballad", "OPM", "Rock n Roll", "Soft Rock"]:
         require(genre_catalog_cpp, f'"{genre}"', "GenreCatalog reference data")
 
