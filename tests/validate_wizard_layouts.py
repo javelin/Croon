@@ -92,6 +92,45 @@ def main() -> None:
         if needle not in page1_impl:
             fail(f"Page1.cpp missing behavior {needle}")
 
+    page2_impl = (root / "Page2.cpp").read_text()
+    if '#include "Croon.h"' in page2_impl:
+        fail("Page2.cpp still depends on Croon.h")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        '#include "Constants.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "UiScaler.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ListCtrl.h"',
+        '#include "AppIdentity.h"',
+        '#include "KarData.h"\n#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ProjectLoader.h"',
+        '#include "LyricsDownloadService.h"',
+        '#include "TextTools.h"',
+        '#include "Page.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "Page2.h"',
+    ]:
+        if needle not in page2_impl:
+            fail(f"Page2.cpp missing direct dependency {needle}")
+    for needle in [
+        "lyricsEd.WhenAction",
+        "LyricsDownloadService::Download",
+        "TextTools::CleanSpacing",
+        "Config::Get(LYRICS_PREFIX)",
+        "Config::Get(LYRICS_SUFFIX)",
+        "karData.rawLyrics = raw",
+    ]:
+        if needle not in page2_impl:
+            fail(f"Page2.cpp missing behavior {needle}")
+
     page3_impl = (root / "Page3.cpp").read_text()
     if "Page3::Page3(String gatherKey)" not in page3_impl:
         fail("Page3 dynamic constructor was unexpectedly removed")
