@@ -629,6 +629,16 @@ def main() -> None:
     require(page1_cpp, "GenreCatalog::List()", "Page1 genre list contract")
     require(page1_cpp, "KarData::GetGlobal()", "Page1 global data contract")
 
+    page2_cpp = (root / "Page2.cpp").read_text()
+    reject(page2_cpp, '#include "Croon.h"', "Page2 app shell dependency")
+    require(page2_cpp, '#include "ConfigService.h"\n#include "Config.h"', "Page2 ordered config dependency")
+    require(page2_cpp, '#include "KarData.h"', "Page2 direct data dependency")
+    require(page2_cpp, '#include "LyricsDownloadService.h"', "Page2 direct download dependency")
+    require(page2_cpp, '#include "TextTools.h"', "Page2 direct text helper dependency")
+    require(page2_cpp, "LyricsDownloadService::Download", "Page2 lyric download contract")
+    require(page2_cpp, "TextTools::CleanSpacing", "Page2 lyric cleanup contract")
+    require(page2_cpp, "Config::Get(LYRICS_PREFIX)", "Page2 lyrics prefix contract")
+
     list_ctrl_cpp = (root / "ListCtrl.cpp").read_text()
     reject(list_ctrl_cpp, '#include "Croon.h"', "ListCtrl app shell dependency")
     for needle in [
