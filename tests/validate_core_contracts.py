@@ -216,8 +216,38 @@ def main() -> None:
     require(lyrics_download_service_h, "AzLyricsPattern", "LyricsDownloadService provider pattern boundary")
 
     lyrics_download_service_cpp = (root / "LyricsDownloadService.cpp").read_text()
+    reject(lyrics_download_service_cpp, '#include "Croon.h"', "LyricsDownloadService app shell dependency")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#include <plugin/pcre/Pcre.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        '#include "Constants.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "UiScaler.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ListCtrl.h"',
+        '#include "AppIdentity.h"',
+        '#include "KarData.h"\n#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ProjectLoader.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "ProgressDlg.h"',
+        '#include "DownloadDefaults.h"',
+        '#include "DownloadDlg.h"',
+        '#include "TextTools.h"',
+        '#include "LyricsDownloadService.h"',
+    ]:
+        require(lyrics_download_service_cpp, needle, "LyricsDownloadService direct dependency")
     require(lyrics_download_service_cpp, "https://www.azlyrics.com/lyrics/%s/%s.html", "LyricsDownloadService provider URL")
     require(lyrics_download_service_cpp, "<!-- Usage of azlyrics.com content", "LyricsDownloadService extraction pattern")
+    require(lyrics_download_service_cpp, "TextTools::CleanSpacing", "LyricsDownloadService spacing cleanup")
+    require(lyrics_download_service_cpp, "TextTools::StripNonAlnum", "LyricsDownloadService URL sanitization")
+    require(lyrics_download_service_cpp, "RegExp rx", "LyricsDownloadService extraction regex")
     require(lyrics_download_service_cpp, "DownloadDlg dlg", "LyricsDownloadService UI download workflow")
 
     download_defaults_h = (root / "DownloadDefaults.h").read_text()
