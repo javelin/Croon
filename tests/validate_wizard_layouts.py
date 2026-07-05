@@ -53,6 +53,45 @@ def main() -> None:
         if "CtrlLayout(*this" not in text:
             fail(f"{rel} does not call CtrlLayout")
 
+    page1_impl = (root / "Page1.cpp").read_text()
+    if '#include "Croon.h"' in page1_impl:
+        fail("Page1.cpp still depends on Croon.h")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        '#include "Constants.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "UiScaler.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ListCtrl.h"',
+        '#include "AppIdentity.h"',
+        '#include "KarData.h"\n#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ProjectLoader.h"',
+        '#include "GenreCatalog.h"',
+        '#include "Page.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "Page1.h"',
+    ]:
+        if needle not in page1_impl:
+            fail(f"Page1.cpp missing direct dependency {needle}")
+    for needle in [
+        "GenreCatalog::List()",
+        "titleEd.WhenAction",
+        "artistEd.WhenAction",
+        "KarData::GetGlobal()",
+        "loadedAudioLbl.SetLabel(data.origAudioFilePath)",
+        "data.title = titleEd.TrimBoth().GetData()",
+        "data.year = year.IsNull() ? 0:(int)year",
+    ]:
+        if needle not in page1_impl:
+            fail(f"Page1.cpp missing behavior {needle}")
+
     page3_impl = (root / "Page3.cpp").read_text()
     if "Page3::Page3(String gatherKey)" not in page3_impl:
         fail("Page3 dynamic constructor was unexpectedly removed")
