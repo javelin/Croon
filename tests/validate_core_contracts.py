@@ -622,6 +622,13 @@ def main() -> None:
         reject(text, "Zx(", f"{rel} raw horizontal scaler dependency")
         reject(text, "Zy(", f"{rel} raw vertical scaler dependency")
 
+    page1_cpp = (root / "Page1.cpp").read_text()
+    reject(page1_cpp, '#include "Croon.h"', "Page1 app shell dependency")
+    require(page1_cpp, '#include "KarData.h"', "Page1 direct data dependency")
+    require(page1_cpp, '#include "GenreCatalog.h"', "Page1 direct genre catalog dependency")
+    require(page1_cpp, "GenreCatalog::List()", "Page1 genre list contract")
+    require(page1_cpp, "KarData::GetGlobal()", "Page1 global data contract")
+
     list_ctrl_cpp = (root / "ListCtrl.cpp").read_text()
     reject(list_ctrl_cpp, '#include "Croon.h"', "ListCtrl app shell dependency")
     for needle in [
