@@ -3,7 +3,34 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <CtrlLib/CtrlLib.h>
+
+#include <atomic>
+#ifdef PLATFORM_POSIX
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#else
+#include <SDL.h>
+#include <SDL_mixer.h>
+#endif
+
+using namespace Upp;
+
+#include "KarData.h"
+#include "LyricsTransformer.h"
+#include "TimeFormatter.h"
+#include "UiScaler.h"
+#include "TimingLine.h"
+#include "TimingCtrl.h"
+
+#define LAYOUTFILE <Croon/CroonTimingDlg.lay>
+#include <CtrlCore/lay.h>
+
+#include "AudioPlayerBase.h"
+#include "AudioPlayer.h"
+#include "SDLMixerAudioPlayer.h"
+#include "MusicPlayer.h"
+#include "TimingDlg.h"
 
 TimingDlg::TimingDlg() {
     CtrlLayout(*this, "Time Lyrics");
