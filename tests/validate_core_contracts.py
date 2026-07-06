@@ -158,6 +158,90 @@ def main() -> None:
 
     croon_h = (root / "Croon.h").read_text()
     reject(croon_h, "typedef struct Visualization VIZ", "Croon.h visualization alias")
+    for path in sorted(root.glob("*")):
+        if path.suffix not in {".cpp", ".h"} or path.name == "Croon.h":
+            continue
+        reject(path.read_text(), '#include "Croon.h"', f"{path.name} umbrella dependency")
+
+    croon_cpp = (root / "Croon.cpp").read_text()
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#include <atomic>",
+        "#include <ctime>",
+        "#include <filesystem>",
+        "#include <SDL2/SDL.h>",
+        "#include <SDL2/SDL_mixer.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        "#include <Draw/iml_source.h>",
+        '#include "Constants.h"',
+        '#include "AppIdentity.h"',
+        '#include "AppPaths.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "KarData.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "SubtitleGenerator.h"',
+        '#include "TimeFormatter.h"',
+        '#include "UiScaler.h"',
+        '#include "GenreCatalog.h"',
+        '#include "RichTextBuilder.h"',
+        '#include "TextTools.h"',
+        '#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "FfmpegProgressParser.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ListCtrl.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ProjectLoader.h"',
+        '#include "Page.h"',
+        '#include "LyricsDownloadService.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "ProgressDlg.h"',
+        '#include "ConvertDlg.h"',
+        '#include "OpenProjectDlg.h"',
+        '#include "SaveProjectDlg.h"',
+        '#include "ExportDlg.h"',
+        '#include "LyricsPartsDlg.h"',
+        '#include "TimingLine.h"',
+        '#include "TimingCtrl.h"',
+        "#define LAYOUTFILE <Croon/CroonTimingDlg.lay>",
+        '#include "AudioPlayerBase.h"',
+        '#include "AudioPlayer.h"',
+        '#include "SDLMixerAudioPlayer.h"',
+        '#include "MusicPlayer.h"',
+        '#include "TimingDlg.h"',
+        '#include "GatherDlg.h"',
+        '#include "VidThumbnail.h"',
+        '#include "Page1.h"',
+        '#include "Page2.h"',
+        '#include "Page3.h"',
+        "#define LAYOUTFILE <Croon/CroonWizardShell.lay>",
+        "#define LAYOUTFILE <Croon/CroonVideoDlg.lay>",
+        '#include "VideoDlg.h"',
+        '#include "WizardDlg.h"',
+        '#include "Project.h"',
+        '#include "ProjectList.h"',
+        "#define LAYOUTFILE <Croon/CroonMainWindow.lay>",
+        '#include "MainWindow.h"',
+    ]:
+        require(croon_cpp, needle, "Croon app shell direct dependency")
+    for needle in [
+        "GatherDlg& GetGatherDlg()",
+        "VideoDlg& GetVideoDlg()",
+        "WizardDlg& GetWizardDlg()",
+        "Config::Get(FFMPEG_LOCATION)",
+        "MediaProcessRunner proc",
+        "proc.Start(ffmpegLoc)",
+        "Config::Set(FFMPEG_LOCATION, ffmpegLoc)",
+        "MusicPlayer::InitPlayer()",
+        "(void)GetVideoDlg()",
+        "(void)GetWizardDlg()",
+        "MainWindow().Run()",
+        "MusicPlayer::DeInitPlayer()",
+    ]:
+        require(croon_cpp, needle, "Croon app launch workflow")
     page3_cpp = (root / "Page3.cpp").read_text()
     open_project_dlg_cpp = (root / "OpenProjectDlg.cpp").read_text()
     reject(page3_cpp, "VIZ::", "Page3 visualization alias dependency")
