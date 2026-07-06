@@ -11,6 +11,11 @@ using namespace Upp;
 #include "KarData.h"
 #include "ProjectSerializer.h"
 
+String ProjectSerializer::ReadVersion(const String& json) {
+    auto js = ParseJSON(json);
+    return NormalizeReadVersion(js.GetAdd("version"));
+}
+
 String ProjectSerializer::ToJson(const KarData& data) {
     JsonArray tlJsa;
     for (const auto& tl : data.timedLyrics) {

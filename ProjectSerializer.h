@@ -10,6 +10,7 @@ struct ProjectSerializer {
     static String FormatVersion() { return AppIdentity::Version(); }
     static String NormalizeReadVersion(const String& version) { return version.IsEmpty() ? FormatVersion() : version; }
     static bool SupportsVersion(const String& version) { return NormalizeReadVersion(version) == FormatVersion(); }
+    static String ReadVersion(const String& json);
     static String ToJson(const KarData& data);
     static KarData FromJson(const String& json);
 };
