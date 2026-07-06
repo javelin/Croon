@@ -89,6 +89,29 @@ def main() -> None:
         fail("TimingDlg does not inherit WithCroonTimingDlgLayout")
 
     timing_impl = (root / "TimingDlg.cpp").read_text()
+    if '#include "Croon.h"' in timing_impl:
+        fail("TimingDlg.cpp still depends on Croon.h")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#include <atomic>",
+        "#include <SDL2/SDL.h>",
+        "#include <SDL2/SDL_mixer.h>",
+        '#include "KarData.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "TimeFormatter.h"',
+        '#include "UiScaler.h"',
+        '#include "TimingLine.h"',
+        '#include "TimingCtrl.h"',
+        "#define LAYOUTFILE <Croon/CroonTimingDlg.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "AudioPlayerBase.h"',
+        '#include "AudioPlayer.h"',
+        '#include "SDLMixerAudioPlayer.h"',
+        '#include "MusicPlayer.h"',
+        '#include "TimingDlg.h"',
+    ]:
+        if needle not in timing_impl:
+            fail(f"TimingDlg.cpp missing direct dependency {needle}")
     if "CtrlLayout(*this" not in timing_impl:
         fail("TimingDlg constructor does not call CtrlLayout")
     constructor_body = timing_impl.split("TimingDlg::TimingDlg()", 1)[-1].split("\n}\n", 1)[0]
@@ -97,6 +120,16 @@ def main() -> None:
     for layout_member in ["Button playBtn;", "TimingCtrl timingCtrl;", "SliderCtrl sliderCtrl;"]:
         if layout_member in timing_header:
             fail(f"TimingDlg.h still declares layout member {layout_member}")
+    for needle in [
+        "MusicPlayer::GetPlayer()",
+        "LyricsTransformer::TimedToRaw(data->timedLyrics)",
+        "TimeFormatter::Format(data->duration)",
+        "timingCtrl.SetTimedLyrics(data->timedLyrics, data->duration)",
+        "timingCtrl.SetMusicPosition(position, duration)",
+        "player.Seek(value/100.0f*player.Duration())",
+    ]:
+        if needle not in timing_impl:
+            fail(f"TimingDlg.cpp missing timing workflow {needle}")
 
     if croon_h.find('#include "Page3.h"') > croon_h.find("<Croon/CroonVideoDlg.lay>"):
         fail("Croon.h includes VideoDlg layout before Page3 declaration")
