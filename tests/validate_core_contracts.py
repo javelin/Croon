@@ -551,11 +551,12 @@ def main() -> None:
     ]:
         require(project_serializer_cpp, key, "ProjectSerializer JSON contract")
     require(project_serializer_cpp, 'js("version", FormatVersion())', "ProjectSerializer save format-version stamping")
-    require(project_serializer_cpp, 'data.version = js.GetAdd("version")', "ProjectSerializer source-version preservation")
+    require(project_serializer_cpp, 'data.version = NormalizeReadVersion(js.GetAdd("version"))', "ProjectSerializer read-version normalization")
     require(project_serializer_cpp, "if (data.year < 0) data.year = 0", "ProjectSerializer year normalization")
 
     project_serializer_h = (root / "ProjectSerializer.h").read_text()
     require(project_serializer_h, "FormatVersion()", "ProjectSerializer format-version contract")
+    require(project_serializer_h, "NormalizeReadVersion", "ProjectSerializer legacy read-version normalization contract")
     require(project_serializer_h, "SupportsVersion", "ProjectSerializer version-support contract")
 
     ffmpeg_h = (root / "FfmpegCommandBuilder.h").read_text()

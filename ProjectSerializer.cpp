@@ -41,7 +41,7 @@ String ProjectSerializer::ToJson(const KarData& data) {
 KarData ProjectSerializer::FromJson(const String& json) {
     KarData data;
     auto js = ParseJSON(json);
-    data.version = js.GetAdd("version");
+    data.version = NormalizeReadVersion(js.GetAdd("version"));
     data.title = js.GetAdd("title");
     data.artist = js.GetAdd("artist");
     data.genre = js.GetAdd("genre");

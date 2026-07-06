@@ -131,6 +131,7 @@ CONSOLE_APP_MAIN
 
 	Check(ProjectSerializer::FormatVersion() == AppIdentity::Version(), "ProjectSerializer format follows app identity version");
 	Check(ProjectSerializer::SupportsVersion("1.0"), "ProjectSerializer supports current .croon format");
+	Check(ProjectSerializer::SupportsVersion(""), "ProjectSerializer supports legacy unversioned .croon metadata");
 	Check(!ProjectSerializer::SupportsVersion("0.9"), "ProjectSerializer rejects unknown .croon format version");
 	String serialized = ProjectSerializer::ToJson(song);
 	const char *projectKeys[] = {
@@ -170,8 +171,10 @@ CONSOLE_APP_MAIN
 	Check(restoredViaKarData.title == restored.title && restoredViaKarData.timedLyrics.GetCount() == restored.timedLyrics.GetCount(),
 		"KarData JSON constructor delegates to ProjectSerializer");
 
-	KarData loadedLegacy = ProjectSerializer::FromJson("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}");
-	Check(loadedLegacy.version == "9.9", "ProjectSerializer preserves source version on read");
+	KarData loadedLegacy = ProjectSerializer::FromJson("{\"timedLyrics\":[],\"parts\":[]}");
+	Check(loadedLegacy.version == ProjectSerializer::FormatVersion(), "ProjectSerializer normalizes unversioned metadata to current format");
+	KarData loadedUnsupported = ProjectSerializer::FromJson("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}");
+	Check(loadedUnsupported.version == "9.9", "ProjectSerializer preserves unsupported source version on read");
 	KarData normalized = ProjectSerializer::FromJson("{\"version\":\"1.0\",\"year\":-7,\"fontSize\":999,\"timedLyrics\":[],\"parts\":[]}");
 	Check(normalized.year == 0, "ProjectSerializer normalizes negative years");
 	Check(normalized.fontSize == Config::DefaultFontSize, "ProjectSerializer keeps font-size clamping behavior");
