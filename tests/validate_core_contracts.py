@@ -541,6 +541,8 @@ def main() -> None:
     require(project_serializer_cpp, '#include "AppIdentity.h"', "ProjectSerializer direct identity dependency")
     require(project_serializer_cpp, '#include "KarData.h"', "ProjectSerializer direct data dependency")
     require(project_serializer_cpp, '#include "ProjectSerializer.h"', "ProjectSerializer direct self dependency")
+    require(project_serializer_cpp, "String ProjectSerializer::ReadVersion(const String& json)", "ProjectSerializer direct version-read implementation")
+    require(project_serializer_cpp, 'return NormalizeReadVersion(js.GetAdd("version"))', "ProjectSerializer direct version-read normalization")
     for key in [
         '"version"',
         '"title"',
@@ -558,6 +560,7 @@ def main() -> None:
     require(project_serializer_h, "FormatVersion()", "ProjectSerializer format-version contract")
     require(project_serializer_h, "NormalizeReadVersion", "ProjectSerializer legacy read-version normalization contract")
     require(project_serializer_h, "SupportsVersion", "ProjectSerializer version-support contract")
+    require(project_serializer_h, "ReadVersion", "ProjectSerializer direct version-read contract")
 
     ffmpeg_h = (root / "FfmpegCommandBuilder.h").read_text()
     reject(ffmpeg_h, "VIZ::", "ffmpeg visualization alias dependency")

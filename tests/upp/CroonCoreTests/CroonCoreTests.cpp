@@ -133,6 +133,14 @@ CONSOLE_APP_MAIN
 	Check(ProjectSerializer::SupportsVersion("1.0"), "ProjectSerializer supports current .croon format");
 	Check(ProjectSerializer::SupportsVersion(""), "ProjectSerializer supports legacy unversioned .croon metadata");
 	Check(!ProjectSerializer::SupportsVersion("0.9"), "ProjectSerializer rejects unknown .croon format version");
+	Check(ProjectSerializer::ReadVersion("{\"version\":\"1.0\",\"timedLyrics\":[],\"parts\":[]}") == ProjectSerializer::FormatVersion(),
+		"ProjectSerializer reads current metadata version directly");
+	Check(ProjectSerializer::ReadVersion("{\"timedLyrics\":[],\"parts\":[]}") == ProjectSerializer::FormatVersion(),
+		"ProjectSerializer reads legacy unversioned metadata as current");
+	Check(ProjectSerializer::ReadVersion("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}") == "9.9",
+		"ProjectSerializer preserves unsupported explicit metadata version on direct read");
+	Check(!ProjectSerializer::SupportsVersion(ProjectSerializer::ReadVersion("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}")),
+		"ProjectSerializer reports unsupported direct-read metadata versions");
 	String serialized = ProjectSerializer::ToJson(song);
 	const char *projectKeys[] = {
 		"\"version\"", "\"title\"", "\"artist\"", "\"genre\"", "\"year\"", "\"writer\"",
