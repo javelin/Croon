@@ -21,7 +21,7 @@ String ProjectSerializer::ToJson(const KarData& data) {
         partsJsa << Json("index", part.a)("part1", part.b)("part2", part.c)("part3", part.d);
     }
     Json js;
-    js("version", data.version)
+    js("version", FormatVersion())
         ("title", data.title)
         ("artist", data.artist)
         ("genre", data.genre)
@@ -41,7 +41,7 @@ String ProjectSerializer::ToJson(const KarData& data) {
 KarData ProjectSerializer::FromJson(const String& json) {
     KarData data;
     auto js = ParseJSON(json);
-    data.version = js.GetAdd("version");
+    data.version = NormalizeReadVersion(js.GetAdd("version"));
     data.title = js.GetAdd("title");
     data.artist = js.GetAdd("artist");
     data.genre = js.GetAdd("genre");

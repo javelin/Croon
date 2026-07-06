@@ -6,6 +6,8 @@
 - Project metadata attachment name: `croon.info`.
 - Current project metadata format version: `1.0`.
 - Project metadata must include a `version` field. Format changes must be represented by explicit version handling in `ProjectSerializer`.
+- Project metadata readers must tolerate legacy unversioned metadata by treating it as the current readable format.
+- Unsupported explicit metadata versions must remain visible on read so future migrations can make compatibility decisions.
 - Runtime app data directory name: `Croon`.
 - Temporary file prefixes should use `Croon_`.
 
