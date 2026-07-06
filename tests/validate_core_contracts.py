@@ -550,6 +550,8 @@ def main() -> None:
         '"parts"',
     ]:
         require(project_serializer_cpp, key, "ProjectSerializer JSON contract")
+    require(project_serializer_cpp, 'js("version", FormatVersion())', "ProjectSerializer save format-version stamping")
+    require(project_serializer_cpp, 'data.version = js.GetAdd("version")', "ProjectSerializer source-version preservation")
     require(project_serializer_cpp, "if (data.year < 0) data.year = 0", "ProjectSerializer year normalization")
 
     project_serializer_h = (root / "ProjectSerializer.h").read_text()

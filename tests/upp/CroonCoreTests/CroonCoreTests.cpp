@@ -141,10 +141,12 @@ CONSOLE_APP_MAIN
 	for(const char *key : projectKeys) {
 		Check(serialized.Find(key) >= 0, String("ProjectSerializer writes ") + key);
 	}
+	Check(serialized.Find("\"version\":\"" + ProjectSerializer::FormatVersion() + "\"") >= 0,
+		"ProjectSerializer stamps current format version on save");
 	Check(serialized.Find("\"rawLyrics\"") < 0, "ProjectSerializer keeps raw lyrics out of project metadata");
 
 	KarData restored = ProjectSerializer::FromJson(serialized);
-	Check(restored.version == "9.9", "KarData JSON preserves version");
+	Check(restored.version == ProjectSerializer::FormatVersion(), "KarData JSON restores saved format version");
 	Check(restored.title == "Long Song", "KarData JSON preserves title");
 	Check(restored.artist == "The Singers", "KarData JSON preserves artist");
 	Check(restored.genre == "Pop", "KarData JSON preserves genre");
@@ -168,6 +170,8 @@ CONSOLE_APP_MAIN
 	Check(restoredViaKarData.title == restored.title && restoredViaKarData.timedLyrics.GetCount() == restored.timedLyrics.GetCount(),
 		"KarData JSON constructor delegates to ProjectSerializer");
 
+	KarData loadedLegacy = ProjectSerializer::FromJson("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}");
+	Check(loadedLegacy.version == "9.9", "ProjectSerializer preserves source version on read");
 	KarData normalized = ProjectSerializer::FromJson("{\"version\":\"1.0\",\"year\":-7,\"fontSize\":999,\"timedLyrics\":[],\"parts\":[]}");
 	Check(normalized.year == 0, "ProjectSerializer normalizes negative years");
 	Check(normalized.fontSize == Config::DefaultFontSize, "ProjectSerializer keeps font-size clamping behavior");
