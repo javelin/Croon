@@ -3,7 +3,49 @@
  * Author: Mark Documento
  */
 
-#include "Croon.h"
+#include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
+#define IMAGECLASS CroonImg
+#define IMAGEFILE <Croon/Croon.iml>
+#include <Draw/iml_header.h>
+
+#include "Constants.h"
+#include "ConfigService.h"
+#include "Config.h"
+#include "UiScaler.h"
+#include "LyricsPartsCtrl.h"
+#include "ListCtrl.h"
+#include "AppIdentity.h"
+#include "AppPaths.h"
+#include "KarData.h"
+#include "Visualization.h"
+#include "FfmpegCommandBuilder.h"
+#include "LyricsTransformer.h"
+#include "MediaProcessRunner.h"
+#include "RecentProjectService.h"
+#include "ProjectLoader.h"
+#include "GenreCatalog.h"
+#include "LyricsDownloadService.h"
+#include "TextTools.h"
+#include "Page.h"
+
+#define LAYOUTFILE <Croon/Croon.lay>
+#include <CtrlCore/lay.h>
+
+#include "ProgressDlg.h"
+#include "GatherDlg.h"
+#include "SaveProjectDlg.h"
+#include "VidThumbnail.h"
+#include "Page1.h"
+#include "Page2.h"
+#include "Page3.h"
+
+#define LAYOUTFILE <Croon/CroonWizardShell.lay>
+#include <CtrlCore/lay.h>
+
+#include "WizardDlg.h"
 
 WizardDlg::WizardDlg() : pages{&page1, &page2, &page3}, currPage(0) {
     CtrlLayout(*this, "Create Project");
