@@ -193,10 +193,59 @@ def main() -> None:
             fail(f"WizardDlg.h still declares layout member {layout_member}")
 
     wizard_impl = (root / "WizardDlg.cpp").read_text()
+    if '#include "Croon.h"' in wizard_impl:
+        fail("WizardDlg.cpp still depends on Croon.h")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        '#include "Constants.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "UiScaler.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ListCtrl.h"',
+        '#include "AppIdentity.h"',
+        '#include "AppPaths.h"',
+        '#include "KarData.h"\n#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ProjectLoader.h"',
+        '#include "GenreCatalog.h"',
+        '#include "LyricsDownloadService.h"',
+        '#include "TextTools.h"',
+        '#include "Page.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "ProgressDlg.h"',
+        '#include "GatherDlg.h"',
+        '#include "SaveProjectDlg.h"',
+        '#include "VidThumbnail.h"',
+        '#include "Page1.h"',
+        '#include "Page2.h"',
+        '#include "Page3.h"',
+        "#define LAYOUTFILE <Croon/CroonWizardShell.lay>",
+        '#include "WizardDlg.h"',
+    ]:
+        if needle not in wizard_impl:
+            fail(f"WizardDlg.cpp missing direct dependency {needle}")
     constructor_body = wizard_impl.split("WizardDlg::WizardDlg()", 1)[-1].split("\n}\n", 1)[0]
     for line in constructor_body.splitlines():
         if "*this <<" in line and "GetPrevButton" not in line and "GetNextButton" not in line and "GatherButton" not in line:
             fail("WizardDlg still hardcodes non-navigation child placement")
+    for needle in [
+        "WizardDlg::WizardDlg() : pages{&page1, &page2, &page3}",
+        "page->WhenPreviousPage",
+        "page->WhenNextPage",
+        "page3.WhenProjectSaved",
+        "KarData::GetGlobal()",
+        "data.Reset()",
+        "page1.ShowPage()",
+        "page3.Rehint(false)",
+    ]:
+        if needle not in wizard_impl:
+            fail(f"WizardDlg.cpp missing wizard workflow {needle}")
 
     croon_h = (root / "Croon.h").read_text()
     if croon_h.find('#include "Page3.h"') > croon_h.find("<Croon/CroonWizardShell.lay>"):
