@@ -154,6 +154,45 @@ def main() -> None:
         if needle not in download_impl:
             fail(f"DownloadDlg.cpp missing download workflow {needle}")
 
+    gather_impl = (root / "GatherDlg.cpp").read_text()
+    if '#include "Croon.h"' in gather_impl:
+        fail("GatherDlg.cpp still depends on Croon.h")
+    for needle in [
+        "#include <CtrlLib/CtrlLib.h>",
+        "#define IMAGECLASS CroonImg",
+        "#define IMAGEFILE <Croon/Croon.iml>",
+        "#include <Draw/iml_header.h>",
+        '#include "Constants.h"',
+        '#include "ConfigService.h"\n#include "Config.h"',
+        '#include "UiScaler.h"',
+        '#include "LyricsPartsCtrl.h"',
+        '#include "ListCtrl.h"',
+        '#include "AppIdentity.h"',
+        '#include "KarData.h"\n#include "Visualization.h"\n#include "FfmpegCommandBuilder.h"',
+        '#include "LyricsTransformer.h"',
+        '#include "MediaProcessRunner.h"',
+        '#include "RecentProjectService.h"',
+        '#include "ProjectLoader.h"',
+        "#define LAYOUTFILE <Croon/Croon.lay>",
+        "#include <CtrlCore/lay.h>",
+        '#include "ProgressDlg.h"',
+        '#include "AppPaths.h"',
+        '#include "TextTools.h"',
+        '#include "GatherDlg.h"',
+    ]:
+        if needle not in gather_impl:
+            fail(f"GatherDlg.cpp missing direct dependency {needle}")
+    for needle in [
+        "Config::Get(FFMPEG_LOCATION)",
+        "AppPaths::DataDirectory()",
+        "AppPaths::FindFiles(videoDir, \"*.mp4\")",
+        "TextTools::ShortenMiddle(paths[curPath], 60)",
+        "FfmpegCommandBuilder::GenerateThumbnail(paths[curPath], tnPath, ThumbnailDim, ThumbnailDim)",
+        "process.Start(ffmpeg",
+    ]:
+        if needle not in gather_impl:
+            fail(f"GatherDlg.cpp missing thumbnail discovery workflow {needle}")
+
     save_impl = (root / "SaveProjectDlg.cpp").read_text()
     if '#include "Croon.h"' in save_impl:
         fail("SaveProjectDlg.cpp still depends on Croon.h")
