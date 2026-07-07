@@ -19,10 +19,6 @@ struct LyricsDownloadService {
     static bool ExtractAzLyrics(String content, String& lyrics);
     static DownloadStatus DownloadWithStatus(String title, String artist, String& lyrics);
     static bool Download(String title, String artist, String& lyrics);
-
-private:
-    static const char* AzLyricsUrlFormat();
-    static const char* AzLyricsPattern();
 };
 
 #endif

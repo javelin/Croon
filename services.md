@@ -6,6 +6,7 @@ This file records service boundaries expected during migration. Some services be
 
 - `AppIdentity`: product name, version, project extension, app data name, temp prefixes, and metadata attachment names.
 - `AppPaths`: runtime data directory creation and simple file discovery helpers.
+- `AzLyricsProvider`: AZLyrics provider name, URL construction, and page extraction rules.
 - `ConfigService`: persisted Croon settings and default values.
 - `DownloadDefaults`: shared HTTP download defaults such as the browser user agent.
 - `ProjectSerializer`: versioned JSON serialization and deserialization for Croon project metadata.
@@ -13,7 +14,7 @@ This file records service boundaries expected during migration. Some services be
 - `FfmpegCommandBuilder`: deterministic command argument construction.
 - `FfmpegProgressParser`: timestamp extraction from `ffmpeg` progress output.
 - `GenreCatalog`: shared application genre reference list.
-- `LyricsDownloadService`: active lyrics provider naming, AZLyrics URL construction, page extraction, download status reporting, and download workflow.
+- `LyricsDownloadService`: active lyrics provider naming, provider URL/extraction delegation, download status reporting, and download workflow.
 - `RecentProjectService`: recent project list persistence and normalization.
 - `RichTextBuilder`: QTF/RichText construction helper for shared list and subtitle previews.
 - `SubtitleLineProcessor`: subtitle metadata expansion, count-in insertion, and vocal style resolution.

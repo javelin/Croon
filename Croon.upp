@@ -25,6 +25,8 @@ file
 	AppPaths.h,
 	AudioPlayer.h,
 	AudioPlayerBase.h,
+	AzLyricsProvider.cpp,
+	AzLyricsProvider.h,
 	Config.cpp,
 	Config.h,
 	ConfigService.cpp,

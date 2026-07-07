@@ -35,6 +35,7 @@ using namespace Upp;
 #include "Constants.h"
 #include "AppIdentity.h"
 #include "AppPaths.h"
+#include "AzLyricsProvider.h"
 #include "KarData.h"
 #include "ProjectSerializer.h"
 #include "LyricsDownloadService.h"

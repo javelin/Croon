@@ -8,6 +8,7 @@ using namespace Upp;
 
 #include <Croon/Constants.h>
 #include <Croon/AppIdentity.h>
+#include <Croon/AzLyricsProvider.h>
 #include <Croon/KarData.h>
 #include <Croon/LyricsTransformer.h>
 #include <Croon/ProjectSerializer.h>
@@ -99,6 +100,16 @@ CONSOLE_APP_MAIN
 	Check(TimeFormatter::Ass(65.12) == "0:01:05.12", "TimeFormatter uses ASS timestamp precision");
 	Check(TimeFormatter::Ass(3661.5) == "1:01:01.50", "TimeFormatter handles ASS hour rollover");
 	Check(TextTools::StripNonAlnum("A! b-2") == "Ab2", "TextTools removes punctuation and spaces");
+	Check(String(AzLyricsProvider::Name()) == "AZLyrics", "AzLyricsProvider exposes provider name");
+	Check(AzLyricsProvider::BuildUrl("The Song!", "Artist") == "https://www.azlyrics.com/lyrics/artist/thesong.html",
+		"AzLyricsProvider builds sanitized URL");
+	String extractedLyrics;
+	Check(AzLyricsProvider::ExtractLyrics("before<!-- Usage of azlyrics.com content by any third-party is prohibited. -->First<br>Second</div>after", extractedLyrics),
+		"AzLyricsProvider extracts provider lyric block");
+	Check(extractedLyrics == "First\nSecond", "AzLyricsProvider trims extracted lyric lines");
+	Check(!AzLyricsProvider::ExtractLyrics("<html>No lyrics here</html>", extractedLyrics),
+		"AzLyricsProvider rejects pages without a lyric block");
+	Check(extractedLyrics.IsEmpty(), "AzLyricsProvider clears output on extraction failure");
 
 	String freqFilter = Visualization::Filter("@@freqs", "subtitles.ass", true);
 	Check(freqFilter.Find("showfreqs") >= 0, "freq visualization uses showfreqs");
