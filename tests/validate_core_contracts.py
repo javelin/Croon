@@ -24,6 +24,7 @@ def validate_no_production_utility_wrapper_calls(root: Path) -> None:
         "CleanSpacing",
         "ComputeFfmpegTs",
         "DownloadLyrics",
+        "DownloadLyricsWithStatus",
         "FormatTime",
         "FormatTime2",
         "FormatTimeASS",
@@ -539,6 +540,7 @@ def main() -> None:
     reject(util_cpp, "SRT_PATTERN", "Util.cpp dead SRT parser cleanup")
     require(util_cpp, "return AppPaths::DataDirectory", "GetDataDirectory compatibility wrapper")
     require(util_cpp, "return AppPaths::FindFiles", "GetPaths compatibility wrapper")
+    require(util_cpp, "return LyricsDownloadService::DownloadWithStatus", "DownloadLyricsWithStatus compatibility wrapper")
     require(util_cpp, "return LyricsDownloadService::Download", "DownloadLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::SplitDecorations", "SplitLyrics compatibility wrapper")
     require(util_cpp, "return LyricsTransformer::RawToUntimed", "RawToUntimedLyrics compatibility wrapper")
@@ -555,6 +557,7 @@ def main() -> None:
 
     util_h = (root / "Util.h").read_text()
     require(util_h, '#include "RichTextBuilder.h"', "Util.h rich text dependency")
+    require(util_h, '#include "LyricsDownloadService.h"', "Util.h lyrics download status dependency")
     reject(util_h, "struct RTHelper", "Util.h rich text helper extraction")
     require(util_h, '#include "SubtitleLineProcessor.h"', "Util.h subtitle type dependency")
     require(util_h, '#include "TextTools.h"', "Util.h text helper dependency")
@@ -563,6 +566,7 @@ def main() -> None:
     require(util_h, "return TextTools::StripNonAlnum", "StripNonAlnum compatibility wrapper")
     require(util_h, "return TextTools::ShortenMiddle", "ShortenMiddle compatibility wrapper")
     require(util_h, "return TimeFormatter::CountInDuration", "CountInDuration compatibility wrapper")
+    require(util_h, "DownloadLyricsWithStatus", "DownloadLyricsWithStatus compatibility declaration")
     require(util_h, "return TimeFormatter::Format", "FormatTime compatibility wrapper")
     require(util_h, "return TimeFormatter::Ass", "FormatTimeASS compatibility wrapper")
     require(util_h, "return TimeFormatter::Srt", "FormatTimeSRT compatibility wrapper")

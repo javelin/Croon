@@ -29,4 +29,4 @@ UI classes should bind controls to services and models. Static control placement
 
 ## Compatibility Facade
 
-- `Util`: legacy compatibility facade for older call sites and tests. New production code should call the extracted services directly.
+- `Util`: legacy compatibility facade for older call sites and tests, including boolean and status-returning lyrics download wrappers. New production code should call the extracted services directly.
