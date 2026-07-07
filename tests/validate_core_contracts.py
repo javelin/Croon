@@ -617,6 +617,11 @@ def main() -> None:
     require(kar_data_cpp, '#include "ConfigService.h"\n#include "Config.h"', "KarData ordered config dependencies")
     require(kar_data_cpp, '#include "KarData.h"', "KarData direct self dependency")
     require(kar_data_cpp, '#include "ProjectSerializer.h"', "KarData direct serializer dependency")
+    require(kar_data_cpp, "namespace {", "KarData internal storage namespace")
+    require(kar_data_cpp, "KarData& GlobalKarData()", "KarData internal global accessor")
+    require(kar_data_cpp, "static KarData data", "KarData internal singleton storage")
+    require(kar_data_cpp, "return GlobalKarData()", "KarData global accessor delegation")
+    reject(kar_data_cpp, "KarData _karData", "KarData exposed global storage")
     require(kar_data_cpp, "ProjectSerializer::ToJson(*this)", "KarData serialization delegation")
     require(kar_data_cpp, "ProjectSerializer::FromJson(JSONStr)", "KarData deserialization delegation")
 
