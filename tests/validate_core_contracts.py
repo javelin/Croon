@@ -461,6 +461,14 @@ def main() -> None:
     for wrapper in ["ReplaceMetadata(", "ResolveVocalPart(", "ResolveCountInStyle(", "ResolveStyle(", "ProcessMetadata("]:
         reject(core_tests_cpp, "Check(" + wrapper, "core tests subtitle-line compatibility wrapper dependency")
         reject(core_tests_cpp, "\t" + wrapper, "core tests subtitle-line compatibility wrapper dependency")
+    for fixture in [
+        "current-project-metadata.json",
+        "legacy-unversioned-project-metadata.json",
+        "unsupported-project-metadata.json",
+    ]:
+        if not (root / "tests" / "upp" / "CroonCoreTests" / "fixtures" / fixture).exists():
+            fail(f"core tests missing metadata fixture {fixture}")
+        require(core_tests_cpp, fixture, f"core tests metadata fixture usage {fixture}")
     for rel, text in {
         "CroonCoreTestSupport.cpp": core_test_support_cpp,
     }.items():

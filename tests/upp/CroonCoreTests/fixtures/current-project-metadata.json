@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "title": "Fixture Current Song",
+  "artist": "Fixture Artist",
+  "genre": "Pop",
+  "year": 2026,
+  "writer": "Fixture Writer",
+  "owner": "Fixture Owner",
+  "origVideoFile": "@@freqs",
+  "duration": 120.5,
+  "timed": 1,
+  "fontSize": 72,
+  "dehiss": false,
+  "timedLyrics": [
+    {
+      "time": 1.25,
+      "lyrics": "Fixture line"
+    }
+  ],
+  "parts": [
+    {
+      "index": 1,
+      "part1": true,
+      "part2": false,
+      "part3": true
+    }
+  ]
+}
