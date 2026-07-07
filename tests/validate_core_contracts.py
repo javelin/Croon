@@ -380,6 +380,7 @@ def main() -> None:
     require(lyrics_download_service_cpp, "return ExtractProviderLyrics(content, lyrics)", "LyricsDownloadService AZ extraction compatibility wrapper")
     require(lyrics_download_service_cpp, "ExtractProviderLyrics(content, *output)", "LyricsDownloadService provider-neutral download extraction")
     require(lyrics_download_service_cpp, "dlg.Run(BuildProviderUrl(title, artist)", "LyricsDownloadService provider-neutral download URL")
+    require(lyrics_download_service_cpp, 'Format("Downloading lyrics from %s", ProviderName())', "LyricsDownloadService provider download prompt")
     require(lyrics_download_service_cpp, 'return "ok"', "LyricsDownloadService success status label")
     require(lyrics_download_service_cpp, 'return "cancelled"', "LyricsDownloadService cancelled status label")
     require(lyrics_download_service_cpp, 'return "extraction-failed"', "LyricsDownloadService extraction failure status label")
