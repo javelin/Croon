@@ -121,6 +121,7 @@ if(CROON_UMK_EXECUTABLE)
             ${CROON_CORE_TEST_HEADERS}
             "${CMAKE_CURRENT_SOURCE_DIR}/Croon.lay"
             "${CMAKE_CURRENT_SOURCE_DIR}/Croon.iml"
+            "${CMAKE_CURRENT_SOURCE_DIR}/AzLyricsProvider.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/KarData.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/LyricsTransformer.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/ProjectSerializer.cpp"

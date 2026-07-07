@@ -21,6 +21,8 @@ def main() -> None:
         "AppIdentity.h",
         "AppPaths.cpp",
         "AppPaths.h",
+        "AzLyricsProvider.cpp",
+        "AzLyricsProvider.h",
         "ConfigService.cpp",
         "ConfigService.h",
         "DownloadDefaults.h",
@@ -66,6 +68,8 @@ def main() -> None:
         "AppIdentity.h" not in upp or
         "AppPaths.cpp" not in upp or
         "AppPaths.h" not in upp or
+        "AzLyricsProvider.cpp" not in upp or
+        "AzLyricsProvider.h" not in upp or
         "ConfigService.cpp" not in upp or
         "ConfigService.h" not in upp or
         "DownloadDefaults.h" not in upp or
@@ -112,6 +116,8 @@ def main() -> None:
         fail("Croon.h does not include AppIdentity.h")
     if '#include "AppPaths.h"' not in header:
         fail("Croon.h does not include AppPaths.h")
+    if '#include "AzLyricsProvider.h"' not in header:
+        fail("Croon.h does not include AzLyricsProvider.h")
     if '#include "ConfigService.h"' not in header:
         fail("Croon.h does not include ConfigService.h")
     if '#include "DownloadDefaults.h"' not in header:

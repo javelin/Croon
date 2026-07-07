@@ -5,6 +5,7 @@ uses
 
 file
 	CroonCoreTests.cpp,
+	AzLyricsProvider.cpp,
 	KarData.cpp,
 	ProjectSerializer.cpp,
 	RecentProjectService.cpp,

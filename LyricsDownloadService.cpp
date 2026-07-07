@@ -4,7 +4,6 @@
  */
 
 #include <CtrlLib/CtrlLib.h>
-#include <plugin/pcre/Pcre.h>
 
 using namespace Upp;
 
@@ -33,11 +32,11 @@ using namespace Upp;
 #include "ProgressDlg.h"
 #include "DownloadDefaults.h"
 #include "DownloadDlg.h"
-#include "TextTools.h"
+#include "AzLyricsProvider.h"
 #include "LyricsDownloadService.h"
 
 const char* LyricsDownloadService::ProviderName() {
-    return "AZLyrics";
+    return AzLyricsProvider::Name();
 }
 
 const char* LyricsDownloadService::DownloadStatusLabel(DownloadStatus status) {
@@ -52,34 +51,12 @@ const char* LyricsDownloadService::DownloadStatusLabel(DownloadStatus status) {
     return "unknown";
 }
 
-const char* LyricsDownloadService::AzLyricsUrlFormat() {
-    return "https://www.azlyrics.com/lyrics/%s/%s.html";
-}
-
-const char* LyricsDownloadService::AzLyricsPattern() {
-    return "<!-- Usage of azlyrics.com content by any third-party.+?-->(.+?)</div>";
-}
-
 String LyricsDownloadService::BuildAzLyricsUrl(String title, String artist) {
-    String t = Join(Split(TextTools::CleanSpacing(ToLower(TextTools::StripNonAlnum(TrimBoth(title)))), ' '), "");
-    String a = ToLower(TextTools::StripNonAlnum(TrimBoth(artist)));
-    a.TrimStart("the ");
-    a = Join(Split(TextTools::CleanSpacing(a), ' '), "");
-    return Format(AzLyricsUrlFormat(), a, t);
+    return AzLyricsProvider::BuildUrl(title, artist);
 }
 
 bool LyricsDownloadService::ExtractAzLyrics(String content, String& lyrics) {
-    static RegExp rx(AzLyricsPattern(), RegExp::DOTALL | RegExp::MULTILINE | RegExp::UTF8);
-    if (rx.Study() && rx.Match(content)) {
-        auto vl = Split(rx.GetString(0), "<br>");
-        for (int i = 0; i < vl.GetCount(); i++) {
-            vl[i] = TrimBoth(vl[i]);
-        }
-        lyrics = Join(vl, "\n");
-        return true;
-    }
-    lyrics = "";
-    return false;
+    return AzLyricsProvider::ExtractLyrics(content, lyrics);
 }
 
 LyricsDownloadService::DownloadStatus LyricsDownloadService::DownloadWithStatus(String title, String artist, String& lyrics) {
