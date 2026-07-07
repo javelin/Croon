@@ -22,8 +22,12 @@ Legacy product names must be renamed when artifacts are created or migrated. Thi
 
 Static TopWindow and form-like Ctrl layouts should move to U++ `.lay` files. Dynamic controls remain C++-driven when Designer ownership would reduce clarity or testability.
 
+### Croon Metadata Compatibility
+
+Croon must keep `.croon` as the supported project artifact format. Project metadata compatibility is versioned through `ProjectSerializer`: current `1.0` metadata is supported, legacy unversioned `.croon` metadata is treated as the current readable format when it is object-shaped JSON, unsupported explicit metadata versions are rejected by load gates while preserving their version for future migration decisions, and invalid metadata is rejected before hydration.
+
 ## Deferred Decisions
 
-- Whether Croon needs backward-compatible import of legacy project files.
+- Whether Croon needs backward-compatible import of legacy product artifacts outside the `.croon` metadata compatibility policy.
 - Whether to replace AZLyrics scraping with a different lyrics provider.
 - Whether to remove global project state after the first functional migration.

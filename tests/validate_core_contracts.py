@@ -256,6 +256,14 @@ def main() -> None:
     require(recent_project_service_cpp, "TrimBoth(path)", "RecentProjectService path normalization")
     require(recent_project_service_cpp, "FindPathIndex(normalized, trimmed)", "RecentProjectService de-duplication")
 
+    decisions_md = (root / "decisions.md").read_text()
+    require(decisions_md, "### Croon Metadata Compatibility", "Croon metadata compatibility decision")
+    require(decisions_md, "Croon must keep `.croon`", "Croon project artifact compatibility decision")
+    require(decisions_md, "ProjectSerializer", "Croon metadata serializer decision")
+    require(decisions_md, "legacy unversioned `.croon` metadata is treated as the current readable format", "legacy .croon metadata compatibility decision")
+    require(decisions_md, "unsupported explicit metadata versions are rejected by load gates", "unsupported .croon metadata compatibility decision")
+    require(decisions_md, "legacy product artifacts outside the `.croon` metadata compatibility policy", "legacy product artifact deferred decision")
+
     project_loader_cpp = (root / "ProjectLoader.cpp").read_text()
     reject(project_loader_cpp, '#include "Croon.h"', "ProjectLoader app shell dependency")
     for needle in [
