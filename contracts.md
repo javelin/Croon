@@ -11,6 +11,7 @@
 - Unsupported explicit metadata versions must remain visible on read so future migrations can make compatibility decisions.
 - `ProjectSerializer` must classify metadata compatibility as current, legacy unversioned, unsupported, or invalid before callers decide whether to load.
 - `ProjectSerializer` compatibility labels must remain stable for diagnostics and future UI/logging.
+- Invalid metadata hydration must not produce a current-version project record.
 - Runtime app data directory name: `Croon`.
 - Temporary file prefixes should use `Croon_`.
 

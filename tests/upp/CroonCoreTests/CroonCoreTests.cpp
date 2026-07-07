@@ -242,6 +242,11 @@ CONSOLE_APP_MAIN
 	Check(loadedLegacy.version == ProjectSerializer::FormatVersion(), "ProjectSerializer normalizes unversioned metadata to current format");
 	KarData loadedUnsupported = ProjectSerializer::FromJson("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}");
 	Check(loadedUnsupported.version == "9.9", "ProjectSerializer preserves unsupported source version on read");
+	KarData invalidMetadata = ProjectSerializer::FromJson(invalidMetadataFixture);
+	Check(invalidMetadata.version.IsVoid(), "ProjectSerializer marks invalid metadata hydration with void version");
+	Check(invalidMetadata.timedLyrics.IsEmpty(), "ProjectSerializer does not hydrate invalid metadata lyrics");
+	KarData nonObjectMetadata = ProjectSerializer::FromJson("[{\"version\":\"1.0\"}]");
+	Check(nonObjectMetadata.version.IsVoid(), "ProjectSerializer marks non-object metadata hydration with void version");
 	KarData normalized = ProjectSerializer::FromJson("{\"version\":\"1.0\",\"year\":-7,\"fontSize\":999,\"timedLyrics\":[],\"parts\":[]}");
 	Check(normalized.year == 0, "ProjectSerializer normalizes negative years");
 	Check(normalized.fontSize == Config::DefaultFontSize, "ProjectSerializer keeps font-size clamping behavior");

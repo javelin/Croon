@@ -578,6 +578,8 @@ def main() -> None:
         require(project_serializer_cpp, key, "ProjectSerializer JSON contract")
     require(project_serializer_cpp, 'js("version", FormatVersion())', "ProjectSerializer save format-version stamping")
     require(project_serializer_cpp, 'data.version = NormalizeReadVersion(js.GetAdd("version"))', "ProjectSerializer read-version normalization")
+    require(project_serializer_cpp, "if (ReadCompatibility(json) == InvalidMetadata)", "ProjectSerializer invalid metadata hydration guard")
+    require(project_serializer_cpp, "data.version = String::GetVoid()", "ProjectSerializer invalid metadata version marker")
     require(project_serializer_cpp, "if (data.year < 0) data.year = 0", "ProjectSerializer year normalization")
 
     project_serializer_h = (root / "ProjectSerializer.h").read_text()
