@@ -46,6 +46,13 @@ void CheckEq(const Vector<String>& actual, std::initializer_list<const char*> ex
 		Check(actual[i] == exp[i], Format("%s[%d]", message, i));
 }
 
+String LoadFixture(const char *name) {
+	String path = AppendFileName("tests/upp/CroonCoreTests/fixtures", name);
+	String content = LoadFile(path);
+	Check(!content.IsVoid(), String("loads fixture ") + name);
+	return content;
+}
+
 }
 
 CONSOLE_APP_MAIN
@@ -153,6 +160,23 @@ CONSOLE_APP_MAIN
 		"ProjectSerializer classifies legacy unversioned project metadata");
 	Check(ProjectSerializer::ReadCompatibility("{\"version\":\"9.9\",\"timedLyrics\":[],\"parts\":[]}") == ProjectSerializer::UnsupportedMetadata,
 		"ProjectSerializer classifies unsupported explicit project metadata");
+	String currentMetadataFixture = LoadFixture("current-project-metadata.json");
+	String legacyMetadataFixture = LoadFixture("legacy-unversioned-project-metadata.json");
+	String unsupportedMetadataFixture = LoadFixture("unsupported-project-metadata.json");
+	Check(ProjectSerializer::ReadCompatibility(currentMetadataFixture) == ProjectSerializer::CurrentMetadata,
+		"ProjectSerializer classifies current metadata fixture");
+	Check(ProjectSerializer::ReadCompatibility(legacyMetadataFixture) == ProjectSerializer::LegacyUnversionedMetadata,
+		"ProjectSerializer classifies legacy unversioned metadata fixture");
+	Check(ProjectSerializer::ReadCompatibility(unsupportedMetadataFixture) == ProjectSerializer::UnsupportedMetadata,
+		"ProjectSerializer classifies unsupported metadata fixture");
+	Check(ProjectSerializer::SupportsJson(currentMetadataFixture), "ProjectSerializer supports current metadata fixture");
+	Check(ProjectSerializer::SupportsJson(legacyMetadataFixture), "ProjectSerializer supports legacy metadata fixture");
+	Check(!ProjectSerializer::SupportsJson(unsupportedMetadataFixture), "ProjectSerializer rejects unsupported metadata fixture");
+	KarData fixtureCurrent = ProjectSerializer::FromJson(currentMetadataFixture);
+	Check(fixtureCurrent.version == ProjectSerializer::FormatVersion(), "ProjectSerializer loads current metadata fixture version");
+	Check(fixtureCurrent.title == "Fixture Current Song", "ProjectSerializer loads current metadata fixture title");
+	KarData fixtureLegacy = ProjectSerializer::FromJson(legacyMetadataFixture);
+	Check(fixtureLegacy.version == ProjectSerializer::FormatVersion(), "ProjectSerializer loads legacy metadata fixture as current version");
 	String serialized = ProjectSerializer::ToJson(song);
 	const char *projectKeys[] = {
 		"\"version\"", "\"title\"", "\"artist\"", "\"genre\"", "\"year\"", "\"writer\"",
