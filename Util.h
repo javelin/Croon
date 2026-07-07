@@ -7,6 +7,7 @@
 #define _Croon_Util_h_
 
 #include "RichTextBuilder.h"
+#include "LyricsDownloadService.h"
 #include "SubtitleLineProcessor.h"
 #include "TextTools.h"
 #include "TimeFormatter.h"
@@ -23,6 +24,7 @@ void ProcessMetadata(const KarData& data, Vector<TimeLyrics>& vtl, int linesToDi
 String TimedToASS(const KarData& data, int linesToDisplay=DefaultASSDisplayLines, int resX=1920, int resY=1080);
 String TimedToRichASS(const KarData& data, int linesToDisplay=DefaultASSDisplayLines, int resX=1920, int resY=1080);
 Vector<String> GetPaths(String dir, String pattern);
+LyricsDownloadService::DownloadStatus DownloadLyricsWithStatus(String title, String artist, String& lyrics);
 bool DownloadLyrics(String title, String artist, String& lyrics);
 
 VocalPart ResolveVocalPart(int partIndex,

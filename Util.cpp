@@ -80,6 +80,10 @@ Vector<String> GetPaths(String dir, String pattern) {
     return AppPaths::FindFiles(dir, pattern);
 }
 
+LyricsDownloadService::DownloadStatus DownloadLyricsWithStatus(String title, String artist, String& lyrics) {
+    return LyricsDownloadService::DownloadWithStatus(title, artist, lyrics);
+}
+
 bool DownloadLyrics(String title, String artist, String& lyrics) {
     return LyricsDownloadService::Download(title, artist, lyrics);
 }
