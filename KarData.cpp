@@ -16,8 +16,16 @@ using namespace Upp;
 #include "KarData.h"
 #include "ProjectSerializer.h"
 
-KarData _karData;
-KarData& KarData::GetGlobal() { return _karData; }
+namespace {
+
+KarData& GlobalKarData() {
+    static KarData data;
+    return data;
+}
+
+}
+
+KarData& KarData::GetGlobal() { return GlobalKarData(); }
 void KarData::Reset() {
     loaded = false;
     projectPath.Clear();
