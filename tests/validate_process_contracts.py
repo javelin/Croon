@@ -218,7 +218,6 @@ def main() -> None:
         "#define LAYOUTFILE <Croon/Croon.lay>",
         "#include <CtrlCore/lay.h>",
         '#include "ProgressDlg.h"',
-        '#include "AppPaths.h"',
         '#include "VideoCatalog.h"',
         '#include "TextTools.h"',
         '#include "GatherDlg.h"',
@@ -227,8 +226,8 @@ def main() -> None:
             fail(f"GatherDlg.cpp missing direct dependency {needle}")
     for needle in [
         "Config::Get(FFMPEG_LOCATION)",
-        "AppPaths::DataDirectory()",
         "VideoCatalog::FindVideoFiles(videoDir)",
+        "VideoCatalog::ThumbnailPath(paths[curPath])",
         "TextTools::ShortenMiddle(paths[curPath], 60)",
         "FfmpegCommandBuilder::GenerateThumbnail(paths[curPath], tnPath, ThumbnailDim, ThumbnailDim)",
         "process.Start(ffmpeg",
