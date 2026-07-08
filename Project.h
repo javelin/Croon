@@ -7,11 +7,13 @@
 #define _Croon_Project_h_
 
 struct KarData;
+class VideoDlg;
 
 class Project : public WithCroonProjectLayout<ParentCtrl> {
 public:
     Project();
     Project(KarData& data);
+    Project(KarData& data, VideoDlg& videoDlg);
     virtual ~Project() { CleanUp(); }
     void Populate();
     void SaveProject();
@@ -45,6 +47,7 @@ private:
     bool open{false};
     bool dirty{false};
     KarData& data;
+    VideoDlg& videoDlg;
 };
 
 #endif

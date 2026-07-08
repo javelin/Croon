@@ -78,7 +78,10 @@ VideoDlg& GetVideoDlg();
 Project::Project() : Project(KarData::GetGlobal()) {
 }
 
-Project::Project(KarData& projectData) : videoPath(""), data(projectData) {
+Project::Project(KarData& projectData) : Project(projectData, GetVideoDlg()) {
+}
+
+Project::Project(KarData& projectData, VideoDlg& videoDialog) : videoPath(""), data(projectData), videoDlg(videoDialog) {
     CtrlLayout(*this);
     
     for (const auto& genre : GenreCatalog::List()) genreEd.AddList(genre);
@@ -142,8 +145,7 @@ Project::Project(KarData& projectData) : videoPath(""), data(projectData) {
     };
     
     videoBtn << [this] {
-        auto& vDlg = GetVideoDlg();
-        if (vDlg.Run() == IDOK) {
+        if (videoDlg.Run() == IDOK) {
             videoImg.SetImage(data.videoThumbnail);
             videoImg.Tip(data.origVideoFile);
             SetDirty();
