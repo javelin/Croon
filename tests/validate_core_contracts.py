@@ -268,6 +268,13 @@ def main() -> None:
     require(decisions_md, "legacy unversioned `.croon` metadata is treated as the current readable format", "legacy .croon metadata compatibility decision")
     require(decisions_md, "unsupported explicit metadata versions are rejected by load gates", "unsupported .croon metadata compatibility decision")
     require(decisions_md, "legacy product artifacts outside the `.croon` metadata compatibility policy", "legacy product artifact deferred decision")
+    require(decisions_md, "`VideoCatalog` or `VideoLibraryCache`", "video catalog deferred decision")
+    require(decisions_md, "preferred future answer to expensive video directory scans", "video catalog performance decision")
+
+    architecture_md = (root / "architecture.md").read_text()
+    require(architecture_md, "`MainWindow` is the normal composition root", "MainWindow composition root documentation")
+    require(architecture_md, "`Project`, `ProjectList`, `VideoDlg`, and `WizardDlg`", "MainWindow runtime dialog ownership documentation")
+    require(architecture_md, "Global data and dialog accessors are compatibility paths", "global accessor compatibility documentation")
 
     project_loader_cpp = (root / "ProjectLoader.cpp").read_text()
     reject(project_loader_cpp, '#include "Croon.h"', "ProjectLoader app shell dependency")
@@ -413,6 +420,9 @@ def main() -> None:
     require(services_md, "opaque download workflow", "LyricsDownloadService opaque workflow documentation")
     require(services_md, "download status reporting", "LyricsDownloadService status documentation")
     require(services_md, "AZLyrics-named URL and extraction methods are compatibility aliases only", "LyricsDownloadService AZ alias documentation")
+    require(services_md, "`VideoCatalog` / `VideoLibraryCache`", "VideoCatalog planned service documentation")
+    require(services_md, "scanning configured video directories", "VideoCatalog scan documentation")
+    require(services_md, "sharing video candidates between `WizardDlg` and `VideoDlg`", "VideoCatalog dialog sharing documentation")
 
     constants_h = (root / "Constants.h").read_text()
     reject(constants_h, "AZ_URL", "Constants provider URL extraction")

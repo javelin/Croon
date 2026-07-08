@@ -31,3 +31,4 @@ Croon must keep `.croon` as the supported project artifact format. Project metad
 - Whether Croon needs backward-compatible import of legacy product artifacts outside the `.croon` metadata compatibility policy.
 - Whether to replace AZLyrics scraping with a different lyrics provider. Until a reliable provider API is chosen, AZLyrics remains an internal implementation detail behind `LyricsDownloadService`, provider-neutral URL/extraction infrastructure is preserved for future work, and the user-facing download workflow stays opaque.
 - Whether to remove global project state after the first functional migration.
+- Whether to introduce a `VideoCatalog` or `VideoLibraryCache` service for startup-time or background video discovery, thumbnail reuse, and shared video candidates across `WizardDlg` and `VideoDlg`. This is the preferred future answer to expensive video directory scans; eager dialog construction may continue to hide that cost until the cache service exists.
