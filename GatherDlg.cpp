@@ -31,6 +31,7 @@ using namespace Upp;
 
 #include "ProgressDlg.h"
 #include "AppPaths.h"
+#include "VideoCatalog.h"
 #include "TextTools.h"
 #include "GatherDlg.h"
 
@@ -120,7 +121,7 @@ GatherDlg::GatherDlg() {
 }
 
 int GatherDlg::Run(String videoDir) {
-    paths = AppPaths::FindFiles(videoDir, "*.mp4");
+    paths = VideoCatalog::FindVideoFiles(videoDir);
     if (paths.IsEmpty()) {
         PromptOK("No videos found.");
     }

@@ -219,6 +219,7 @@ def main() -> None:
         "#include <CtrlCore/lay.h>",
         '#include "ProgressDlg.h"',
         '#include "AppPaths.h"',
+        '#include "VideoCatalog.h"',
         '#include "TextTools.h"',
         '#include "GatherDlg.h"',
     ]:
@@ -227,7 +228,7 @@ def main() -> None:
     for needle in [
         "Config::Get(FFMPEG_LOCATION)",
         "AppPaths::DataDirectory()",
-        "AppPaths::FindFiles(videoDir, \"*.mp4\")",
+        "VideoCatalog::FindVideoFiles(videoDir)",
         "TextTools::ShortenMiddle(paths[curPath], 60)",
         "FfmpegCommandBuilder::GenerateThumbnail(paths[curPath], tnPath, ThumbnailDim, ThumbnailDim)",
         "process.Start(ffmpeg",

@@ -754,7 +754,7 @@ def main() -> None:
 
     direct_path_catalog_dependencies = {
         "ConfigService.cpp": ["AppPaths::DataDirectory"],
-        "GatherDlg.cpp": ["AppPaths::DataDirectory", "AppPaths::FindFiles"],
+        "GatherDlg.cpp": ["AppPaths::DataDirectory", "VideoCatalog::FindVideoFiles"],
         "Page1.cpp": ["GenreCatalog::List"],
         "Page3.cpp": ["AppPaths::DataDirectory", "VideoCatalog::FindVideoFiles"],
         "Project.cpp": ["GenreCatalog::List"],
@@ -905,6 +905,11 @@ def main() -> None:
     reject(video_catalog_cpp, '#include "Croon.h"', "VideoCatalog app shell dependency")
     require(video_catalog_cpp, '#include "AppPaths.h"\n#include "VideoCatalog.h"', "VideoCatalog direct dependencies")
     require(video_catalog_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "VideoCatalog mp4 discovery contract")
+
+    gather_dlg_cpp = (root / "GatherDlg.cpp").read_text()
+    require(gather_dlg_cpp, '#include "VideoCatalog.h"', "GatherDlg direct VideoCatalog dependency")
+    require(gather_dlg_cpp, "VideoCatalog::FindVideoFiles(videoDir)", "GatherDlg video discovery service")
+    reject(gather_dlg_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "GatherDlg raw mp4 discovery dependency")
 
     wizard_cpp = (root / "WizardDlg.cpp").read_text()
     reject(wizard_cpp, "WizardDlg::WizardDlg() : WizardDlg(KarData::GetGlobal())", "WizardDlg default global data wiring")
