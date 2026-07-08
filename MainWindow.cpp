@@ -89,9 +89,6 @@ using namespace Upp;
 #include "SettingsDlg.h"
 #include "MainWindow.h"
 
-MainWindow::MainWindow() : MainWindow(KarData::GetGlobal()) {
-}
-
 MainWindow::MainWindow(KarData& data) : videoDlg(data), wizardDlg(data), project(data, videoDlg), projects(data, wizardDlg) {
     CtrlLayout(*this);
     Add(projects.HSizePos().VSizePos());

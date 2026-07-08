@@ -10,7 +10,6 @@ struct KarData;
 
 class MainWindow : public WithCroonMainWindowLayout<TopWindow> {
 public:
-    MainWindow();
     MainWindow(KarData& data);
     ~MainWindow();
     void Close() override {

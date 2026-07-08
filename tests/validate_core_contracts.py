@@ -859,7 +859,7 @@ def main() -> None:
     require(project_h, "VideoDlg& videoDlg", "Project injected video member")
 
     main_window_cpp = (root / "MainWindow.cpp").read_text()
-    require(main_window_cpp, "MainWindow::MainWindow() : MainWindow(KarData::GetGlobal())", "MainWindow default global data wiring")
+    reject(main_window_cpp, "MainWindow::MainWindow() : MainWindow(KarData::GetGlobal())", "MainWindow default global data wiring")
     require(main_window_cpp, "MainWindow::MainWindow(KarData& data) : videoDlg(data), wizardDlg(data), project(data, videoDlg), projects(data, wizardDlg)", "MainWindow injected data constructor")
     require(main_window_cpp, "Add(projects.HSizePos().VSizePos())", "MainWindow runtime project-list mount")
     require(main_window_cpp, "Add(project.HSizePos().VSizePos())", "MainWindow runtime project mount")
@@ -867,6 +867,7 @@ def main() -> None:
     require(main_window_cpp, "projects.NewProject()", "MainWindow project-list workflow")
     main_window_h = (root / "MainWindow.h").read_text()
     require(main_window_h, "MainWindow(KarData& data)", "MainWindow injected data declaration")
+    reject(main_window_h, "    MainWindow();", "MainWindow default global data declaration")
     reject(main_window_h, "KarData& data;", "MainWindow unused data member")
     require(main_window_h, "VideoDlg videoDlg", "MainWindow owned VideoDlg member")
     require(main_window_h, "WizardDlg wizardDlg", "MainWindow owned WizardDlg member")

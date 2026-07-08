@@ -47,7 +47,7 @@ def main() -> None:
     constructors = {
         "ProjectList.cpp": "ProjectList::ProjectList()",
         "Project.cpp": "Project::Project()",
-        "MainWindow.cpp": "MainWindow::MainWindow()",
+        "MainWindow.cpp": "MainWindow::MainWindow(KarData& data)",
     }
     for rel, marker in constructors.items():
         text = (root / rel).read_text()
@@ -129,7 +129,6 @@ def main() -> None:
         if needle not in mainwindow_impl:
             fail(f"MainWindow.cpp missing direct dependency {needle}")
     for needle in [
-        "MainWindow::MainWindow() : MainWindow(KarData::GetGlobal())",
         "MainWindow::MainWindow(KarData& data) : videoDlg(data), wizardDlg(data), project(data, videoDlg), projects(data, wizardDlg)",
         "Add(projects.HSizePos().VSizePos())",
         "Add(project.HSizePos().VSizePos())",
