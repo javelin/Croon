@@ -25,6 +25,10 @@ This file records service boundaries expected during migration. Some services be
 - `UiScaler`: U++ zoom-ratio scaling helpers for layout dimensions.
 - `MediaProcessRunner`: process execution boundary for `ffmpeg` and related long-running tasks.
 
+## Planned Services
+
+- `VideoCatalog` / `VideoLibraryCache`: deferred service for scanning configured video directories, loading/reusing thumbnails, and sharing video candidates between `WizardDlg` and `VideoDlg`. This should replace constructor-heavy `Page3` video discovery when the migration reaches video-library performance work.
+
 ## UI Boundary
 
 UI classes should bind controls to services and models. Static control placement belongs in `.lay` files when the screen is form-like or dialog-like. Custom runtime controls may expose stable methods that UI shells call after `CtrlLayout`.
