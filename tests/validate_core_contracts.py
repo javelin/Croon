@@ -270,7 +270,7 @@ def main() -> None:
     require(decisions_md, "### Explicit Runtime Project State", "explicit runtime project state decision")
     require(decisions_md, "legacy global `KarData` accessor has been removed", "removed global data decision")
     require(decisions_md, "### VideoCatalog Owns Video Discovery", "VideoCatalog discovery decision")
-    require(decisions_md, "Configured video directory enumeration belongs behind `VideoCatalog`", "VideoCatalog enumeration ownership decision")
+    require(decisions_md, "Configured video directory enumeration and thumbnail file path construction belong behind `VideoCatalog`", "VideoCatalog enumeration ownership decision")
     require(decisions_md, "legacy product artifacts outside the `.croon` metadata compatibility policy", "legacy product artifact deferred decision")
     reject(decisions_md, "Whether to remove global project state after the first functional migration.", "resolved global project state deferred decision")
     require(decisions_md, "expand `VideoCatalog` into a `VideoLibraryCache`", "video library cache deferred decision")
@@ -425,7 +425,7 @@ def main() -> None:
     require(services_md, "opaque download workflow", "LyricsDownloadService opaque workflow documentation")
     require(services_md, "download status reporting", "LyricsDownloadService status documentation")
     require(services_md, "AZLyrics-specific naming stays inside `AzLyricsProvider`", "LyricsDownloadService provider-specific naming documentation")
-    require(services_md, "`VideoCatalog`: video file discovery boundary for configured video directories", "VideoCatalog service documentation")
+    require(services_md, "`VideoCatalog`: video file discovery and thumbnail path boundary for configured video directories", "VideoCatalog service documentation")
     require(services_md, "`VideoLibraryCache`: deferred service", "VideoLibraryCache planned service documentation")
     require(services_md, "sharing video candidates between `WizardDlg` and `VideoDlg`", "VideoCatalog dialog sharing documentation")
 
@@ -754,11 +754,11 @@ def main() -> None:
 
     direct_path_catalog_dependencies = {
         "ConfigService.cpp": ["AppPaths::DataDirectory"],
-        "GatherDlg.cpp": ["AppPaths::DataDirectory", "VideoCatalog::FindVideoFiles"],
+        "GatherDlg.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath"],
         "Page1.cpp": ["GenreCatalog::List"],
-        "Page3.cpp": ["AppPaths::DataDirectory", "VideoCatalog::FindVideoFiles"],
+        "Page3.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath"],
         "Project.cpp": ["GenreCatalog::List"],
-        "VideoCatalog.cpp": ["AppPaths::FindFiles"],
+        "VideoCatalog.cpp": ["AppPaths::DataDirectory", "AppPaths::FindFiles"],
     }
     for rel, expected_calls in direct_path_catalog_dependencies.items():
         text = (root / rel).read_text()
@@ -887,6 +887,8 @@ def main() -> None:
     require(page3_cpp, "gatherDlg.Run(~fsel)", "Page3 injected gather run")
     require(page3_cpp, "LyricsTransformer::RawToUntimed(this->data)", "Page3 injected data timing conversion")
     require(page3_cpp, "VideoCatalog::FindVideoFiles(videoDir)", "Page3 injected video discovery service")
+    require(page3_cpp, "VideoCatalog::ThumbnailPath(paths[i])", "Page3 video thumbnail path service")
+    reject(page3_cpp, "AppPaths::DataDirectory()", "Page3 raw thumbnail directory dependency")
     require(page3_cpp, "saveDlg.Run(savePath, this->data)", "Page3 injected data save contract")
     require(page3_cpp, "this->data.videoFilePath = path", "Page3 injected video path write")
     require(page3_cpp, "enableNext = !data.videoFilePath.IsEmpty()", "Page3 injected data population")
@@ -901,14 +903,19 @@ def main() -> None:
 
     video_catalog_h = (root / "VideoCatalog.h").read_text()
     require(video_catalog_h, "FindVideoFiles(String videoDir)", "VideoCatalog discovery declaration")
+    require(video_catalog_h, "ThumbnailPath(String videoPath)", "VideoCatalog thumbnail path declaration")
     video_catalog_cpp = (root / "VideoCatalog.cpp").read_text()
     reject(video_catalog_cpp, '#include "Croon.h"', "VideoCatalog app shell dependency")
     require(video_catalog_cpp, '#include "AppPaths.h"\n#include "VideoCatalog.h"', "VideoCatalog direct dependencies")
     require(video_catalog_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "VideoCatalog mp4 discovery contract")
+    require(video_catalog_cpp, "AppendFileName(AppPaths::DataDirectory(), GetFileName(videoPath))", "VideoCatalog thumbnail data path contract")
+    require(video_catalog_cpp, 'tnPath.Replace(".mp4", ".thumbnail.png")', "VideoCatalog thumbnail extension contract")
 
     gather_dlg_cpp = (root / "GatherDlg.cpp").read_text()
     require(gather_dlg_cpp, '#include "VideoCatalog.h"', "GatherDlg direct VideoCatalog dependency")
     require(gather_dlg_cpp, "VideoCatalog::FindVideoFiles(videoDir)", "GatherDlg video discovery service")
+    require(gather_dlg_cpp, "VideoCatalog::ThumbnailPath(paths[curPath])", "GatherDlg thumbnail path service")
+    reject(gather_dlg_cpp, "AppPaths::DataDirectory()", "GatherDlg raw thumbnail directory dependency")
     reject(gather_dlg_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "GatherDlg raw mp4 discovery dependency")
 
     wizard_cpp = (root / "WizardDlg.cpp").read_text()

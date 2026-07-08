@@ -146,7 +146,6 @@ def main() -> None:
         '#include "LyricsPartsCtrl.h"',
         '#include "ListCtrl.h"',
         '#include "AppIdentity.h"',
-        '#include "AppPaths.h"',
         '#include "KarData.h"\n#include "Visualization.h"',
         '#include "VideoCatalog.h"',
         '#include "FfmpegCommandBuilder.h"',
@@ -182,7 +181,7 @@ def main() -> None:
         fail("Page3.h still declares layout member TabCtrl tab")
     for needle in [
         "VideoCatalog::FindVideoFiles(videoDir)",
-        "AppPaths::DataDirectory()",
+        "VideoCatalog::ThumbnailPath(paths[i])",
         "Visualization::Thumbnail(\"@@freqs\")",
         "gatherDlg.WhenVideoAdded",
         "gatherDlg.Run(~fsel)",

@@ -18,7 +18,6 @@ using namespace Upp;
 #include "LyricsPartsCtrl.h"
 #include "ListCtrl.h"
 #include "AppIdentity.h"
-#include "AppPaths.h"
 #include "KarData.h"
 #include "Visualization.h"
 #include "VideoCatalog.h"
@@ -49,8 +48,7 @@ Page3::Page3(KarData& data, GatherDlg& gatherDlg, String gatherKey) :
     Vector<String> paths = VideoCatalog::FindVideoFiles(videoDir);
     
     for (int i = 0; i < paths.GetCount(); ++i) {
-        String tnPath = AppendFileName(AppPaths::DataDirectory(), GetFileName(paths[i]));
-        tnPath.Replace(".mp4", ".thumbnail.png");
+        String tnPath = VideoCatalog::ThumbnailPath(paths[i]);
         
         Image img;
         if (FileExists(tnPath) && (img = StreamRaster::LoadFileAny(tnPath))) {

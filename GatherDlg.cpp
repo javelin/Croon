@@ -30,7 +30,6 @@ using namespace Upp;
 #include <CtrlCore/lay.h>
 
 #include "ProgressDlg.h"
-#include "AppPaths.h"
 #include "VideoCatalog.h"
 #include "TextTools.h"
 #include "GatherDlg.h"
@@ -39,8 +38,7 @@ GatherDlg::GatherDlg() {
     ffmpeg = Config::Get(FFMPEG_LOCATION);
     WhenProcessEnded << [=] (int code) {
         if (code == 0) {
-            String tnPath = paths[curPath];
-            tnPath.Replace(".mp4", ".thumbnail.png");
+            String tnPath = VideoCatalog::ThumbnailPath(paths[curPath]);
             Image image = StreamRaster::LoadFileAny(tnPath);
             if (image) {
                 images.Add(image);
@@ -59,8 +57,7 @@ GatherDlg::GatherDlg() {
             return;
         }
         
-        String tnPath = AppendFileName(AppPaths::DataDirectory(), GetFileName(paths[curPath]));
-        tnPath.Replace(".mp4", ".thumbnail.png");
+        String tnPath = VideoCatalog::ThumbnailPath(paths[curPath]);
         bool existing = FileExists(tnPath);
         auto fn = [=]() {
             Image image = StreamRaster::LoadFileAny(tnPath);
