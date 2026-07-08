@@ -16,7 +16,6 @@ struct TimeLyrics : Moveable<TimeLyrics>, public Pte<TimeLyrics> {
 };
 
 struct KarData : Moveable<KarData> {
-    static KarData& GetGlobal();
     KarData() { Reset(); }
     KarData(const String& JSONStr);
     void Dump() const;
