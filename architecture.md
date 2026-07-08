@@ -9,6 +9,7 @@ Croon is an Ultimate++ desktop application for karaoke authoring. It is being mi
 - `ffmpeg` is an external runtime executable. Croon constructs command arguments and launches the configured executable rather than linking libav libraries.
 - Static form layouts should live in U++ Designer `.lay` files. Runtime-populated lists, custom-painted controls, timing rows, and menu wiring may remain in C++.
 - Deterministic behavior should be isolated behind testable services before or during UI migration.
+- `RunCroon` owns the normal application `KarData` instance and passes it into `MainWindow`.
 - `MainWindow` is the normal composition root for shared project UI state. It owns the runtime `Project`, `ProjectList`, `VideoDlg`, and `WizardDlg` instances and wires them to the shared `KarData` model and dialog dependencies.
 - Global data and dialog accessors are compatibility paths for default constructors and legacy wiring, not the preferred runtime path for new UI code.
 

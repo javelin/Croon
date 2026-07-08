@@ -241,10 +241,12 @@ def main() -> None:
         "proc.Start(ffmpegLoc)",
         "Config::Set(FFMPEG_LOCATION, ffmpegLoc)",
         "MusicPlayer::InitPlayer()",
-        "MainWindow(KarData::GetGlobal()).Run()",
+        "KarData data;",
+        "MainWindow(data).Run()",
         "MusicPlayer::DeInitPlayer()",
     ]:
         require(croon_cpp, needle, "Croon app launch workflow")
+    reject(croon_cpp, "MainWindow(KarData::GetGlobal()).Run()", "Croon launch global data wiring")
     reject(croon_cpp, "GatherDlg& GetGatherDlg()", "Croon app shell global gather accessor")
     reject(croon_cpp, "VideoDlg& GetVideoDlg()", "Croon app shell global video accessor")
     reject(croon_cpp, "WizardDlg& GetWizardDlg()", "Croon app shell global wizard accessor")

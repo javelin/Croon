@@ -113,7 +113,8 @@ void RunCroon() {
     
     MusicPlayer::InitPlayer();
     
-    MainWindow(KarData::GetGlobal()).Run();
+    KarData data;
+    MainWindow(data).Run();
     
     MusicPlayer::DeInitPlayer();
 }
