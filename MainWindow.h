@@ -33,6 +33,7 @@ private:
     
 private:
     KarData& data;
+    VideoDlg videoDlg;
     WizardDlg wizardDlg;
     Project project;
     ProjectList projects;

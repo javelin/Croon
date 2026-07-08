@@ -58,7 +58,7 @@ def main() -> None:
             fail(f"{rel} still hardcodes top-level child placement")
 
     mainwindow_h = (root / "MainWindow.h").read_text()
-    for runtime_member in ["KarData& data;", "WizardDlg wizardDlg;", "Project project;", "ProjectList projects;", "StatusBar status;", "MenuBar menuBar;"]:
+    for runtime_member in ["KarData& data;", "VideoDlg videoDlg;", "WizardDlg wizardDlg;", "Project project;", "ProjectList projects;", "StatusBar status;", "MenuBar menuBar;"]:
         if runtime_member not in mainwindow_h:
             fail(f"MainWindow.h missing runtime frame member {runtime_member}")
 
@@ -128,7 +128,7 @@ def main() -> None:
             fail(f"MainWindow.cpp missing direct dependency {needle}")
     for needle in [
         "MainWindow::MainWindow() : MainWindow(KarData::GetGlobal())",
-        "MainWindow::MainWindow(KarData& data) : data(data), wizardDlg(data), project(data), projects(data, wizardDlg)",
+        "MainWindow::MainWindow(KarData& data) : data(data), videoDlg(), wizardDlg(data), project(data, videoDlg), projects(data, wizardDlg)",
         "Add(projects.HSizePos().VSizePos())",
         "Add(project.HSizePos().VSizePos())",
         "Title(AppIdentity::ProductName())",
@@ -206,9 +206,10 @@ def main() -> None:
     for needle in [
         "GenreCatalog::List()",
         "Project::Project() : Project(KarData::GetGlobal())",
-        "Project::Project(KarData& projectData) : videoPath(\"\"), data(projectData)",
+        "Project::Project(KarData& projectData) : Project(projectData, GetVideoDlg())",
+        "Project::Project(KarData& projectData, VideoDlg& videoDialog) : videoPath(\"\"), data(projectData), videoDlg(videoDialog)",
         "SubtitleGenerator::ToRichAss(data)",
-        "GetVideoDlg()",
+        "videoDlg.Run()",
         "SaveProjectDlg().Run(data)",
         "LyricsTransformer::RawToUntimed(data)",
         "TimingDlg tDlg",
