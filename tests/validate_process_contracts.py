@@ -230,6 +230,7 @@ def main() -> None:
         "VideoCatalog::ThumbnailPath(paths[curPath])",
         "VideoCatalog::HasThumbnail(paths[curPath])",
         "VideoCatalog::LoadThumbnail(paths[curPath])",
+        "VideoCatalog::DeleteThumbnail(paths[curPath])",
         "TextTools::ShortenMiddle(paths[curPath], 60)",
         "FfmpegCommandBuilder::GenerateThumbnail(paths[curPath], tnPath, ThumbnailDim, ThumbnailDim)",
         "process.Start(ffmpeg",

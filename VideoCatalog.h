@@ -11,6 +11,7 @@ struct VideoCatalog {
     static String ThumbnailPath(String videoPath);
     static bool HasThumbnail(String videoPath);
     static Image LoadThumbnail(String videoPath);
+    static bool DeleteThumbnail(String videoPath);
 };
 
 #endif
