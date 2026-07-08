@@ -754,7 +754,7 @@ def main() -> None:
 
     direct_path_catalog_dependencies = {
         "ConfigService.cpp": ["AppPaths::DataDirectory"],
-        "GatherDlg.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath", "VideoCatalog::HasThumbnail", "VideoCatalog::LoadThumbnail"],
+        "GatherDlg.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath", "VideoCatalog::HasThumbnail", "VideoCatalog::LoadThumbnail", "VideoCatalog::DeleteThumbnail"],
         "Page1.cpp": ["GenreCatalog::List"],
         "Page3.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath", "VideoCatalog::LoadThumbnail"],
         "Project.cpp": ["GenreCatalog::List"],
@@ -908,6 +908,7 @@ def main() -> None:
     require(video_catalog_h, "ThumbnailPath(String videoPath)", "VideoCatalog thumbnail path declaration")
     require(video_catalog_h, "HasThumbnail(String videoPath)", "VideoCatalog thumbnail existence declaration")
     require(video_catalog_h, "LoadThumbnail(String videoPath)", "VideoCatalog thumbnail loading declaration")
+    require(video_catalog_h, "DeleteThumbnail(String videoPath)", "VideoCatalog thumbnail deletion declaration")
     video_catalog_cpp = (root / "VideoCatalog.cpp").read_text()
     reject(video_catalog_cpp, '#include "Croon.h"', "VideoCatalog app shell dependency")
     require(video_catalog_cpp, "#include <Draw/Draw.h>", "VideoCatalog image loading dependency")
@@ -918,6 +919,7 @@ def main() -> None:
     require(video_catalog_cpp, "FileExists(ThumbnailPath(videoPath))", "VideoCatalog thumbnail existence contract")
     require(video_catalog_cpp, "if (!HasThumbnail(videoPath)) return Image()", "VideoCatalog thumbnail loading existence gate")
     require(video_catalog_cpp, "StreamRaster::LoadFileAny(tnPath)", "VideoCatalog thumbnail loading contract")
+    require(video_catalog_cpp, "FileDelete(ThumbnailPath(videoPath))", "VideoCatalog thumbnail deletion contract")
 
     gather_dlg_cpp = (root / "GatherDlg.cpp").read_text()
     require(gather_dlg_cpp, '#include "VideoCatalog.h"', "GatherDlg direct VideoCatalog dependency")
@@ -925,9 +927,11 @@ def main() -> None:
     require(gather_dlg_cpp, "VideoCatalog::ThumbnailPath(paths[curPath])", "GatherDlg thumbnail path service")
     require(gather_dlg_cpp, "VideoCatalog::HasThumbnail(paths[curPath])", "GatherDlg thumbnail existence service")
     require(gather_dlg_cpp, "VideoCatalog::LoadThumbnail(paths[curPath])", "GatherDlg thumbnail loading service")
+    require(gather_dlg_cpp, "VideoCatalog::DeleteThumbnail(paths[curPath])", "GatherDlg thumbnail deletion service")
     reject(gather_dlg_cpp, "AppPaths::DataDirectory()", "GatherDlg raw thumbnail directory dependency")
     reject(gather_dlg_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "GatherDlg raw mp4 discovery dependency")
     reject(gather_dlg_cpp, "FileExists(tnPath)", "GatherDlg raw thumbnail existence dependency")
+    reject(gather_dlg_cpp, "FileDelete(tnPath)", "GatherDlg raw thumbnail deletion dependency")
     reject(gather_dlg_cpp, "StreamRaster::LoadFileAny(tnPath)", "GatherDlg raw thumbnail loading dependency")
 
     wizard_cpp = (root / "WizardDlg.cpp").read_text()

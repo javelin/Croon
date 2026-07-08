@@ -29,3 +29,7 @@ Image VideoCatalog::LoadThumbnail(String videoPath) {
     if (!HasThumbnail(videoPath)) return Image();
     return StreamRaster::LoadFileAny(tnPath);
 }
+
+bool VideoCatalog::DeleteThumbnail(String videoPath) {
+    return FileDelete(ThumbnailPath(videoPath));
+}

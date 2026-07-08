@@ -76,7 +76,7 @@ GatherDlg::GatherDlg() {
         
         if (existing) {
             if (overwriteTN) {
-                if (!FileDelete(tnPath)) {
+                if (!VideoCatalog::DeleteThumbnail(paths[curPath])) {
                     if (fn()) return;
                     ++curPath;
                     UpdateProgress();
@@ -84,7 +84,7 @@ GatherDlg::GatherDlg() {
             }
             else {
                 if (fn()) return;
-                if (!FileDelete(tnPath)) {
+                if (!VideoCatalog::DeleteThumbnail(paths[curPath])) {
                     ++curPath;
                     progress.Set(curPath, paths.GetCount());
                     UpdateProgress();
