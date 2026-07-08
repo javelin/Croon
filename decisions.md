@@ -26,9 +26,12 @@ Static TopWindow and form-like Ctrl layouts should move to U++ `.lay` files. Dyn
 
 Croon must keep `.croon` as the supported project artifact format. Project metadata compatibility is versioned through `ProjectSerializer`: current `1.0` metadata is supported, legacy unversioned `.croon` metadata is treated as the current readable format when it is object-shaped JSON, unsupported explicit metadata versions are rejected by load gates while preserving their version for future migration decisions, and invalid metadata is rejected before hydration.
 
+### Explicit Runtime Project State
+
+Croon runtime UI code owns and passes `KarData` explicitly from `RunCroon` through `MainWindow` into child dialogs and controls. The legacy global `KarData` accessor has been removed from the application surface.
+
 ## Deferred Decisions
 
 - Whether Croon needs backward-compatible import of legacy product artifacts outside the `.croon` metadata compatibility policy.
 - Whether to replace AZLyrics scraping with a different lyrics provider. Until a reliable provider API is chosen, AZLyrics remains an internal implementation detail behind `LyricsDownloadService`, provider-neutral URL/extraction infrastructure is preserved for future work, and the user-facing download workflow stays opaque.
-- Whether to remove global project state after the first functional migration.
 - Whether to introduce a `VideoCatalog` or `VideoLibraryCache` service for startup-time or background video discovery, thumbnail reuse, and shared video candidates across `WizardDlg` and `VideoDlg`. This is the preferred future answer to expensive video directory scans; eager dialog construction may continue to hide that cost until the cache service exists.

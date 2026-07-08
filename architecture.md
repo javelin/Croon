@@ -11,7 +11,7 @@ Croon is an Ultimate++ desktop application for karaoke authoring. It is being mi
 - Deterministic behavior should be isolated behind testable services before or during UI migration.
 - `RunCroon` owns the normal application `KarData` instance and passes it into `MainWindow`.
 - `MainWindow` is the normal composition root for shared project UI state. It owns the runtime `Project`, `ProjectList`, `VideoDlg`, and `WizardDlg` instances and wires them to the shared `KarData` model and dialog dependencies.
-- Global data and dialog accessors are compatibility paths for default constructors and legacy wiring, not the preferred runtime path for new UI code.
+- Runtime UI code uses explicit `KarData` and dialog ownership; legacy global data and dialog accessors have been retired from the application surface.
 
 ## Primary Flows
 
