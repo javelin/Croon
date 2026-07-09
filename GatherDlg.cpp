@@ -30,7 +30,6 @@ using namespace Upp;
 
 #include "ProgressDlg.h"
 #include "VideoCatalog.h"
-#include "TextTools.h"
 #include "GatherDlg.h"
 
 GatherDlg::GatherDlg() {
@@ -111,7 +110,7 @@ GatherDlg::GatherDlg() {
             monitor.SetLabel("");
         }
         else {
-            monitor.SetLabel(Format("Adding %s", TextTools::ShortenMiddle(paths[curPath], 60)));
+            monitor.SetLabel(Format("Adding %s", VideoCatalog::DisplayName(paths[curPath], 60)));
         }
     };
 }
