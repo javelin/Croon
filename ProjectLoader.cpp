@@ -12,7 +12,7 @@ using namespace Upp;
 #include "KarData.h"
 #include "ProjectSerializer.h"
 #include "Visualization.h"
-#include "FfmpegCommandBuilder.h"
+#include "FfmpegProjectCommandBuilder.h"
 #include "LyricsTransformer.h"
 #include "MediaProcessRunner.h"
 #include "RecentProjectService.h"
@@ -89,7 +89,7 @@ void ProjectLoader::StartNextProcess() {
             if (FileExists(infoFilePath)) FileDelete(infoFilePath);
             if (FileExists(thumbnailPath)) FileDelete(thumbnailPath);
             auto res = process.Start(ffmpeg,
-                            FfmpegCommandBuilder::DumpAttachmentAndGenerateThumbnail(
+                            FfmpegProjectCommandBuilder::DumpAttachmentAndGenerateThumbnail(
                                 projectPath,
                                 infoFilePath,
                                 thumbnailPath,

@@ -21,7 +21,8 @@ using namespace Upp;
 #include "KarData.h"
 #include "ProjectSerializer.h"
 #include "Visualization.h"
-#include "FfmpegCommandBuilder.h"
+#include "FfmpegProjectCommandBuilder.h"
+#include "FfmpegThumbnailCommandBuilder.h"
 #include "LyricsTransformer.h"
 #include "MediaProcessRunner.h"
 #include "RecentProjectService.h"
@@ -121,7 +122,7 @@ int OpenProjectDlg::Run(String projectPath, KarData& karData) {
 void OpenProjectDlg::ExtractAudio() {
     data->infoFilePath = AppIdentity::TempFileName(".json");
     data->audioFilePath = AppIdentity::TempFileName(".ogg");
-    auto vs = FfmpegCommandBuilder::ProjectExtractAudioAndInfo(data->projectPath,
+    auto vs = FfmpegProjectCommandBuilder::ExtractAudioAndInfo(data->projectPath,
                                                     data->audioFilePath,
                                                     data->infoFilePath);
     bool res = process.Start(ffmpeg, vs);
@@ -136,7 +137,7 @@ void OpenProjectDlg::ExtractAudio() {
 
 void OpenProjectDlg::ExtractVideo() {
     data->videoFilePath = AppIdentity::TempFileName(".mp4");
-    auto vs = FfmpegCommandBuilder::ProjectExtractVideo(data->projectPath, data->videoFilePath);
+    auto vs = FfmpegProjectCommandBuilder::ExtractVideo(data->projectPath, data->videoFilePath);
     bool res = process.Start(ffmpeg, vs);
     if (!res) {
         Exclamation(Format("Unable to load %s. Failed to open project!", Phase()));
@@ -149,7 +150,7 @@ void OpenProjectDlg::ExtractVideo() {
 
 void OpenProjectDlg::LoadThumbnail() {
     data->thumbnailFilePath = AppIdentity::TempFileName(".png");
-    auto vs = FfmpegCommandBuilder::GenerateThumbnail(data->videoFilePath, data->thumbnailFilePath,
+    auto vs = FfmpegThumbnailCommandBuilder::Generate(data->videoFilePath, data->thumbnailFilePath,
                                         ThumbnailDim, ThumbnailDim);
     bool res = process.Start(ffmpeg, vs);
     if (!res) {

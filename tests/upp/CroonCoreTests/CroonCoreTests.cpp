@@ -24,6 +24,7 @@ using namespace Upp;
 #include <Croon/FfmpegAudioCommandBuilder.h>
 #include <Croon/FfmpegCommandBuilder.h>
 #include <Croon/FfmpegExportCommandBuilder.h>
+#include <Croon/FfmpegProjectCommandBuilder.h>
 
 namespace {
 
@@ -73,10 +74,10 @@ CONSOLE_APP_MAIN
 		"-vf", "crop='min(iw,ih)':'min(iw,ih)',scale=256:256", "thumb.png"
 	}, "GenerateThumbnail");
 
-	CheckEq(FfmpegCommandBuilder::ProjectExtractAudioAndInfo("song.croon", "song.ogg", "song.json"), {
+	CheckEq(FfmpegProjectCommandBuilder::ExtractAudioAndInfo("song.croon", "song.ogg", "song.json"), {
 		"-dump_attachment:t:0", "song.json", "-i", "song.croon", "-map", "0:a:0",
 		"-c:a", "copy", "song.ogg"
-	}, "ProjectExtractAudioAndInfo");
+	}, "ExtractAudioAndInfo");
 
 	KarData commandData;
 	commandData.version = "2.5";
@@ -92,18 +93,18 @@ CONSOLE_APP_MAIN
 		"-metadata", "comment=Year: 0\nOriginal Video: ", "-metadata", "lyrics=", "song.mp4"
 	}, "WithBackgroundVideo");
 
-	CheckEq(FfmpegCommandBuilder::ProjectSaveWithBackgroundVideo(commandData, "song.croon"), {
+	CheckEq(FfmpegProjectCommandBuilder::SaveWithBackgroundVideo(commandData, "song.croon"), {
 		"-i", "video.mp4", "-i", "audio.ogg", "-map", "0:v:0", "-map", "1:a:0",
 		"-map_metadata:s", "-1", "-attach", "croon.json",
 		"-metadata:s:2", "filename=croon.info", "-metadata:s:2", "mimetype=application/json",
 		"-c", "copy", "-metadata", "APPLICATION=Croon v2.5", "-f", "matroska", "song.croon"
-	}, "ProjectSaveWithBackgroundVideo");
+	}, "SaveWithBackgroundVideo");
 
-	CheckEq(FfmpegCommandBuilder::ProjectSaveWithVisualization(commandData, "song.croon"), {
+	CheckEq(FfmpegProjectCommandBuilder::SaveWithVisualization(commandData, "song.croon"), {
 		"-i", "audio.ogg", "-map_metadata:s", "-1", "-attach", "croon.json",
 		"-metadata:s:1", "filename=croon.info", "-metadata:s:1", "mimetype=application/json",
 		"-c", "copy", "-metadata", "APPLICATION=Croon v2.5", "-f", "matroska", "song.croon"
-	}, "ProjectSaveWithVisualization");
+	}, "SaveWithVisualization");
 
 	Check(TimeFormatter::CountInDuration(120) == 0.5, "TimeFormatter rounds beat duration");
 	Check(TimeFormatter::Clock(65.9) == "00:01:05", "TimeFormatter truncates clock seconds");

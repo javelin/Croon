@@ -22,7 +22,7 @@ using namespace Upp;
 #include "AppIdentity.h"
 #include "KarData.h"
 #include "Visualization.h"
-#include "FfmpegCommandBuilder.h"
+#include "FfmpegProjectCommandBuilder.h"
 #include "LyricsTransformer.h"
 #include "MediaProcessRunner.h"
 #include "RecentProjectService.h"
@@ -92,8 +92,8 @@ void SaveProjectDlg::StartSave() {
     SaveFile(data->infoFilePath, data->ToJSONStr());
     
     auto res = process.Start(ffmpeg, data->videoFilePath.StartsWith("@@") ?
-                            FfmpegCommandBuilder::ProjectSaveWithVisualization(*data, tempFilename) :
-                            FfmpegCommandBuilder::ProjectSaveWithBackgroundVideo(*data, tempFilename));
+                            FfmpegProjectCommandBuilder::SaveWithVisualization(*data, tempFilename) :
+                            FfmpegProjectCommandBuilder::SaveWithBackgroundVideo(*data, tempFilename));
     if (!res) {
         Exclamation("Unable to save project!");
         Break(IDOK);

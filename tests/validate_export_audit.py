@@ -15,14 +15,19 @@ def main() -> None:
     root = Path(sys.argv[1])
     ffmpeg_h = (root / "FfmpegCommandBuilder.h").read_text()
     ffmpeg_export_h = (root / "FfmpegExportCommandBuilder.h").read_text()
+    ffmpeg_project_h = (root / "FfmpegProjectCommandBuilder.h").read_text()
     for needle in [
         "ExportWithBackgroundVideo",
         "ExportWithVisualization",
-        "AppIdentity::ProjectAttachmentMetadata()",
-        "AppIdentity::ProductName()",
     ]:
         if needle not in ffmpeg_h:
             fail(f"FfmpegCommandBuilder.h missing {needle}")
+    for needle in [
+        "AppIdentity::ProjectAttachmentMetadata()",
+        "AppIdentity::ProductName()",
+    ]:
+        if needle not in ffmpeg_project_h:
+            fail(f"FfmpegProjectCommandBuilder.h missing {needle}")
     for needle in [
         "WithBackgroundVideo",
         "WithVisualization",
