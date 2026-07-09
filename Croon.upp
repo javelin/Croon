@@ -43,6 +43,7 @@ file
 	FfmpegExportCommandBuilder.h,
 	FfmpegProgressParser.cpp,
 	FfmpegProgressParser.h,
+	FfmpegProjectCommandBuilder.h,
 	FfmpegThumbnailCommandBuilder.h,
 	GatherDlg.cpp,
 	GatherDlg.h,

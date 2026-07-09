@@ -31,6 +31,7 @@ def main() -> None:
         "FfmpegExportCommandBuilder.h",
         "FfmpegProgressParser.cpp",
         "FfmpegProgressParser.h",
+        "FfmpegProjectCommandBuilder.h",
         "FfmpegThumbnailCommandBuilder.h",
         "GenreCatalog.cpp",
         "GenreCatalog.h",
@@ -82,6 +83,7 @@ def main() -> None:
         "FfmpegExportCommandBuilder.h" not in upp or
         "FfmpegProgressParser.cpp" not in upp or
         "FfmpegProgressParser.h" not in upp or
+        "FfmpegProjectCommandBuilder.h" not in upp or
         "FfmpegThumbnailCommandBuilder.h" not in upp or
         "GenreCatalog.cpp" not in upp or
         "GenreCatalog.h" not in upp or
