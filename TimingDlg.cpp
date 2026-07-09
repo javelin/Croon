@@ -26,9 +26,6 @@ using namespace Upp;
 #define LAYOUTFILE <Croon/CroonTimingDlg.lay>
 #include <CtrlCore/lay.h>
 
-#include "AudioPlayerBase.h"
-#include "AudioPlayer.h"
-#include "SDLMixerAudioPlayer.h"
 #include "AppAudioPlayer.h"
 #include "TimingDlg.h"
 

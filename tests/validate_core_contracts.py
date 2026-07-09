@@ -124,10 +124,12 @@ def main() -> None:
     require(config_service_cpp, "SerializeGlobalConfigs", "ConfigService persistence contract")
     require(config_service_cpp, "std::max(MinFontSize, std::min(MaxFontSize", "ConfigService font-size clamp")
 
-    audio_player_h = (root / "AudioPlayer.h").read_text()
-    require(audio_player_h, "bool Reopen() override { return player.Reopen(); }", "AudioPlayer reopen delegation")
     app_audio_player_h = (root / "AppAudioPlayer.h").read_text()
-    require(app_audio_player_h, "typedef AudioPlayer<SDLMixerAudioPlayer> AppAudioPlayer;", "AppAudioPlayer SDL_mixer boundary")
+    require(app_audio_player_h, "struct AppAudioPlayer", "AppAudioPlayer explicit boundary declaration")
+    require(app_audio_player_h, '#include "SDLMixerAudioPlayer.h"', "AppAudioPlayer SDL_mixer dependency")
+    require(app_audio_player_h, "SDLMixerAudioPlayer::InitPlayer()", "AppAudioPlayer init delegation")
+    require(app_audio_player_h, "SDLMixerAudioPlayer::DeInitPlayer()", "AppAudioPlayer shutdown delegation")
+    require(app_audio_player_h, "static SDLMixerAudioPlayer& GetPlayer()", "AppAudioPlayer player access contract")
     audio_player_base_h = (root / "AudioPlayerBase.h").read_text()
     reject(audio_player_base_h, "AudioPlayerEvent", "AudioPlayerBase dead event wrapper")
     reject(audio_player_base_h, "APE_Type_", "AudioPlayerBase dead event type")
@@ -139,12 +141,12 @@ def main() -> None:
     reject(sdl_mixer_audio_player_h, "GetPosition", "SDLMixerAudioPlayer dead position declaration")
     reject(sdl_mixer_audio_player_cpp, "initialized", "SDLMixerAudioPlayer dead initialized storage")
     reject(sdl_mixer_audio_player_cpp, '#include "Croon.h"', "SDLMixerAudioPlayer app shell dependency")
+    require(sdl_mixer_audio_player_h, '#include "AudioPlayerBase.h"', "SDLMixerAudioPlayer direct base dependency")
     for needle in [
         "#include <Core/Core.h>",
         "#include <atomic>",
         "#include <SDL2/SDL.h>",
         "#include <SDL2/SDL_mixer.h>",
-        '#include "AudioPlayerBase.h"',
         '#include "SDLMixerAudioPlayer.h"',
     ]:
         require(sdl_mixer_audio_player_cpp, needle, "SDLMixerAudioPlayer direct dependency")
@@ -163,9 +165,12 @@ def main() -> None:
         fail("obsolete Croon.h umbrella header still exists")
     if (root / "MusicPlayer.h").exists():
         fail("obsolete MusicPlayer compatibility facade still exists")
+    if (root / "AudioPlayer.h").exists():
+        fail("obsolete generic AudioPlayer wrapper still exists")
     croon_upp = (root / "Croon.upp").read_text()
     reject(croon_upp, "Croon.h", "Croon.upp obsolete umbrella header")
     reject(croon_upp, "MusicPlayer.h", "Croon.upp obsolete music player facade")
+    reject(croon_upp, "\tAudioPlayer.h,", "Croon.upp obsolete generic audio wrapper")
     for path in sorted(root.glob("*")):
         if path.suffix not in {".cpp", ".h"}:
             continue
@@ -215,9 +220,6 @@ def main() -> None:
         '#include "TimingLine.h"',
         '#include "TimingCtrl.h"',
         "#define LAYOUTFILE <Croon/CroonTimingDlg.lay>",
-        '#include "AudioPlayerBase.h"',
-        '#include "AudioPlayer.h"',
-        '#include "SDLMixerAudioPlayer.h"',
         '#include "AppAudioPlayer.h"',
         '#include "TimingDlg.h"',
         '#include "GatherDlg.h"',
