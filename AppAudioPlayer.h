@@ -6,9 +6,12 @@
 #ifndef _Croon_AppAudioPlayer_h_
 #define _Croon_AppAudioPlayer_h_
 
-#include "AudioPlayer.h"
 #include "SDLMixerAudioPlayer.h"
 
-typedef AudioPlayer<SDLMixerAudioPlayer> AppAudioPlayer;
+struct AppAudioPlayer {
+    static void InitPlayer() { SDLMixerAudioPlayer::InitPlayer(); }
+    static void DeInitPlayer() { SDLMixerAudioPlayer::DeInitPlayer(); }
+    static SDLMixerAudioPlayer& GetPlayer() { return SDLMixerAudioPlayer::GetPlayer(); }
+};
 
 #endif

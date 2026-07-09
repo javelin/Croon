@@ -128,6 +128,8 @@ def main() -> None:
         fail("Croon.upp should not list obsolete FfmpegCommandBuilder facade")
     if "\tMusicPlayer.h," in upp:
         fail("Croon.upp should not list obsolete MusicPlayer facade")
+    if "\tAudioPlayer.h," in upp:
+        fail("Croon.upp should not list obsolete generic AudioPlayer wrapper")
 
     if (root / "Croon.h").exists():
         fail("obsolete Croon.h umbrella header still exists")
@@ -135,6 +137,8 @@ def main() -> None:
         fail("obsolete FfmpegCommandBuilder compatibility facade still exists")
     if (root / "MusicPlayer.h").exists():
         fail("obsolete MusicPlayer compatibility facade still exists")
+    if (root / "AudioPlayer.h").exists():
+        fail("obsolete generic AudioPlayer wrapper still exists")
 
     croon_cpp = (root / "Croon.cpp").read_text()
     if "CroonImg" not in croon_cpp:

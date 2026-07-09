@@ -6,6 +6,8 @@
 #ifndef _Croon_SDLMixerAudioPlayer_h_
 #define _Croon_SDLMixerAudioPlayer_h_
 
+#include "AudioPlayerBase.h"
+
 class SDLMixerAudioPlayer : public AudioPlayerBase {
 public:
     static void InitPlayer() {}

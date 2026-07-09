@@ -23,7 +23,6 @@ file
 	AppPaths.cpp,
 	AppPaths.h,
 	AppAudioPlayer.h,
-	AudioPlayer.h,
 	AudioPlayerBase.h,
 	AzLyricsProvider.cpp,
 	AzLyricsProvider.h,
