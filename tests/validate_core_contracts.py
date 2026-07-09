@@ -716,7 +716,6 @@ def main() -> None:
 
     direct_lyrics_dependencies = {
         "ExportDlg.cpp": ["SubtitleGenerator::ToAss"],
-        "GatherDlg.cpp": ["TextTools::ShortenMiddle"],
         "OpenProjectDlg.cpp": ["LyricsTransformer::TimedToRaw"],
         "Page2.cpp": ["LyricsDownloadService::Download", "TextTools::CleanSpacing"],
         "Page3.cpp": ["LyricsTransformer::RawToUntimed"],
@@ -764,11 +763,11 @@ def main() -> None:
 
     direct_path_catalog_dependencies = {
         "ConfigService.cpp": ["AppPaths::DataDirectory"],
-        "GatherDlg.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath", "VideoCatalog::HasThumbnail", "VideoCatalog::LoadThumbnail", "VideoCatalog::DeleteThumbnail", "VideoCatalog::BuildThumbnailCommand"],
+        "GatherDlg.cpp": ["VideoCatalog::FindVideoFiles", "VideoCatalog::ThumbnailPath", "VideoCatalog::HasThumbnail", "VideoCatalog::LoadThumbnail", "VideoCatalog::DeleteThumbnail", "VideoCatalog::BuildThumbnailCommand", "VideoCatalog::DisplayName"],
         "Page1.cpp": ["GenreCatalog::List"],
         "Page3.cpp": ["VideoCatalog::FindCachedThumbnails"],
         "Project.cpp": ["GenreCatalog::List"],
-        "VideoCatalog.cpp": ["AppPaths::DataDirectory", "AppPaths::FindFiles"],
+        "VideoCatalog.cpp": ["AppPaths::DataDirectory", "AppPaths::FindFiles", "TextTools::ShortenMiddle"],
     }
     for rel, expected_calls in direct_path_catalog_dependencies.items():
         text = (root / rel).read_text()
@@ -929,10 +928,11 @@ def main() -> None:
     require(video_catalog_h, "LoadThumbnail(String videoPath)", "VideoCatalog thumbnail loading declaration")
     require(video_catalog_h, "DeleteThumbnail(String videoPath)", "VideoCatalog thumbnail deletion declaration")
     require(video_catalog_h, "BuildThumbnailCommand(String videoPath)", "VideoCatalog thumbnail command declaration")
+    require(video_catalog_h, "DisplayName(String videoPath, int maxLength)", "VideoCatalog display name declaration")
     video_catalog_cpp = (root / "VideoCatalog.cpp").read_text()
     reject(video_catalog_cpp, '#include "Croon.h"', "VideoCatalog app shell dependency")
     require(video_catalog_cpp, "#include <Draw/Draw.h>", "VideoCatalog image loading dependency")
-    require(video_catalog_cpp, '#include "Constants.h"\n#include "AppPaths.h"\n#include "FfmpegThumbnailCommandBuilder.h"\n#include "VideoCatalog.h"', "VideoCatalog direct dependencies")
+    require(video_catalog_cpp, '#include "Constants.h"\n#include "AppPaths.h"\n#include "FfmpegThumbnailCommandBuilder.h"\n#include "TextTools.h"\n#include "VideoCatalog.h"', "VideoCatalog direct dependencies")
     require(video_catalog_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "VideoCatalog mp4 discovery contract")
     require(video_catalog_cpp, "Vector<VideoCatalogItem> VideoCatalog::FindCachedThumbnails(String videoDir)", "VideoCatalog cached thumbnail implementation")
     require(video_catalog_cpp, "Vector<String> paths = FindVideoFiles(videoDir)", "VideoCatalog cached listing discovery")
@@ -948,6 +948,8 @@ def main() -> None:
     require(video_catalog_cpp, "FileDelete(ThumbnailPath(videoPath))", "VideoCatalog thumbnail deletion contract")
     require(video_catalog_cpp, "Vector<String> VideoCatalog::BuildThumbnailCommand(String videoPath)", "VideoCatalog thumbnail command implementation")
     require(video_catalog_cpp, "FfmpegThumbnailCommandBuilder::Generate(videoPath, ThumbnailPath(videoPath), ThumbnailDim, ThumbnailDim)", "VideoCatalog thumbnail command delegation")
+    require(video_catalog_cpp, "String VideoCatalog::DisplayName(String videoPath, int maxLength)", "VideoCatalog display name implementation")
+    require(video_catalog_cpp, "TextTools::ShortenMiddle(videoPath, maxLength)", "VideoCatalog display name formatting")
 
     gather_dlg_cpp = (root / "GatherDlg.cpp").read_text()
     require(gather_dlg_cpp, '#include "VideoCatalog.h"', "GatherDlg direct VideoCatalog dependency")
@@ -957,6 +959,7 @@ def main() -> None:
     require(gather_dlg_cpp, "VideoCatalog::LoadThumbnail(paths[curPath])", "GatherDlg thumbnail loading service")
     require(gather_dlg_cpp, "VideoCatalog::DeleteThumbnail(paths[curPath])", "GatherDlg thumbnail deletion service")
     require(gather_dlg_cpp, "VideoCatalog::BuildThumbnailCommand(paths[curPath])", "GatherDlg thumbnail command service")
+    require(gather_dlg_cpp, "VideoCatalog::DisplayName(paths[curPath], 60)", "GatherDlg video display name service")
     reject(gather_dlg_cpp, "AppPaths::DataDirectory()", "GatherDlg raw thumbnail directory dependency")
     reject(gather_dlg_cpp, 'AppPaths::FindFiles(videoDir, "*.mp4")', "GatherDlg raw mp4 discovery dependency")
     reject(gather_dlg_cpp, "FfmpegCommandBuilder::GenerateThumbnail", "GatherDlg raw thumbnail command dependency")
@@ -964,6 +967,7 @@ def main() -> None:
     reject(gather_dlg_cpp, "FileExists(tnPath)", "GatherDlg raw thumbnail existence dependency")
     reject(gather_dlg_cpp, "FileDelete(tnPath)", "GatherDlg raw thumbnail deletion dependency")
     reject(gather_dlg_cpp, "StreamRaster::LoadFileAny(tnPath)", "GatherDlg raw thumbnail loading dependency")
+    reject(gather_dlg_cpp, "TextTools::ShortenMiddle(paths[curPath], 60)", "GatherDlg raw display formatting dependency")
 
     wizard_cpp = (root / "WizardDlg.cpp").read_text()
     reject(wizard_cpp, "WizardDlg::WizardDlg() : WizardDlg(KarData::GetGlobal())", "WizardDlg default global data wiring")

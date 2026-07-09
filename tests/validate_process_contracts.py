@@ -218,7 +218,6 @@ def main() -> None:
         "#include <CtrlCore/lay.h>",
         '#include "ProgressDlg.h"',
         '#include "VideoCatalog.h"',
-        '#include "TextTools.h"',
         '#include "GatherDlg.h"',
     ]:
         if needle not in gather_impl:
@@ -231,7 +230,7 @@ def main() -> None:
         "VideoCatalog::LoadThumbnail(paths[curPath])",
         "VideoCatalog::DeleteThumbnail(paths[curPath])",
         "VideoCatalog::BuildThumbnailCommand(paths[curPath])",
-        "TextTools::ShortenMiddle(paths[curPath], 60)",
+        "VideoCatalog::DisplayName(paths[curPath], 60)",
         "process.Start(ffmpeg",
     ]:
         if needle not in gather_impl:
