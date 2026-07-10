@@ -22,6 +22,7 @@ file
 	AppIdentity.h,
 	AppPaths.cpp,
 	AppPaths.h,
+	AppAudioPlayer.cpp,
 	AppAudioPlayer.h,
 	AzLyricsProvider.cpp,
 	AzLyricsProvider.h,
