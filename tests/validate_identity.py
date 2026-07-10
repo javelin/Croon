@@ -20,6 +20,7 @@ def main() -> None:
         "AppIdentity.h",
         "AppPaths.cpp",
         "AppPaths.h",
+        "AppAudioPlayer.cpp",
         "AppAudioPlayer.h",
         "AzLyricsProvider.cpp",
         "AzLyricsProvider.h",
@@ -73,6 +74,7 @@ def main() -> None:
         "AppIdentity.h" not in upp or
         "AppPaths.cpp" not in upp or
         "AppPaths.h" not in upp or
+        "AppAudioPlayer.cpp" not in upp or
         "AppAudioPlayer.h" not in upp or
         "AzLyricsProvider.cpp" not in upp or
         "AzLyricsProvider.h" not in upp or

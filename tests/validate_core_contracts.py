@@ -125,17 +125,35 @@ def main() -> None:
     require(config_service_cpp, "std::max(MinFontSize, std::min(MaxFontSize", "ConfigService font-size clamp")
 
     app_audio_player_h = (root / "AppAudioPlayer.h").read_text()
+    app_audio_player_cpp = (root / "AppAudioPlayer.cpp").read_text()
     require(app_audio_player_h, "struct AppAudioPlayer", "AppAudioPlayer explicit boundary declaration")
-    require(app_audio_player_h, '#include "SDLMixerAudioPlayer.h"', "AppAudioPlayer SDL_mixer dependency")
-    require(app_audio_player_h, "SDLMixerAudioPlayer::InitPlayer()", "AppAudioPlayer init delegation")
-    require(app_audio_player_h, "SDLMixerAudioPlayer::DeInitPlayer()", "AppAudioPlayer shutdown delegation")
-    require(app_audio_player_h, "static bool Open(const String& filename)", "AppAudioPlayer open contract")
+    reject(app_audio_player_h, '#include "SDLMixerAudioPlayer.h"', "AppAudioPlayer backend header dependency")
+    reject(app_audio_player_h, "SDLMixerAudioPlayer::", "AppAudioPlayer inline backend delegation")
+    reject(app_audio_player_h, "static SDLMixerAudioPlayer& Player()", "AppAudioPlayer private backend accessor")
+    require(app_audio_player_h, "#include <Core/Core.h>", "AppAudioPlayer String dependency")
+    require(app_audio_player_h, "static bool Open(const Upp::String& filename)", "AppAudioPlayer open contract")
     require(app_audio_player_h, "static bool Close()", "AppAudioPlayer close contract")
     require(app_audio_player_h, "static bool Reopen()", "AppAudioPlayer reopen contract")
     require(app_audio_player_h, "static bool Seek(double seconds)", "AppAudioPlayer seek contract")
     require(app_audio_player_h, "static bool IsPlaying()", "AppAudioPlayer playing-state contract")
     require(app_audio_player_h, "static double Duration()", "AppAudioPlayer duration contract")
-    require(app_audio_player_h, "static SDLMixerAudioPlayer& Player()", "AppAudioPlayer private backend accessor")
+    require(app_audio_player_cpp, '#include "AppAudioPlayer.h"', "AppAudioPlayer implementation facade dependency")
+    require(app_audio_player_cpp, '#include "SDLMixerAudioPlayer.h"', "AppAudioPlayer implementation backend dependency")
+    for needle in [
+        "SDLMixerAudioPlayer::InitPlayer()",
+        "SDLMixerAudioPlayer::DeInitPlayer()",
+        "SDLMixerAudioPlayer::GetPlayer().Open(filename)",
+        "SDLMixerAudioPlayer::GetPlayer().Close()",
+        "SDLMixerAudioPlayer::GetPlayer().Reopen()",
+        "SDLMixerAudioPlayer::GetPlayer().Pause()",
+        "SDLMixerAudioPlayer::GetPlayer().Play()",
+        "SDLMixerAudioPlayer::GetPlayer().Seek(seconds)",
+        "SDLMixerAudioPlayer::GetPlayer().IsPlaying()",
+        "SDLMixerAudioPlayer::GetPlayer().IsOpen()",
+        "SDLMixerAudioPlayer::GetPlayer().Duration()",
+        "SDLMixerAudioPlayer::GetPlayer().Position()",
+    ]:
+        require(app_audio_player_cpp, needle, "AppAudioPlayer implementation backend delegation")
     if (root / "AudioPlayerBase.h").exists():
         fail("obsolete AudioPlayerBase wrapper still exists")
     sdl_mixer_audio_player_h = (root / "SDLMixerAudioPlayer.h").read_text()
@@ -190,6 +208,7 @@ def main() -> None:
     reject(croon_upp, "MusicPlayer.h", "Croon.upp obsolete music player facade")
     reject(croon_upp, "\tAudioPlayer.h,", "Croon.upp obsolete generic audio wrapper")
     reject(croon_upp, "\tAudioPlayerBase.h,", "Croon.upp obsolete audio base wrapper")
+    require(croon_upp, "AppAudioPlayer.cpp", "Croon.upp app audio facade implementation")
     for path in sorted(root.glob("*")):
         if path.suffix not in {".cpp", ".h"}:
             continue
