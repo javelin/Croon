@@ -12,6 +12,7 @@ struct AppAudioPlayer {
     static void InitPlayer() { SDLMixerAudioPlayer::InitPlayer(); }
     static void DeInitPlayer() { SDLMixerAudioPlayer::DeInitPlayer(); }
     static bool Open(const String& filename) { return Player().Open(filename); }
+    static bool Close() { return Player().Close(); }
     static bool Reopen() { return Player().Reopen(); }
     static bool Pause() { return Player().Pause(); }
     static bool Play() { return Player().Play(); }

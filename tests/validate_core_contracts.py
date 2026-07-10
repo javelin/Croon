@@ -130,6 +130,7 @@ def main() -> None:
     require(app_audio_player_h, "SDLMixerAudioPlayer::InitPlayer()", "AppAudioPlayer init delegation")
     require(app_audio_player_h, "SDLMixerAudioPlayer::DeInitPlayer()", "AppAudioPlayer shutdown delegation")
     require(app_audio_player_h, "static bool Open(const String& filename)", "AppAudioPlayer open contract")
+    require(app_audio_player_h, "static bool Close()", "AppAudioPlayer close contract")
     require(app_audio_player_h, "static bool Reopen()", "AppAudioPlayer reopen contract")
     require(app_audio_player_h, "static bool Seek(double seconds)", "AppAudioPlayer seek contract")
     require(app_audio_player_h, "static bool IsPlaying()", "AppAudioPlayer playing-state contract")
