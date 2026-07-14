@@ -391,6 +391,8 @@ CONSOLE_APP_MAIN
 	Check(ass.Find(",V1,,0,0,0,,{\\an2\\move(") >= 0, "SubtitleGenerator positions highlighted lines with motion");
 	Check(ass.Find("Sing along") >= 0, "SubtitleGenerator preserves highlighted lyric text");
 	Check(ass.Find("\\move(") >= 0, "SubtitleGenerator emits scrolling ASS movement tags");
+	Check(ass.Find("\\move(960,860,960,716,0,450)") >= 0,
+		"SubtitleGenerator reserves a blank row between highlighted and grayed slots");
 	String richAss = SubtitleGenerator::ToRichAss(exportData, 4);
 	Check(richAss.Find("@4") >= 0, "SubtitleGenerator emits rich ASS formatting");
 	Check(richAss.Find("Script Info") >= 0, "SubtitleGenerator emits rich ASS script info");

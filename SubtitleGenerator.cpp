@@ -38,8 +38,10 @@ constexpr int SubtitleBottomMargin = 120;
 constexpr int SubtitleScrollDurationMs = 450;
 
 int SubtitleSlotY(const KarData& data, int resY, int slot) {
-    int normalStep = data.fontSize;
-    int smallStep = max(1, (int)(data.fontSize * 0.7));
+    int normalLineHeight = max(1, data.fontSize);
+    int smallLineHeight = max(1, (int)(data.fontSize * 0.7));
+    int normalStep = normalLineHeight * 2;
+    int smallStep = smallLineHeight * 2;
     int bottom = resY - SubtitleBottomMargin;
 
     switch (slot) {
