@@ -309,8 +309,7 @@ void TimingCtrl::SetParts(const Vector<Tuple<int, bool, bool, bool>>& parts) {
     vocalParts.SetCount(lines.GetCount(), VP_NONE);
     for (const auto& part : parts) {
         if (part.a > 0 && part.a < vocalParts.GetCount()) {
-            VocalPart resolved = VocalPartStyle::FromParts(part.b, part.c);
-            vocalParts[part.a] = part.d && VocalPartStyle::IsAssigned(resolved) ? resolved:VP_NONE;
+            vocalParts[part.a] = VocalPartStyle::FromParts(part.b, part.c);
         }
     }
     ApplyPartsToLines();

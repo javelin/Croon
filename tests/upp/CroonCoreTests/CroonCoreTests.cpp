@@ -321,6 +321,8 @@ CONSOLE_APP_MAIN
 	Check(SubtitleLineProcessor::ResolveVocalPart(1, vocalParts) == VP_V1, "SubtitleLineProcessor maps V1-only part");
 	Check(SubtitleLineProcessor::ResolveVocalPart(2, vocalParts) == VP_V2, "SubtitleLineProcessor maps V2-only part");
 	Check(SubtitleLineProcessor::ResolveVocalPart(3, vocalParts) == VP_B, "SubtitleLineProcessor maps dual-voice part");
+	Check(VocalPartStyle::FromParts(true, false) == VP_V1, "VocalPartStyle maps lyrics dialog V1 assignments without part3");
+	Check(VocalPartStyle::FromParts(false, true) == VP_V2, "VocalPartStyle maps lyrics dialog V2 assignments without part3");
 	Check(VocalPartStyle::Next(VP_NONE) == VP_V1, "VocalPartStyle cycles unassigned to V1");
 	Check(VocalPartStyle::Next(VP_B) == VP_NONE, "VocalPartStyle cycles both singers to unassigned");
 	Check(VocalPartStyle::ToParts(4, VP_B) == MakeTuple(4, true, true, true), "VocalPartStyle preserves tuple storage contract");
