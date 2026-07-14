@@ -351,6 +351,11 @@ def main() -> None:
             fail(f"OpenProjectDlg.cpp missing project-open workflow {needle}")
 
     save_impl = (root / "SaveProjectDlg.cpp").read_text()
+    save_header = (root / "SaveProjectDlg.h").read_text()
+    if "return Run(data.projectPath, data)" in save_header:
+        fail("SaveProjectDlg.h still owns inline Run(KarData&) forwarding")
+    if "void Close() override {}" in save_header:
+        fail("SaveProjectDlg.h still owns inline Close override")
     if '#include "Croon.h"' in save_impl:
         fail("SaveProjectDlg.cpp still depends on Croon.h")
     for needle in [
@@ -379,6 +384,9 @@ def main() -> None:
             fail(f"SaveProjectDlg.cpp missing direct dependency {needle}")
     for needle in [
         "Config::Get(FFMPEG_LOCATION)",
+        "int SaveProjectDlg::Run(KarData& karData)",
+        "return Run(karData.projectPath, karData)",
+        "void SaveProjectDlg::Close()",
         "std::filesystem::copy",
         "AppIdentity::ProjectTempFileName()",
         "SaveFile(data->infoFilePath, data->ToJSONStr())",
