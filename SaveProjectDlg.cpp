@@ -87,6 +87,13 @@ int SaveProjectDlg::Run(String savePath, KarData& karData) {
     return RunDlg("Create Project");
 }
 
+int SaveProjectDlg::Run(KarData& karData) {
+    return Run(karData.projectPath, karData);
+}
+
+void SaveProjectDlg::Close() {
+}
+
 void SaveProjectDlg::StartSave() {
     tempFilename = AppIdentity::ProjectTempFileName();
     SaveFile(data->infoFilePath, data->ToJSONStr());

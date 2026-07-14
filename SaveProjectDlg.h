@@ -10,8 +10,8 @@ class SaveProjectDlg : public ProgressDlg {
 public:
     SaveProjectDlg();
     int Run(String savePath, KarData& data);
-    int Run(KarData& data) { return Run(data.projectPath, data); }
-    void Close() override {}
+    int Run(KarData& data);
+    void Close() override;
     
 private:
     void StartSave();
