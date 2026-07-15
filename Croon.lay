@@ -73,6 +73,8 @@ LAYOUT(CroonProjectLayout, 900, 640)
 	ITEM(Label, genreLbl, SetLabel(t_("Genre")).LeftPosZ(120, 34).TopPosZ(56, 20))
 	ITEM(WithDropChoice<EditString>, genreEd, HSizePos(Zx(153), Zx(220) + 250).TopPosZ(56, 20))
 	ITEM(Option, dehissOpt, SetLabel(t_("De-hiss")).RightPos(Zx(20) + 250, Zx(50)).TopPosZ(56, 20))
+	ITEM(Label, subtitleLinesLbl, SetLabel(t_("Lines")).LeftPosZ(390, 34).TopPosZ(56, 20))
+	ITEM(DropList, subtitleLinesDrop, LeftPosZ(426, 32).TopPosZ(56, 20))
 	ITEM(Label, fontSizeLbl, SetLabel(t_("Font Size")).RightPos(Zx(138) + 250, Zx(50)).TopPosZ(56, 20))
 	ITEM(EditIntSpin, fontSizeEd, SetInc(2).MinMax(Config::MinFontSize, Config::MaxFontSize).AlignRight().RightPos(Zx(88) + 250, Zx(50)).TopPosZ(56, 20))
 	ITEM(Label, writerLbl, SetLabel(t_("Writer")).LeftPosZ(10, 34).TopPosZ(79, 20))
@@ -89,4 +91,3 @@ LAYOUT(CroonProjectLayout, 900, 640)
 	ITEM(DropList, exportOpts, RightPos(Zx(11), 250 - Zx(2)).BottomPosZ(47, 20))
 	ITEM(Button, saveBtn, SetLabel(t_("Save")).RightPos(Zx(10), 250).BottomPosZ(10, 28))
 END_LAYOUT
-

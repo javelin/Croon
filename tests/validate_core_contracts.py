@@ -87,7 +87,7 @@ def main() -> None:
         require(identity_h, needle, "AppIdentity contract")
     for needle in [
         'return "Croon"',
-        'return "1.0"',
+        'return "1.1"',
         'return ".croon"',
         'return "*.croon"',
         'return "croon.info"',
@@ -349,7 +349,7 @@ def main() -> None:
     require(decisions_md, "### Croon Metadata Compatibility", "Croon metadata compatibility decision")
     require(decisions_md, "Croon must keep `.croon`", "Croon project artifact compatibility decision")
     require(decisions_md, "ProjectSerializer", "Croon metadata serializer decision")
-    require(decisions_md, "legacy unversioned `.croon` metadata is treated as the current readable format", "legacy .croon metadata compatibility decision")
+    require(decisions_md, "legacy `1.0` and unversioned `.croon` metadata are treated as the current readable format", "legacy .croon metadata compatibility decision")
     require(decisions_md, "unsupported explicit metadata versions are rejected by load gates", "unsupported .croon metadata compatibility decision")
     require(decisions_md, "### Explicit Runtime Project State", "explicit runtime project state decision")
     require(decisions_md, "legacy global `KarData` accessor has been removed", "removed global data decision")
@@ -758,12 +758,15 @@ def main() -> None:
         '"title"',
         '"artist"',
         '"origVideoFile"',
+        '"subtitleLines"',
         '"timedLyrics"',
         '"parts"',
     ]:
         require(project_serializer_cpp, key, "ProjectSerializer JSON contract")
     require(project_serializer_cpp, 'js("version", FormatVersion())', "ProjectSerializer save format-version stamping")
+    require(project_serializer_cpp, 'version == "1.0"', "ProjectSerializer legacy 1.0 version normalization")
     require(project_serializer_cpp, 'data.version = NormalizeReadVersion(js.GetAdd("version"))', "ProjectSerializer read-version normalization")
+    require(project_serializer_cpp, 'data.SetSubtitleLines(js.GetAdd("subtitleLines"))', "ProjectSerializer subtitle line-count hydration")
     require(project_serializer_cpp, "if (!ParseMetadataObject(json, js))", "ProjectSerializer invalid metadata hydration guard")
     require(project_serializer_cpp, "data.version = String::GetVoid()", "ProjectSerializer invalid metadata version marker")
     require(project_serializer_cpp, "if (data.year < 0) data.year = 0", "ProjectSerializer year normalization")
