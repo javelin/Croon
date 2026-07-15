@@ -58,6 +58,18 @@ String LoadFixture(const char *name) {
 	return content;
 }
 
+int CountOccurrences(const String& text, const String& needle) {
+	int count = 0;
+	int pos = 0;
+	for(;;) {
+		pos = text.Find(needle, pos);
+		if(pos < 0)
+			return count;
+		++count;
+		pos += needle.GetCount();
+	}
+}
+
 }
 
 CONSOLE_APP_MAIN
@@ -392,6 +404,8 @@ CONSOLE_APP_MAIN
 	exportData.timedLyrics.Add({1.0, "Sing along"});
 	exportData.timedLyrics.Add({3.0, "Next line"});
 	exportData.timedLyrics.Add({5.0, "Second next"});
+	exportData.timedLyrics.Add({7.0, "Third next"});
+	exportData.timedLyrics.Add({9.0, "Fourth next"});
 	exportData.parts.Add(MakeTuple(1, true, false, true));
 	String ass = SubtitleGenerator::ToAss(exportData, 4);
 	Check(ass.Find("[Script Info]") >= 0, "SubtitleGenerator emits script info section");
@@ -403,6 +417,12 @@ CONSOLE_APP_MAIN
 	Check(ass.Find("\\move(") >= 0, "SubtitleGenerator emits scrolling ASS movement tags");
 	Check(ass.Find("\\move(960,860,960,716,0,450)") >= 0,
 		"SubtitleGenerator reserves a blank row between highlighted and grayed slots");
+	Check(ass.Find("\\move(960,572,960,428") < 0,
+		"SubtitleGenerator does not emit an extra outgoing grayed row");
+	Check(CountOccurrences(ass, "Dialogue: 0,0:00:05.00") == 4,
+		"SubtitleGenerator limits 4-line pages to four active dialogue rows");
+	Check(CountOccurrences(SubtitleGenerator::ToAss(exportData, 3), "Dialogue: 0,0:00:05.00") == 3,
+		"SubtitleGenerator limits 3-line pages to three active dialogue rows");
 	String richAss = SubtitleGenerator::ToRichAss(exportData, 4);
 	Check(richAss.Find("@4") >= 0, "SubtitleGenerator emits rich ASS formatting");
 	Check(richAss.Find("Script Info") >= 0, "SubtitleGenerator emits rich ASS script info");

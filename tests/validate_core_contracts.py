@@ -603,7 +603,8 @@ def main() -> None:
     require(subtitle_generator_cpp, "TimeFormatter::Ass", "SubtitleGenerator direct ASS time formatting")
     require(subtitle_generator_cpp, "SubtitleMoveTag", "SubtitleGenerator scrolling movement helper")
     require(subtitle_generator_cpp, "\\move(", "SubtitleGenerator ASS movement tag")
-    require(subtitle_generator_cpp, "olderLine", "SubtitleGenerator outgoing grayed line tracking")
+    require(subtitle_generator_cpp, "lastLine", "SubtitleGenerator previous grayed line tracking")
+    reject(subtitle_generator_cpp, "olderLine", "SubtitleGenerator no extra outgoing grayed line")
     reject(subtitle_generator_cpp, "    ProcessMetadata(data", "SubtitleGenerator utility metadata wrapper dependency")
     reject(subtitle_generator_cpp, "String hilite = ResolveStyle", "SubtitleGenerator utility style wrapper dependency")
     reject(subtitle_generator_cpp, "FormatTimeASS", "SubtitleGenerator utility time wrapper dependency")
@@ -656,6 +657,10 @@ def main() -> None:
     require(core_tests_cpp, "VocalPartStyle::Next", "core tests direct vocal part helper dependency")
     require(core_tests_cpp, "VocalPartStyle::ToParts", "core tests vocal part tuple contract")
     require(core_tests_cpp, 'richAss.Find("@4")', "core tests rich ASS formatting assertion")
+    require(core_tests_cpp, 'CountOccurrences(ass, "Dialogue: 0,0:00:05.00") == 4',
+            "core tests 4-line subtitle page limit")
+    require(core_tests_cpp, 'CountOccurrences(SubtitleGenerator::ToAss(exportData, 3), "Dialogue: 0,0:00:05.00") == 3',
+            "core tests 3-line subtitle page limit")
     require(core_tests_upp, "LyricsTransformer.cpp", "core tests lyrics transformer implementation")
     require(core_tests_upp, "SubtitleGenerator.cpp", "core tests subtitle generator implementation")
     require(core_tests_upp, "SubtitleLineProcessor.cpp", "core tests subtitle line processor implementation")
