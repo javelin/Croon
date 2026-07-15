@@ -29,6 +29,7 @@ ConfigService::ConfigService(const char* fname) : fname(fname) {
     RegisterGlobalConfig(MUSIC_DIR);
     RegisterGlobalConfig(PROJECT_DIR);
     RegisterGlobalConfig(EXPORT_DIR);
+    RegisterGlobalConfig(LRC_EXPORT_DIR);
     RegisterGlobalConfig(VIDEO_DIR);
     RegisterGlobalConfig(PROJECT_LIST);
     RegisterGlobalConfig(WIN_X);

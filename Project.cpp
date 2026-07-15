@@ -20,6 +20,7 @@ using namespace Upp;
 #include "Config.h"
 #include "KarData.h"
 #include "LyricsTransformer.h"
+#include "LrcGenerator.h"
 #include "SubtitleGenerator.h"
 #include "TimeFormatter.h"
 #include "UiScaler.h"
@@ -351,7 +352,7 @@ void Project::ExportVideo(int length) {
 #endif
     
     FileSel fsel;
-    String saveDir = Config::Get(EXPORT_DIR);
+    String saveDir = Config::Get(LRC_EXPORT_DIR);
     if (saveDir.IsEmpty()) saveDir = Config::Get(PROJECT_DIR);
     fsel <<= saveDir;
     fsel.Set(outputPath);
@@ -366,6 +367,38 @@ void Project::ExportVideo(int length) {
     
     ExportDlg expDlg;
     expDlg.Run(data, outputPath, length);
+}
+
+void Project::ExportLrc() {
+    KillTimeCallback(timerId);
+    UpdateLyricsData();
+
+#ifdef PLATFORM_POSIX
+    std::filesystem::path savePath((const char*)data.projectPath);
+    savePath.replace_extension("lrc");
+    String outputPath = savePath.filename().c_str();
+#else
+    String outputPath = GetFileTitle(data.projectPath) + ".lrc";
+#endif
+
+    FileSel fsel;
+    String saveDir = Config::Get(EXPORT_DIR);
+    if (saveDir.IsEmpty()) saveDir = Config::Get(PROJECT_DIR);
+    fsel <<= saveDir;
+    fsel.Set(outputPath);
+    fsel.ClearTypes();
+    fsel.Type("LRC Lyrics (*.lrc)", "*.lrc");
+
+    if (!fsel.ExecuteSaveAs("Export LRC File")) return;
+    outputPath = ~fsel;
+    if (!HasFileExt(outputPath)) outputPath += ".lrc";
+    else if (ToLower(GetFileExt(outputPath)) != ".lrc") {
+        outputPath = ForceExt(outputPath, ".lrc");
+    }
+    Config::Set(LRC_EXPORT_DIR, GetFileDirectory(outputPath));
+    if (!SaveFile(outputPath, LrcGenerator::ToLrc(data))) {
+        Exclamation("Unable to save LRC file.");
+    }
 }
 
 Event<Bar&> Project::MainMenu() {
@@ -397,6 +430,10 @@ Event<Bar&> Project::MainMenu() {
                 sub.Separator();
                 sub.Add("HD Video...", [=] {
                     ExportVideo();
+                });
+                sub.Separator();
+                sub.Add("LRC File...", [=] {
+                    ExportLrc();
                 });
             });
         });

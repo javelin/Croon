@@ -36,6 +36,7 @@ private:
 #define MUSIC_DIR           "MusicDir"
 #define PROJECT_DIR         "ProjectDir"
 #define EXPORT_DIR          "ExportDir"
+#define LRC_EXPORT_DIR      "LrcExportDir"
 #define VIDEO_DIR           "VideoDir"
 #define PROJECT_LIST        "ProjectList"
 #define WIN_X               "WinX"
