@@ -36,6 +36,8 @@ def main() -> None:
         "FfmpegProgressParser.cpp",
         "FfmpegProgressParser.h",
         "FfmpegProjectCommandBuilder.h",
+        "FfmpegSubtitleProbeCommandBuilder.cpp",
+        "FfmpegSubtitleProbeCommandBuilder.h",
         "FfmpegThumbnailCommandBuilder.h",
         "GenreCatalog.cpp",
         "GenreCatalog.h",
@@ -54,6 +56,8 @@ def main() -> None:
         "SubtitleLineProcessor.h",
         "SubtitleGenerator.cpp",
         "SubtitleGenerator.h",
+        "SubtitleWrapProbe.cpp",
+        "SubtitleWrapProbe.h",
         "TextTools.cpp",
         "TextTools.h",
         "TimeFormatter.cpp",
@@ -103,6 +107,8 @@ def main() -> None:
         "FfmpegProgressParser.h" not in upp or
         "FfmpegProjectCommandBuilder.cpp" not in upp or
         "FfmpegProjectCommandBuilder.h" not in upp or
+        "FfmpegSubtitleProbeCommandBuilder.cpp" not in upp or
+        "FfmpegSubtitleProbeCommandBuilder.h" not in upp or
         "FfmpegThumbnailCommandBuilder.cpp" not in upp or
         "FfmpegThumbnailCommandBuilder.h" not in upp or
         "GenreCatalog.cpp" not in upp or
@@ -124,6 +130,8 @@ def main() -> None:
         "SubtitleLineProcessor.h" not in upp or
         "SubtitleGenerator.cpp" not in upp or
         "SubtitleGenerator.h" not in upp or
+        "SubtitleWrapProbe.cpp" not in upp or
+        "SubtitleWrapProbe.h" not in upp or
         "TextTools.cpp" not in upp or
         "TextTools.h" not in upp or
         "TimeFormatter.cpp" not in upp or

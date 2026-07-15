@@ -42,6 +42,10 @@ Croon will not add import support for older legacy product metadata or other leg
 
 The editor no longer shows or refreshes the RichText ASS preview tab. Maintaining an eager QTF approximation of ASS is expensive on lyrics/timing changes and less faithful than libass/ffmpeg rendering; a future lightweight preview can reuse the tab area for LRC-formatted lyrics.
 
+### Probe Wrapping With Rendered Highlight Lines
+
+Subtitle wrapping should be measured from libass/ffmpeg-rendered output rather than predicted from text length. The probe path renders one highlighted normal-size lyric per frame, because the grayed line has the same effective size and incoming lines are smaller. Initial infrastructure remains internal until UI/export integration is chosen.
+
 ## Deferred Decisions
 
 - Whether to replace scraping with a reliable lyrics provider API. Until a reliable API is chosen, scraped providers remain internal implementation details behind `LyricsDownloadService`; AZLyrics is tried first, Genius and SongLyrics are fallback candidates, and the user-facing download workflow stays opaque.

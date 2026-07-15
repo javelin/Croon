@@ -18,6 +18,7 @@ using namespace Upp;
 #include <Croon/SongLyricsProvider.h>
 #include <Croon/SubtitleGenerator.h>
 #include <Croon/SubtitleLineProcessor.h>
+#include <Croon/SubtitleWrapProbe.h>
 #include <Croon/VocalPart.h>
 #include <Croon/TextTools.h>
 #include <Croon/TimeFormatter.h>
@@ -29,6 +30,7 @@ using namespace Upp;
 #include <Croon/FfmpegAudioCommandBuilder.h>
 #include <Croon/FfmpegExportCommandBuilder.h>
 #include <Croon/FfmpegProjectCommandBuilder.h>
+#include <Croon/FfmpegSubtitleProbeCommandBuilder.h>
 #include <Croon/FfmpegThumbnailCommandBuilder.h>
 
 namespace {
@@ -74,6 +76,30 @@ int CountOccurrences(const String& text, const String& needle) {
 	}
 }
 
+String ProbeRgbaFixture() {
+	const int width = 8;
+	const int height = 6;
+	const int frames = 2;
+	StringBuffer rgba;
+	rgba.SetCount(width * height * frames * 4);
+	for(int i = 0; i < rgba.GetCount(); i++)
+		rgba[i] = 0;
+
+	auto setAlpha = [&](int frame, int x, int y, byte alpha) {
+		rgba[(frame * width * height + y * width + x) * 4 + 3] = alpha;
+	};
+
+	for(int y = 1; y <= 2; y++)
+		for(int x = 2; x <= 5; x++)
+			setAlpha(0, x, y, 255);
+	for(int x = 1; x <= 3; x++)
+		setAlpha(0, x, 4, 255);
+	for(int x = 4; x <= 6; x++)
+		setAlpha(1, x, 3, 255);
+
+	return String(rgba);
+}
+
 }
 
 CONSOLE_APP_MAIN
@@ -93,6 +119,11 @@ CONSOLE_APP_MAIN
 		"-i", "video.mp4", "-ss", "00:00:06", "-vframes", "1",
 		"-vf", "crop='min(iw,ih)':'min(iw,ih)',scale=256:256", "thumb.png"
 	}, "GenerateThumbnail");
+	CheckEq(FfmpegSubtitleProbeCommandBuilder::RenderRgba("probe.ass", "probe.rgba", 3, 1920, 1080, 700, 300), {
+		"-f", "lavfi", "-i", "color=c=black@0.0:s=1920x1080:r=1",
+		"-t", "3", "-vf", "subtitles=probe.ass,crop=1920:300:0:700",
+		"-pix_fmt", "rgba", "-f", "rawvideo", "probe.rgba"
+	}, "Render subtitle probe RGBA");
 
 	CheckEq(FfmpegProjectCommandBuilder::ExtractAudioAndInfo("song.croon", "song.ogg", "song.json"), {
 		"-dump_attachment:t:0", "song.json", "-i", "song.croon", "-map", "0:a:0",
@@ -444,6 +475,26 @@ CONSOLE_APP_MAIN
 	String richAss = SubtitleGenerator::ToRichAss(exportData, 4);
 	Check(richAss.Find("@4") >= 0, "SubtitleGenerator emits rich ASS formatting");
 	Check(richAss.Find("Script Info") >= 0, "SubtitleGenerator emits rich ASS script info");
+
+	Vector<String> probeLyrics;
+	probeLyrics.Add("Sing along");
+	probeLyrics.Add("A much longer highlighted line");
+	String probeAss = SubtitleWrapProbe::BuildAss(exportData, probeLyrics);
+	Check(probeAss.Find("[Script Info]") >= 0, "SubtitleWrapProbe emits script info");
+	Check(probeAss.Find("Style: V1,Arial,72") >= 0, "SubtitleWrapProbe uses highlighted normal-size style");
+	Check(probeAss.Find("Dialogue: 0,0:00:00.00,0:00:00.90,V1") >= 0,
+		"SubtitleWrapProbe emits one-frame first probe event");
+	Check(probeAss.Find("Dialogue: 0,0:00:01.00,") >= 0,
+		"SubtitleWrapProbe emits one-frame second probe event");
+	Check(probeAss.Find("Sing along") >= 0, "SubtitleWrapProbe preserves probe text");
+	Vector<SubtitleWrapProbeFrame> probeFrames = SubtitleWrapProbe::AnalyzeRgbaFrames(ProbeRgbaFixture(), 8, 6, 2);
+	Check(probeFrames.GetCount() == 2, "SubtitleWrapProbe analyzes available RGBA frames");
+	Check(probeFrames[0].bands.GetCount() == 2, "SubtitleWrapProbe groups contiguous alpha rows");
+	Check(probeFrames[0].bands[0].y0 == 1 && probeFrames[0].bands[0].y1 == 3,
+		"SubtitleWrapProbe reports first band rows");
+	Check(probeFrames[0].bands[0].width == 3, "SubtitleWrapProbe reports first band width");
+	Check(probeFrames[0].bands[1].width == 2, "SubtitleWrapProbe reports second band width");
+	Check(probeFrames[1].bands.GetCount() == 1, "SubtitleWrapProbe analyzes second frame independently");
 
 	KarData v2Data;
 	v2Data.duration = 10.0;
