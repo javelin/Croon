@@ -134,6 +134,7 @@ def main() -> None:
         "FONT_SIZE",
         "MUSIC_DIR",
         "PROJECT_DIR",
+        "LRC_EXPORT_DIR",
         "PROJECT_LIST",
         "WIN_X",
         "WIN_H",
@@ -1010,6 +1011,8 @@ def main() -> None:
     require(project_cpp, "LyricsTransformer::RawToUntimed(data)", "Project injected data lyrics update")
     require(project_cpp, "expDlg.Run(data, outputPath, length)", "Project injected data export")
     require(project_cpp, "void Project::ExportLrc()", "Project LRC export implementation")
+    require(project_cpp, "Config::Get(LRC_EXPORT_DIR)", "Project LRC export directory lookup")
+    require(project_cpp, "Config::Set(LRC_EXPORT_DIR, GetFileDirectory(outputPath))", "Project LRC export directory persistence")
     require(project_cpp, "fsel.Type(\"LRC Lyrics (*.lrc)\", \"*.lrc\")", "Project LRC save type")
     require(project_cpp, "SaveFile(outputPath, LrcGenerator::ToLrc(data))", "Project LRC file write")
     require(project_cpp, "sub.Add(\"LRC File...\"", "Project LRC menu entry")

@@ -352,7 +352,7 @@ void Project::ExportVideo(int length) {
 #endif
     
     FileSel fsel;
-    String saveDir = Config::Get(EXPORT_DIR);
+    String saveDir = Config::Get(LRC_EXPORT_DIR);
     if (saveDir.IsEmpty()) saveDir = Config::Get(PROJECT_DIR);
     fsel <<= saveDir;
     fsel.Set(outputPath);
@@ -395,7 +395,7 @@ void Project::ExportLrc() {
     else if (ToLower(GetFileExt(outputPath)) != ".lrc") {
         outputPath = ForceExt(outputPath, ".lrc");
     }
-    Config::Set(EXPORT_DIR, GetFileDirectory(outputPath));
+    Config::Set(LRC_EXPORT_DIR, GetFileDirectory(outputPath));
     if (!SaveFile(outputPath, LrcGenerator::ToLrc(data))) {
         Exclamation("Unable to save LRC file.");
     }

@@ -217,6 +217,8 @@ def main() -> None:
         "std::filesystem::path savePath",
         "ExportDlg expDlg",
         "void Project::ExportLrc()",
+        "Config::Get(LRC_EXPORT_DIR)",
+        "Config::Set(LRC_EXPORT_DIR",
         "SaveFile(outputPath, LrcGenerator::ToLrc(data))",
         "sub.Add(\"LRC File...\"",
         "menu.Sub(\"Project\"",

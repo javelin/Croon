@@ -56,6 +56,8 @@ def main() -> None:
     for needle in [
         "void Project::ExportLrc()",
         "LrcGenerator::ToLrc(data)",
+        "Config::Get(LRC_EXPORT_DIR)",
+        "Config::Set(LRC_EXPORT_DIR",
         'sub.Add("LRC File..."',
         'fsel.Type("LRC Lyrics (*.lrc)", "*.lrc")',
     ]:
