@@ -588,6 +588,13 @@ CONSOLE_APP_MAIN
 	String wrappedIncomingAss = SubtitleGenerator::ToAss(exportData, wrappedIncoming, 4);
 	Check(wrappedIncomingAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,910,960,860") >= 0,
 		"SubtitleGenerator lets wrapped incoming rows consume one extra visual line");
+	Vector<bool> normalWrappedSmallUnwrapped = clone(noWrappedHighlights);
+	normalWrappedSmallUnwrapped[secondNextIdx] = true;
+	String splitWrapAss = SubtitleGenerator::ToAss(exportData, normalWrappedSmallUnwrapped, noWrappedHighlights, 4);
+	Check(splitWrapAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,960,960,910") >= 0,
+		"SubtitleGenerator keeps a normal-wrapped lyric compact while it is small incoming");
+	Check(splitWrapAss.Find("Dialogue: 0,0:00:05.00,0:00:07.00,V1,,0,0,0,,{\\an2\\move(960,860,960,788") >= 0,
+		"SubtitleGenerator expands the same lyric when it becomes highlighted");
 
 	Vector<String> probeLyrics;
 	probeLyrics.Add("Sing along");
@@ -595,6 +602,9 @@ CONSOLE_APP_MAIN
 	String probeAss = SubtitleWrapProbe::BuildAss(exportData, probeLyrics);
 	Check(probeAss.Find("[Script Info]") >= 0, "SubtitleWrapProbe emits script info");
 	Check(probeAss.Find("Style: V1,Arial,72") >= 0, "SubtitleWrapProbe uses highlighted normal-size style");
+	String smallProbeAss = SubtitleWrapProbe::BuildAss(exportData, probeLyrics, 1920, 1080, 50, false);
+	Check(smallProbeAss.Find("Style: V1,Arial,50") >= 0, "SubtitleWrapProbe supports incoming small-size style");
+	Check(smallProbeAss.Find(",0,0,0,100,100") >= 0, "SubtitleWrapProbe supports non-bold incoming style");
 	Check(probeAss.Find("Dialogue: 0,0:00:00.00,0:00:00.90,V1") >= 0,
 		"SubtitleWrapProbe emits one-frame first probe event");
 	Check(probeAss.Find("Dialogue: 0,0:00:01.00,") >= 0,

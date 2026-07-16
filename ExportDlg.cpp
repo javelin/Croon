@@ -129,13 +129,21 @@ void ExportDlg::ExportASS() {
     UpdateProgress();
     assFilePath = AppIdentity::TempFileName(".ass");
     Vector<bool> wrappedHighlights;
+    Vector<bool> wrappedIncoming;
     Vector<String> probeLyrics = SubtitleGenerator::HighlightProbeLyrics(*data, data->subtitleLines);
     Vector<SubtitleWrapProbeFrame> probeFrames;
     if (SubtitleWrapProbeRunner::Run(*data, probeLyrics, probeFrames, ffmpeg)) {
         for (const auto& frame : probeFrames)
             wrappedHighlights.Add(SubtitleWrapProbe::IsWrappedFrame(frame, data->fontSize));
     }
-    SaveFile(assFilePath, SubtitleGenerator::ToAss(*data, wrappedHighlights, data->subtitleLines));
+    int incomingFontSize = max(1, (int)(data->fontSize * 0.7));
+    Vector<SubtitleWrapProbeFrame> incomingProbeFrames;
+    if (SubtitleWrapProbeRunner::Run(*data, probeLyrics, incomingProbeFrames, ffmpeg,
+                                     1920, 1080, 700, 300, incomingFontSize, false)) {
+        for (const auto& frame : incomingProbeFrames)
+            wrappedIncoming.Add(SubtitleWrapProbe::IsWrappedFrame(frame, incomingFontSize));
+    }
+    SaveFile(assFilePath, SubtitleGenerator::ToAss(*data, wrappedHighlights, wrappedIncoming, data->subtitleLines));
     SetTimeCallback(500, [=] {
         phase = Dehiss;
         StartNextProcess();

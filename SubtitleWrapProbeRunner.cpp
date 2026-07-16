@@ -22,7 +22,9 @@ bool SubtitleWrapProbeRunner::Run(const KarData& data,
                                   int resX,
                                   int resY,
                                   int cropY,
-                                  int cropHeight) {
+                                  int cropHeight,
+                                  int probeFontSize,
+                                  bool probeBold) {
     frames.Clear();
     if (lyrics.IsEmpty())
         return true;
@@ -39,7 +41,7 @@ bool SubtitleWrapProbeRunner::Run(const KarData& data,
         FileDelete(rgbaPath);
     };
 
-    if (!SaveFile(assPath, SubtitleWrapProbe::BuildAss(data, lyrics, resX, resY))) {
+    if (!SaveFile(assPath, SubtitleWrapProbe::BuildAss(data, lyrics, resX, resY, probeFontSize, probeBold))) {
         cleanup();
         return false;
     }

@@ -123,6 +123,10 @@ Vector<String> SubtitleGenerator::HighlightProbeLyrics(const KarData& data, int 
 }
 
 String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrappedHighlights, int linesToDisplay, int resX, int resY) {
+    return ToAss(data, wrappedHighlights, wrappedHighlights, linesToDisplay, resX, resY);
+}
+
+String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrappedHighlights, const Vector<bool>& wrappedIncoming, int linesToDisplay, int resX, int resY) {
     if (data.timedLyrics.IsEmpty()) return "";
     Vector<TimeLyrics> vtl;
     SubtitleLineProcessor::ProcessMetadata(data, vtl, linesToDisplay);
@@ -210,7 +214,7 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
         int highlightedRow = addRow(true, wrappedHighlight);
         for (int j = 1; j <= futureLines; ++j) {
             if (i + j < vtl.GetCount()) {
-                bool nextWrapped = IsWrappedHighlight(wrappedHighlights, i + j - 1);
+                bool nextWrapped = IsWrappedHighlight(wrappedIncoming, i + j - 1);
                 incomingRow[j] = addRow(false, nextWrapped);
             }
         }

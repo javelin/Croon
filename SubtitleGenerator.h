@@ -18,6 +18,12 @@ struct SubtitleGenerator {
                         int linesToDisplay=DefaultASSDisplayLines,
                         int resX=1920,
                         int resY=1080);
+    static String ToAss(const KarData& data,
+                        const Vector<bool>& wrappedHighlights,
+                        const Vector<bool>& wrappedIncoming,
+                        int linesToDisplay=DefaultASSDisplayLines,
+                        int resX=1920,
+                        int resY=1080);
     static String ToRichAss(const KarData& data,
                             int linesToDisplay=DefaultASSDisplayLines,
                             int resX=1920,

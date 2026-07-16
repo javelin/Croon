@@ -20,7 +20,9 @@ struct SubtitleWrapProbe {
     static String BuildAss(const KarData& data,
                            const Vector<String>& lyrics,
                            int resX=1920,
-                           int resY=1080);
+                           int resY=1080,
+                           int fontSize=0,
+                           bool bold=true);
     static Vector<SubtitleWrapProbeFrame> AnalyzeRgbaFrames(const String& rgba,
                                                             int width,
                                                             int height,

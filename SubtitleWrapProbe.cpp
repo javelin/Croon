@@ -14,11 +14,12 @@ using namespace Upp;
 
 namespace {
 
-String ProbeStyle(const KarData& data) {
-    return Format("Style: V1,Arial,%d,%s,%s,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,2,1,2,10,10,120,1",
-                  data.fontSize,
+String ProbeStyle(const KarData& data, int fontSize, bool bold) {
+    return Format("Style: V1,Arial,%d,%s,%s,&H00000000,&H64000000,%d,0,0,0,100,100,0,0,1,2,1,2,10,10,120,1",
+                  fontSize > 0 ? fontSize:data.fontSize,
                   VocalPartStyle::V1PrimaryAss(),
-                  VocalPartStyle::V1SecondaryAss());
+                  VocalPartStyle::V1SecondaryAss(),
+                  bold ? -1:0);
 }
 
 String ProbeMoveTag(int resX, int resY) {
@@ -121,7 +122,9 @@ int CountTextLineGroups(const SubtitleWrapProbeFrame& frame, int fontSize) {
 String SubtitleWrapProbe::BuildAss(const KarData& data,
                                    const Vector<String>& lyrics,
                                    int resX,
-                                   int resY) {
+                                   int resY,
+                                   int fontSize,
+                                   bool bold) {
     if (lyrics.IsEmpty())
         return "";
 
@@ -136,7 +139,7 @@ String SubtitleWrapProbe::BuildAss(const KarData& data,
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
            "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
            "Alignment, MarginL, MarginR, MarginV, Encoding",
-        ProbeStyle(data),
+        ProbeStyle(data, fontSize, bold),
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
