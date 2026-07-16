@@ -100,6 +100,12 @@ bool IsWrappedHighlight(const Vector<bool>& wrappedHighlights, int highlightInde
            wrappedHighlights[highlightIndex];
 }
 
+String SubtitleLineMoveTag(const KarData& data, int resX, int resY, double startTS, double endTS,
+                           int targetSlot, bool wrapped) {
+    int toSlot = targetSlot - (wrapped ? 1:0);
+    return SubtitleMoveTag(data, resX, resY, startTS, endTS, toSlot + 1, toSlot);
+}
+
 }
 
 String SubtitleGenerator::ToAss(const KarData& data, int linesToDisplay, int resX, int resY) {
@@ -165,6 +171,7 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
     };
     
     String lastLine{""};
+    bool lastLineWrapped = false;
     for (int i = 1; i < vtl.GetCount(); ++i) {
         const auto& tl = vtl[i];
         
@@ -194,13 +201,14 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
                 if (nextLine.StartsWith("@CountIn")) nextLine = "\u00A0";
                 nextLine.Replace("\\(", "(");
                 nextLine.Replace("\\)", ")");
+                bool nextWrapped = IsWrappedHighlight(wrappedHighlights, i + j - 1);
                 VocalPart nextPart = SubtitleLineProcessor::ResolveVocalPart(ntl.partIndex, data.parts);
                 String dimStyle = SubtitleLineProcessor::ResolveDimStyle(nextPart, nextLine, ntl.isMeta);
                 vs.AddPick(Format("Dialogue: 0,%s,%s,%s,,0,0,0,,%s%s%s",
                                     TimeFormatter::Ass(startTS),
                                     TimeFormatter::Ass(endTS),
                                     dimStyle,
-                                    SubtitleMoveTag(data, resX, resY, startTS, endTS, j + 2, j + 1),
+                                    SubtitleLineMoveTag(data, resX, resY, startTS, endTS, j + 1, nextWrapped),
                                     hasCountIn ? "":"{\\fad(150,100)}",
                                     nextLine));
             }
@@ -212,17 +220,18 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
                             TimeFormatter::Ass(startTS),
                             TimeFormatter::Ass(endTS),
                             hilite,
-                            SubtitleMoveTag(data, resX, resY, startTS, endTS, 2, 1),
+                            SubtitleLineMoveTag(data, resX, resY, startTS, endTS, 1, wrappedHighlight),
                             singLine));
         
         if (!lastLine.IsEmpty()) {
             vs.AddPick(Format("Dialogue: 0,%s,%s,Grayed,,0,0,0,,%s%s",
                                 TimeFormatter::Ass(startTS),
                                 TimeFormatter::Ass(endTS),
-                                SubtitleMoveTag(data, resX, resY, startTS, endTS, 1, wrappedHighlight ? -1:0),
+                                SubtitleLineMoveTag(data, resX, resY, startTS, endTS, 0, lastLineWrapped),
                                 SubtitleGrayText(lastLine)));
         }
         lastLine = hasCountIn ? "\u00A03... 2... 1...":line;
+        lastLineWrapped = hasCountIn ? false:wrappedHighlight;
     }
     return Join(vs, "\n");
 }

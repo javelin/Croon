@@ -485,11 +485,30 @@ CONSOLE_APP_MAIN
 	String compactAss = SubtitleGenerator::ToAss(exportData, noWrappedHighlights, 4);
 	Check(compactAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,716,960,572") >= 0,
 		"SubtitleGenerator keeps compact grayed slot for unwrapped highlights");
+	int singAlongIdx = 0;
+	int nextLineIdx = 1;
+	int secondNextIdx = 2;
+	Check(highlightProbeLyrics[singAlongIdx] == "Sing along" &&
+		  highlightProbeLyrics[nextLineIdx] == "Next line" &&
+		  highlightProbeLyrics[secondNextIdx] == "Second next",
+		"SubtitleGenerator probe lyrics include expected displayed lines");
 	Vector<bool> wrappedHighlights = clone(noWrappedHighlights);
-	wrappedHighlights[1] = true;
+	wrappedHighlights[nextLineIdx] = true;
 	String raisedAss = SubtitleGenerator::ToAss(exportData, wrappedHighlights, 4);
-	Check(raisedAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,716,960,428") >= 0,
-		"SubtitleGenerator raises grayed slot when highlighted line wraps");
+	Check(raisedAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1,,0,0,0,,{\\an2\\move(960,716,960,572") >= 0,
+		"SubtitleGenerator raises highlighted slot when that line wraps");
+	Check(raisedAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,716,960,572") >= 0,
+		"SubtitleGenerator keeps grayed slot compact when the grayed line does not wrap");
+	Vector<bool> wrappedPrevious = clone(noWrappedHighlights);
+	wrappedPrevious[singAlongIdx] = true;
+	String raisedPreviousAss = SubtitleGenerator::ToAss(exportData, wrappedPrevious, 4);
+	Check(raisedPreviousAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,572,960,428") >= 0,
+		"SubtitleGenerator raises grayed slot when the grayed line wraps");
+	Vector<bool> wrappedIncoming = clone(noWrappedHighlights);
+	wrappedIncoming[secondNextIdx] = true;
+	String raisedIncomingAss = SubtitleGenerator::ToAss(exportData, wrappedIncoming, 4);
+	Check(raisedIncomingAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,860,960,716") >= 0,
+		"SubtitleGenerator raises incoming slot when that incoming line wraps");
 
 	Vector<String> probeLyrics;
 	probeLyrics.Add("Sing along");

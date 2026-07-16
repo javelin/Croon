@@ -44,7 +44,7 @@ The editor no longer shows or refreshes the RichText ASS preview tab. Maintainin
 
 ### Probe Wrapping With Rendered Highlight Lines
 
-Subtitle wrapping should be measured from libass/ffmpeg-rendered output rather than predicted from text length. The probe path renders one highlighted normal-size lyric per frame, because the grayed line has the same effective size and incoming lines are smaller. `ExportDlg::ExportASS` uses the synchronous probe runner to raise the grayed row only when the current highlighted line wraps; live UI preview remains disabled.
+Subtitle wrapping should be measured from libass/ffmpeg-rendered output rather than predicted from text length. The probe path renders one highlighted normal-size lyric per frame, because the grayed line has the same effective size and incoming lines are smaller. `ExportDlg::ExportASS` uses the synchronous probe runner so every displayed row decides from its own lyric wrap flag whether to use the raised slot; live UI preview remains disabled.
 
 ## Deferred Decisions
 
