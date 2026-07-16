@@ -116,12 +116,42 @@ bool ReadVideoSizeWithFfmpeg(const String& ffmpegPath, const String& videoPath, 
     return ParseVideoSize(output, size);
 }
 
+bool ReadVideoSizeFromDecodedFrame(const String& ffmpegPath, const String& videoPath, Size& size) {
+    String framePath = AppIdentity::TaggedTempFileName("videosize", ".png");
+    MediaProcessRunner process;
+    Vector<String> args{
+        "-y",
+        "-i", videoPath,
+        "-frames:v", "1",
+        framePath
+    };
+    if (!process.Start(ffmpegPath, args))
+        return false;
+
+    String chunk;
+    while (process.Read(chunk) || process.IsRunning())
+        Sleep(10);
+    if (process.GetExitCode() != 0) {
+        FileDelete(framePath);
+        return false;
+    }
+
+    Image frame = StreamRaster::LoadFileAny(framePath);
+    FileDelete(framePath);
+    if (!frame)
+        return false;
+    size = frame.GetSize();
+    return size.cx >= 160 && size.cy >= 90;
+}
+
 Size ProbeCanvasForExport(const KarData& data, const String& ffmpegPath) {
     if (data.videoFilePath.StartsWith("@@"))
         return Size(1920, 1080);
 
     Size videoSize;
     if (ReadVideoSizeWithFfprobe(ffmpegPath, data.videoFilePath, videoSize))
+        return videoSize;
+    if (ReadVideoSizeFromDecodedFrame(ffmpegPath, data.videoFilePath, videoSize))
         return videoSize;
     if (ReadVideoSizeWithFfmpeg(ffmpegPath, data.videoFilePath, videoSize))
         return videoSize;
