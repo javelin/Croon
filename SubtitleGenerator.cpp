@@ -201,11 +201,13 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
         Vector<int> incomingRow;
         incomingRow.SetCount(futureLines + 1, -1);
         Vector<int> rowSteps;
+        Vector<int> rowWrapSteps;
         Vector<bool> rowWrapped;
         auto addRow = [&](bool normalSize, bool wrapped) {
             int lineHeight = normalSize ? max(1, data.fontSize):max(1, (int)(data.fontSize * 0.7));
             int rowIndex = rowSteps.GetCount();
             rowSteps.Add(lineHeight);
+            rowWrapSteps.Add(lineHeight * 5 / 4);
             rowWrapped.Add(wrapped);
             return rowIndex;
         };
@@ -227,7 +229,7 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
         int wrappedOffset = 0;
         for (int row = rowSteps.GetCount() - 1; row >= 0; row--) {
             if (rowWrapped[row])
-                wrappedOffset += rowSteps[row];
+                wrappedOffset += rowWrapSteps[row];
             rowY[row] = currentY - wrappedOffset;
             rowFromY[row] = rowY[row] + rowSteps[row];
             currentY -= rowSteps[row];
