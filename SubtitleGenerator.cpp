@@ -37,7 +37,22 @@ namespace {
 constexpr int SubtitleBottomMargin = 120;
 constexpr int SubtitleScrollDurationMs = 450;
 
-int SubtitleSlotY(const KarData& data, int resY, int slot) {
+int SubtitleScrollDuration(double startTS, double endTS) {
+    int eventMs = max(1, (int)((endTS - startTS) * 1000.0));
+    return min(SubtitleScrollDurationMs, eventMs);
+}
+
+String SubtitleMoveTag(int resX, double startTS, double endTS, int fromY, int toY) {
+    int x = resX / 2;
+    return Format("{\\an2\\move(%d,%d,%d,%d,0,%d)}",
+                  x,
+                  fromY,
+                  x,
+                  toY,
+                  SubtitleScrollDuration(startTS, endTS));
+}
+
+int LegacySubtitleSlotY(const KarData& data, int resY, int slot) {
     int normalLineHeight = max(1, data.fontSize);
     int smallLineHeight = max(1, (int)(data.fontSize * 0.7));
     int normalStep = normalLineHeight * 2;
@@ -54,20 +69,11 @@ int SubtitleSlotY(const KarData& data, int resY, int slot) {
     }
 }
 
-int SubtitleScrollDuration(double startTS, double endTS) {
-    int eventMs = max(1, (int)((endTS - startTS) * 1000.0));
-    return min(SubtitleScrollDurationMs, eventMs);
-}
-
 String SubtitleMoveTag(const KarData& data, int resX, int resY, double startTS, double endTS,
                        int fromSlot, int toSlot) {
-    int x = resX / 2;
-    return Format("{\\an2\\move(%d,%d,%d,%d,0,%d)}",
-                  x,
-                  SubtitleSlotY(data, resY, fromSlot),
-                  x,
-                  SubtitleSlotY(data, resY, toSlot),
-                  SubtitleScrollDuration(startTS, endTS));
+    return SubtitleMoveTag(resX, startTS, endTS,
+                           LegacySubtitleSlotY(data, resY, fromSlot),
+                           LegacySubtitleSlotY(data, resY, toSlot));
 }
 
 String SubtitleGrayText(String line) {
@@ -98,12 +104,6 @@ bool IsWrappedHighlight(const Vector<bool>& wrappedHighlights, int highlightInde
     return highlightIndex >= 0 &&
            highlightIndex < wrappedHighlights.GetCount() &&
            wrappedHighlights[highlightIndex];
-}
-
-String SubtitleLineMoveTag(const KarData& data, int resX, int resY, double startTS, double endTS,
-                           int targetSlot, bool wrapped) {
-    int toSlot = targetSlot - (wrapped ? 1:0);
-    return SubtitleMoveTag(data, resX, resY, startTS, endTS, toSlot + 1, toSlot);
 }
 
 }
@@ -194,21 +194,56 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
             : SubtitleLineProcessor::ResolveVocalPart(tl.partIndex, data.parts);
         
         int futureLines = min(2, max(1, linesToDisplay - (lastLine.IsEmpty() ? 1:2)));
-        for (int j = futureLines; j > 0; --j) {
+        Vector<int> incomingRow;
+        incomingRow.SetCount(futureLines + 1, -1);
+        Vector<int> rowHeights;
+        Vector<int> rowSteps;
+        auto addRow = [&](bool normalSize, bool wrapped) {
+            int lineHeight = normalSize ? max(1, data.fontSize):max(1, (int)(data.fontSize * 0.7));
+            int rowIndex = rowHeights.GetCount();
+            rowHeights.Add(lineHeight * (wrapped ? 2:1));
+            rowSteps.Add(lineHeight);
+            return rowIndex;
+        };
+
+        int grayedRow = lastLine.IsEmpty() ? -1:addRow(true, lastLineWrapped);
+        int highlightedRow = addRow(true, wrappedHighlight);
+        for (int j = 1; j <= futureLines; ++j) {
             if (i + j < vtl.GetCount()) {
+                bool nextWrapped = IsWrappedHighlight(wrappedHighlights, i + j - 1);
+                incomingRow[j] = addRow(false, nextWrapped);
+            }
+        }
+
+        Vector<int> rowY;
+        Vector<int> rowFromY;
+        rowY.SetCount(rowHeights.GetCount(), 0);
+        rowFromY.SetCount(rowHeights.GetCount(), 0);
+        int totalHeight = 0;
+        for (int h : rowHeights)
+            totalHeight += h;
+        int currentY = resY - SubtitleBottomMargin - totalHeight;
+        for (int row = 0; row < rowHeights.GetCount(); row++) {
+            currentY += rowHeights[row];
+            rowY[row] = currentY;
+            rowFromY[row] = currentY + rowSteps[row];
+        }
+
+        for (int j = futureLines; j > 0; --j) {
+            if (i + j < vtl.GetCount() && incomingRow[j] >= 0) {
                 const auto& ntl = vtl[i + j];
                 String nextLine = TrimBoth(ntl.lyrics);
                 if (nextLine.StartsWith("@CountIn")) nextLine = "\u00A0";
                 nextLine.Replace("\\(", "(");
                 nextLine.Replace("\\)", ")");
-                bool nextWrapped = IsWrappedHighlight(wrappedHighlights, i + j - 1);
                 VocalPart nextPart = SubtitleLineProcessor::ResolveVocalPart(ntl.partIndex, data.parts);
                 String dimStyle = SubtitleLineProcessor::ResolveDimStyle(nextPart, nextLine, ntl.isMeta);
+                int row = incomingRow[j];
                 vs.AddPick(Format("Dialogue: 0,%s,%s,%s,,0,0,0,,%s%s%s",
                                     TimeFormatter::Ass(startTS),
                                     TimeFormatter::Ass(endTS),
                                     dimStyle,
-                                    SubtitleLineMoveTag(data, resX, resY, startTS, endTS, j + 1, nextWrapped),
+                                    SubtitleMoveTag(resX, startTS, endTS, rowFromY[row], rowY[row]),
                                     hasCountIn ? "":"{\\fad(150,100)}",
                                     nextLine));
             }
@@ -220,14 +255,14 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
                             TimeFormatter::Ass(startTS),
                             TimeFormatter::Ass(endTS),
                             hilite,
-                            SubtitleLineMoveTag(data, resX, resY, startTS, endTS, 1, wrappedHighlight),
+                            SubtitleMoveTag(resX, startTS, endTS, rowFromY[highlightedRow], rowY[highlightedRow]),
                             singLine));
         
         if (!lastLine.IsEmpty()) {
             vs.AddPick(Format("Dialogue: 0,%s,%s,Grayed,,0,0,0,,%s%s",
                                 TimeFormatter::Ass(startTS),
                                 TimeFormatter::Ass(endTS),
-                                SubtitleLineMoveTag(data, resX, resY, startTS, endTS, 0, lastLineWrapped),
+                                SubtitleMoveTag(resX, startTS, endTS, rowFromY[grayedRow], rowY[grayedRow]),
                                 SubtitleGrayText(lastLine)));
         }
         lastLine = hasCountIn ? "\u00A03... 2... 1...":line;
