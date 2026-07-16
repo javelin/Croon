@@ -18,6 +18,7 @@ This file records service boundaries expected during migration. Some services be
 - `FfmpegExportCommandBuilder`: deterministic rendered export and cover image command argument construction.
 - `FfmpegProgressParser`: timestamp extraction from `ffmpeg` progress output.
 - `FfmpegProjectCommandBuilder`: deterministic project save, load, and attachment listing command argument construction.
+- `FfmpegSubtitleProbeCommandBuilder`: deterministic ffmpeg arguments for raw RGBA subtitle probe rendering.
 - `FfmpegThumbnailCommandBuilder`: deterministic thumbnail generation command argument construction.
 - `GenreCatalog`: shared application genre reference list.
 - `KarData`: project data model passed explicitly through the runtime UI composition graph.
@@ -27,6 +28,7 @@ This file records service boundaries expected during migration. Some services be
 - `RichTextBuilder`: QTF/RichText construction helper retained for generated rich text formatting. The live ASS preview tab is disabled; a future lightweight preview may show LRC-formatted lyrics instead.
 - `SubtitleLineProcessor`: subtitle metadata expansion, count-in insertion, and vocal style resolution.
 - `SubtitleGenerator`: ASS subtitle generation from timed lyrics and vocal parts.
+- `SubtitleWrapProbe`: internal highlighted-line ASS probe generation and RGBA alpha-band analysis for future libass/ffmpeg wrap detection.
 - `LrcGenerator`: LRC lyric export after metadata/count-in processing, with Croon vocal-part annotations.
 - `TextTools`: shared text spacing, filtering, and display-shortening helpers.
 - `TimeFormatter`: timestamp and count-in duration formatting helpers.
