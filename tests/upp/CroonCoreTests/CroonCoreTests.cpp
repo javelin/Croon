@@ -570,23 +570,23 @@ CONSOLE_APP_MAIN
 	Vector<bool> wrappedHighlights = clone(noWrappedHighlights);
 	wrappedHighlights[nextLineIdx] = true;
 	String wrappedHighlightAss = SubtitleGenerator::ToAss(exportData, wrappedHighlights, 4);
-	Check(wrappedHighlightAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1,,0,0,0,,{\\an2\\move(960,932,960,860") >= 0,
+	Check(wrappedHighlightAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1,,0,0,0,,{\\an2\\move(960,860,960,788") >= 0,
 		"SubtitleGenerator lets wrapped highlighted rows consume one extra visual line");
 	Check(wrappedHighlightAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,788,960,716") >= 0,
 		"SubtitleGenerator keeps the grayed row directly above a wrapped highlighted row");
 	Check(wrappedHighlightAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,960,960,910") >= 0,
-		"SubtitleGenerator keeps incoming rows directly below a wrapped highlighted row");
+		"SubtitleGenerator keeps lower incoming rows fixed below a wrapped highlighted row");
 	Vector<bool> wrappedPrevious = clone(noWrappedHighlights);
 	wrappedPrevious[singAlongIdx] = true;
 	String wrappedPreviousAss = SubtitleGenerator::ToAss(exportData, wrappedPrevious, 4);
-	Check(wrappedPreviousAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,860,960,788") >= 0,
+	Check(wrappedPreviousAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,Grayed,,0,0,0,,{\\an2\\move(960,788,960,716") >= 0,
 		"SubtitleGenerator lets wrapped grayed rows consume one extra visual line");
 	Check(wrappedPreviousAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1,,0,0,0,,{\\an2\\move(960,932,960,860") >= 0,
-		"SubtitleGenerator keeps highlighted rows directly below wrapped grayed rows");
+		"SubtitleGenerator keeps lower highlighted rows fixed below wrapped grayed rows");
 	Vector<bool> wrappedIncoming = clone(noWrappedHighlights);
 	wrappedIncoming[secondNextIdx] = true;
 	String wrappedIncomingAss = SubtitleGenerator::ToAss(exportData, wrappedIncoming, 4);
-	Check(wrappedIncomingAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,960,960,910") >= 0,
+	Check(wrappedIncomingAss.Find("Dialogue: 0,0:00:03.00,0:00:05.00,V1Normal,,0,0,0,,{\\an2\\move(960,910,960,860") >= 0,
 		"SubtitleGenerator lets wrapped incoming rows consume one extra visual line");
 
 	Vector<String> probeLyrics;

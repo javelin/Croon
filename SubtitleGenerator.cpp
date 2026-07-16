@@ -196,13 +196,13 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
         int futureLines = min(2, max(1, linesToDisplay - (lastLine.IsEmpty() ? 1:2)));
         Vector<int> incomingRow;
         incomingRow.SetCount(futureLines + 1, -1);
-        Vector<int> rowHeights;
         Vector<int> rowSteps;
+        Vector<bool> rowWrapped;
         auto addRow = [&](bool normalSize, bool wrapped) {
             int lineHeight = normalSize ? max(1, data.fontSize):max(1, (int)(data.fontSize * 0.7));
-            int rowIndex = rowHeights.GetCount();
-            rowHeights.Add(lineHeight * (wrapped ? 2:1));
+            int rowIndex = rowSteps.GetCount();
             rowSteps.Add(lineHeight);
+            rowWrapped.Add(wrapped);
             return rowIndex;
         };
 
@@ -217,16 +217,16 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
 
         Vector<int> rowY;
         Vector<int> rowFromY;
-        rowY.SetCount(rowHeights.GetCount(), 0);
-        rowFromY.SetCount(rowHeights.GetCount(), 0);
-        int totalHeight = 0;
-        for (int h : rowHeights)
-            totalHeight += h;
-        int currentY = resY - SubtitleBottomMargin - totalHeight;
-        for (int row = 0; row < rowHeights.GetCount(); row++) {
-            currentY += rowHeights[row];
-            rowY[row] = currentY;
-            rowFromY[row] = currentY + rowSteps[row];
+        rowY.SetCount(rowSteps.GetCount(), 0);
+        rowFromY.SetCount(rowSteps.GetCount(), 0);
+        int currentY = resY - SubtitleBottomMargin;
+        int wrappedOffset = 0;
+        for (int row = rowSteps.GetCount() - 1; row >= 0; row--) {
+            if (rowWrapped[row])
+                wrappedOffset += rowSteps[row];
+            rowY[row] = currentY - wrappedOffset;
+            rowFromY[row] = rowY[row] + rowSteps[row];
+            currentY -= rowSteps[row];
         }
 
         for (int j = futureLines; j > 0; --j) {
