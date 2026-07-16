@@ -625,6 +625,8 @@ CONSOLE_APP_MAIN
 	String probeAss = SubtitleWrapProbe::BuildAss(exportData, probeLyrics);
 	Check(probeAss.Find("[Script Info]") >= 0, "SubtitleWrapProbe emits script info");
 	Check(probeAss.Find("Style: V1,Arial,72") >= 0, "SubtitleWrapProbe uses highlighted normal-size style");
+	Check(probeAss.Find("{\\an2\\pos(960,990)}") >= 0,
+		"SubtitleWrapProbe anchors probe text near the bottom of the canvas");
 	String smallProbeAss = SubtitleWrapProbe::BuildAss(exportData, probeLyrics, 1920, 1080, 50, false);
 	Check(smallProbeAss.Find("Style: V1,Arial,50") >= 0, "SubtitleWrapProbe supports incoming small-size style");
 	Check(smallProbeAss.Find(",0,0,0,100,100") >= 0, "SubtitleWrapProbe supports non-bold incoming style");

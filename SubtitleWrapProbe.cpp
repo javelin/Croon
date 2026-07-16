@@ -23,7 +23,8 @@ String ProbeStyle(const KarData& data, int fontSize, bool bold) {
 }
 
 String ProbeMoveTag(int resX, int resY) {
-    return Format("{\\an2\\pos(%d,%d)}", resX / 2, resY - 300);
+    int bottomPadding = max(30, resY / 12);
+    return Format("{\\an2\\pos(%d,%d)}", resX / 2, max(1, resY - bottomPadding));
 }
 
 String ProbeText(String text) {
