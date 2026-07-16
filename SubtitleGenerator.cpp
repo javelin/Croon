@@ -228,11 +228,11 @@ String SubtitleGenerator::ToAss(const KarData& data, const Vector<bool>& wrapped
         int currentY = resY - SubtitleBottomMargin;
         int wrappedOffset = 0;
         for (int row = rowSteps.GetCount() - 1; row >= 0; row--) {
-            if (rowWrapped[row])
-                wrappedOffset += rowWrapSteps[row];
             rowY[row] = currentY - wrappedOffset;
             rowFromY[row] = rowY[row] + rowSteps[row];
             currentY -= rowSteps[row];
+            if (rowWrapped[row])
+                wrappedOffset += rowWrapSteps[row];
         }
 
         for (int j = futureLines; j > 0; --j) {
