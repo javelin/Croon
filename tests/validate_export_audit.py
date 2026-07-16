@@ -41,7 +41,6 @@ def main() -> None:
     export_cpp = (root / "ExportDlg.cpp").read_text()
     for needle in [
         "ReadVideoSizeWithFfprobe(ffmpegPath, data.videoFilePath, videoSize)",
-        "ReadVideoSizeFromDecodedFrame(ffmpegPath, data.videoFilePath, videoSize)",
         "ReadVideoSizeWithFfmpeg(ffmpegPath, data.videoFilePath, videoSize)",
         'AppIdentity::TempFileName(".ass")',
         "SubtitleGenerator::HighlightProbeLyrics(*data, data->subtitleLines)",
@@ -58,6 +57,8 @@ def main() -> None:
     ]:
         if needle not in export_cpp:
             fail(f"ExportDlg.cpp missing {needle}")
+    if "ReadVideoSizeFromDecodedFrame" in export_cpp:
+        fail("ExportDlg.cpp should not decode a PNG frame for video size probing")
     if "FfmpegCommandBuilder::" in export_cpp:
         fail("ExportDlg.cpp still calls broad ffmpeg command builder")
 

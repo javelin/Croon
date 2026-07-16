@@ -253,7 +253,6 @@ def main() -> None:
         "return RunDlg(\"Export Video\")",
         "FfmpegProgressParser::ParseTimestamp",
         "ReadVideoSizeWithFfprobe(ffmpegPath, data.videoFilePath, videoSize)",
-        "ReadVideoSizeFromDecodedFrame(ffmpegPath, data.videoFilePath, videoSize)",
         "ReadVideoSizeWithFfmpeg(ffmpegPath, data.videoFilePath, videoSize)",
         "AppIdentity::TempFileName(\".ass\")",
         "SubtitleGenerator::HighlightProbeLyrics(*data, data->subtitleLines)",
@@ -269,6 +268,8 @@ def main() -> None:
     ]:
         if needle not in export_impl:
             fail(f"ExportDlg.cpp missing export workflow {needle}")
+    if "ReadVideoSizeFromDecodedFrame" in export_impl:
+        fail("ExportDlg should not decode a PNG frame for video size probing")
     if "ProgressDlg::Run(\"Export Video\")" in export_impl:
         fail("ExportDlg nests modal progress runs across export phases")
     if "runCode" in export_header or "runCode" in export_impl:
