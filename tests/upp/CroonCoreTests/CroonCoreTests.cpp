@@ -14,6 +14,7 @@ using namespace Upp;
 #include <Croon/LyricsProviderTools.h>
 #include <Croon/LyricsTransformer.h>
 #include <Croon/LrcGenerator.h>
+#include <Croon/LrcPreviewGenerator.h>
 #include <Croon/ProjectSerializer.h>
 #include <Croon/SongLyricsProvider.h>
 #include <Croon/SubtitleGenerator.h>
@@ -720,6 +721,17 @@ CONSOLE_APP_MAIN
 		"LrcGenerator leaves unassigned lines without vocal prefix");
 	Check(lrc.Find("[00:50.00]℗ 2026 Arista Records") >= 0,
 		"LrcGenerator exports processed copyright metadata");
+	String lrcPreview = LrcPreviewGenerator::ToQtf(lrcData);
+	Check(lrcPreview.Find("[@(96.96.96) `[00`:23`.15`]") >= 0,
+		"LrcPreviewGenerator renders timestamps in normal gray text");
+	Check(lrcPreview.Find("[*@(255.0.0) `[1`]`: Lately all my thoughts have gone to you]") >= 0,
+		"LrcPreviewGenerator renders V1 lyrics in bold red");
+	Check(lrcPreview.Find("[*@(0.0.255) `[2`]`: You know that`'s true]") >= 0,
+		"LrcPreviewGenerator renders V2 lyrics in bold blue");
+	Check(lrcPreview.Find("[*@(255.0.255) `[B`]`: Both voices]") >= 0,
+		"LrcPreviewGenerator renders both-singer lyrics in bold purple");
+	Check(lrcPreview.Find("[/*@(11.218.81) `(Young love`)") >= 0,
+		"LrcPreviewGenerator renders backup vocals in italic MALACHITE green");
 
 	if(failures)
 		SetExitCode(1);
