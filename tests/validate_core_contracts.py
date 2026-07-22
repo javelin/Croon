@@ -618,6 +618,8 @@ def main() -> None:
 
     lrc_generator_h = (root / "LrcGenerator.h").read_text()
     require(lrc_generator_h, "ToLrc", "LrcGenerator LRC contract")
+    require(lrc_generator_h, "static String LrcText(String line, bool isMeta)",
+            "LrcGenerator shared LrcText helper contract")
 
     lrc_preview_generator_h = (root / "LrcPreviewGenerator.h").read_text()
     require(lrc_preview_generator_h, "ToQtf", "LrcPreviewGenerator QTF contract")
@@ -731,6 +733,7 @@ def main() -> None:
     require(lrc_generator_cpp, "************", "LrcGenerator count-in stars")
     require(lrc_generator_cpp, "VocalPartPrefix", "LrcGenerator vocal part prefix helper")
     require(lrc_generator_cpp, "AssignedVocalPart", "LrcGenerator explicit assignment helper")
+    require(lrc_generator_cpp, "String LrcGenerator::LrcText(", "LrcGenerator owns shared LrcText helper")
 
     lrc_preview_generator_cpp = (root / "LrcPreviewGenerator.cpp").read_text()
     reject(lrc_preview_generator_cpp, '#include "Croon.h"', "LrcPreviewGenerator app shell dependency")
@@ -740,6 +743,8 @@ def main() -> None:
     require(lrc_preview_generator_cpp, '#include "RichTextBuilder.h"', "LrcPreviewGenerator QTF builder dependency")
     require(lrc_preview_generator_cpp, '#include "SubtitleLineProcessor.h"', "LrcPreviewGenerator subtitle style dependency")
     require(lrc_preview_generator_cpp, "LrcGenerator::ToLrc(data)", "LrcPreviewGenerator reuses exported LRC text")
+    require(lrc_preview_generator_cpp, "LrcGenerator::LrcText(", "LrcPreviewGenerator reuses shared LrcText helper")
+    reject(lrc_preview_generator_cpp, "String LrcText(", "LrcPreviewGenerator duplicate LrcText helper")
     require(lrc_preview_generator_cpp, "SubtitleLineProcessor::ResolveStyle", "LrcPreviewGenerator video subtitle style resolution")
     require(lrc_preview_generator_cpp, "\"*@(250.80.83)\"", "LrcPreviewGenerator V1 subtitle red preview")
     require(lrc_preview_generator_cpp, "\"*@(144.213.255)\"", "LrcPreviewGenerator V2 subtitle blue preview")
@@ -812,6 +817,7 @@ def main() -> None:
     require(core_tests_cpp, "SubtitleWrapProbeRunner::Run", "core tests subtitle wrap probe runner")
     require(core_tests_cpp, "FfmpegSubtitleProbeCommandBuilder::RenderRgba", "core tests subtitle probe command builder")
     require(core_tests_cpp, "LrcGenerator::ToLrc", "core tests direct LRC generator dependency")
+    require(core_tests_cpp, "LrcGenerator::LrcText", "core tests direct shared LrcText helper dependency")
     require(core_tests_cpp, "LrcPreviewGenerator::ToQtf", "core tests direct LRC preview generator dependency")
     require(core_tests_cpp, "VocalPartStyle::Next", "core tests direct vocal part helper dependency")
     require(core_tests_cpp, "VocalPartStyle::ToParts", "core tests vocal part tuple contract")
