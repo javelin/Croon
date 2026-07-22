@@ -721,6 +721,12 @@ CONSOLE_APP_MAIN
 		"LrcGenerator leaves unassigned lines without vocal prefix");
 	Check(lrc.Find("[00:50.00]℗ 2026 Arista Records") >= 0,
 		"LrcGenerator exports processed copyright metadata");
+	Check(LrcGenerator::LrcText("~Young love", false) == "(Young love)",
+		"LrcGenerator::LrcText wraps backup vocals in parentheses");
+	Check(LrcGenerator::LrcText("@Title", true) == "Title",
+		"LrcGenerator::LrcText strips metadata marker");
+	Check(LrcGenerator::LrcText("@CountIn{\\k100}", false) == "************",
+		"LrcGenerator::LrcText converts count-in to stars");
 	String lrcPreview = LrcPreviewGenerator::ToQtf(lrcData);
 	Check(lrcPreview.Find("[@(96.96.96) `[00`:23`.15`]") >= 0,
 		"LrcPreviewGenerator renders timestamps in normal gray text");
