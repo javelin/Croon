@@ -751,7 +751,7 @@ def main() -> None:
     require(lrc_preview_generator_cpp, "\"*@(237.128.233)\"", "LrcPreviewGenerator both-singer subtitle purple preview")
     require(lrc_preview_generator_cpp, "\"/*@(11.218.81)\"", "LrcPreviewGenerator bold italic MALACHITE backup preview")
     require(lrc_preview_generator_cpp, "\"*@(251.236.93)\"", "LrcPreviewGenerator metadata subtitle yellow preview")
-    require(lrc_preview_generator_cpp, "\"@(96.96.96)\"", "LrcPreviewGenerator normal timestamp preview")
+    require(lrc_preview_generator_cpp, "\"@(200.200.200)\"", "LrcPreviewGenerator light gray timestamp preview")
 
     rich_text_builder_h = (root / "RichTextBuilder.h").read_text()
     require(rich_text_builder_h, "struct RTHelper", "RichTextBuilder compatibility type")
@@ -1207,6 +1207,7 @@ def main() -> None:
     require(project_cpp, "tab.Add(lrcPreview.HSizePosZ(5, 5).VSizePosZ(5, 5), \"LRC Preview\")", "Project LRC preview tab")
     require(project_cpp, "void Project::UpdateLrcPreview()", "Project LRC preview refresh implementation")
     require(project_cpp, "lrcPreview.SetQTF(LrcPreviewGenerator::ToQtf(data))", "Project LRC preview QTF refresh")
+    require(project_cpp, "lrcPreview.Background(GrayColor(90))", "Project LRC preview dark contrast background")
     reject(project_cpp, "lrcPreview.Background(White()).TextColor", "Project LRC preview text color override")
     reject(project_cpp, "lrcPreview.TextColor", "Project LRC preview text color override")
     require(project_cpp, "SaveProjectDlg().Run(data) == IDOK", "Project save clears dirty only after successful save")

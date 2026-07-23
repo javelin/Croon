@@ -767,8 +767,8 @@ CONSOLE_APP_MAIN
 	Check(LrcGenerator::LrcText("@CountIn{\\k100}", false) == "************",
 		"LrcGenerator::LrcText converts count-in to stars");
 	String lrcPreview = LrcPreviewGenerator::ToQtf(lrcData);
-	Check(lrcPreview.Find("[@(96.96.96) `[00`:23`.15`]") >= 0,
-		"LrcPreviewGenerator renders timestamps in normal gray text");
+	Check(lrcPreview.Find("[@(200.200.200) `[00`:23`.15`]") >= 0,
+		"LrcPreviewGenerator renders timestamps in light gray text");
 	Check(lrcPreview.Find("[*@(250.80.83) `[1`]`: Lately all my thoughts have gone to you]") >= 0,
 		"LrcPreviewGenerator renders V1 lyrics in bold subtitle red");
 	Check(lrcPreview.Find("[*@(144.213.255) `[2`]`: You know that`'s true]") >= 0,
