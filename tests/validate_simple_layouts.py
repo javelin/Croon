@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import sys
 from pathlib import Path
 
@@ -8,11 +9,57 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+# Native U++ controls in a .lay ITEM must be written fully qualified (Upp::Button,
+# Upp::WithDropChoice<Upp::EditString>, ...). TheIDE adds these prefixes on load,
+# so writing them ourselves keeps the committed file stable. Project-defined
+# controls (their own class in a repo header) stay unqualified. Any unqualified
+# type that is not a project control is therefore a native control missing Upp::.
+def check_lay_upp_prefix(root: Path, lay_files) -> None:
+    project_types = set()
+    for header in root.rglob("*.h"):
+        if "build" in header.parts:
+            continue
+        project_types.update(re.findall(r"\b(?:class|struct)\s+(\w+)", header.read_text()))
+
+    ident = re.compile(r"[A-Za-z_]\w*")
+    for lay_path in lay_files:
+        rel = lay_path.relative_to(root)
+        text = lay_path.read_text()
+        for m in re.finditer(r"ITEM\(([^,]+),", text):
+            type_str = m.group(1)
+            for token in ident.finditer(type_str):
+                name = token.group(0)
+                if name == "Upp":
+                    continue
+                qualified = type_str[max(0, token.start() - 2):token.start()] == "::"
+                if qualified or name in project_types:
+                    continue
+                fail(f"{rel}: control type '{name}' must be Upp::-qualified "
+                     "(native U++ controls need the prefix so TheIDE does not add it)")
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         fail("expected repository root argument")
 
     root = Path(sys.argv[1])
+
+    # Every .lay file must end with exactly one trailing blank line. TheIDE adds
+    # one automatically when it loads a layout, so keeping it in the committed
+    # file avoids a spurious one-line diff every time the layout is opened. This
+    # rule applies to all current and future .lay files.
+    lay_files = sorted(p for p in root.rglob("*.lay") if "build" not in p.parts)
+    if not lay_files:
+        fail("no .lay files found to validate")
+    for lay_path in lay_files:
+        text = lay_path.read_text()
+        rel = lay_path.relative_to(root)
+        if not text.endswith("\n\n") or text.endswith("\n\n\n"):
+            fail(f"{rel} must end with exactly one trailing blank line "
+                 "(TheIDE adds one on load; commit it to avoid noisy diffs)")
+
+    check_lay_upp_prefix(root, lay_files)
+
     lay = (root / "Croon.lay").read_text()
     for layout in [
         "LAYOUT(CroonSettingsLayout",

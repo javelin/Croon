@@ -19,15 +19,15 @@ def main() -> None:
         "LAYOUT(CroonWizardPage1Layout",
         "LAYOUT(CroonWizardPage2Layout",
         "LAYOUT(CroonWizardPage3Layout",
-        "ITEM(TabCtrl, tab",
+        "ITEM(Upp::TabCtrl, tab",
     ]:
         if layout not in lay:
             fail(f"missing {layout}")
 
     for layout in [
         "LAYOUT(CroonWizardLayout",
-        "ITEM(Label, pageName",
-        "ITEM(Button, cancelBtn",
+        "ITEM(Upp::Label, pageName",
+        "ITEM(Upp::Button, cancelBtn",
     ]:
         if layout not in shell_lay:
             fail(f"missing {layout}")

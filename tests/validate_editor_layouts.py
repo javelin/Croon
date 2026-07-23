@@ -64,8 +64,8 @@ def main() -> None:
         "LAYOUT(CroonProjectLayout",
         "ITEM(ListCtrl, projectLst",
         "ITEM(ProjectLoader, loader",
-        "ITEM(TabCtrl, tab",
-        "ITEM(ImageCtrl, videoImg",
+        "ITEM(Upp::TabCtrl, tab",
+        "ITEM(Upp::ImageCtrl, videoImg",
     ]:
         if layout not in lay:
             fail(f"missing {layout}")
@@ -343,7 +343,7 @@ def main() -> None:
     for layout in [
         "LAYOUT(CroonTimingDlgLayout",
         "ITEM(TimingCtrl, timingCtrl",
-        "ITEM(SliderCtrl, sliderCtrl",
+        "ITEM(Upp::SliderCtrl, sliderCtrl",
     ]:
         if layout not in timing_lay:
             fail(f"missing {layout}")
@@ -410,8 +410,8 @@ def main() -> None:
     video_lay = (root / "CroonVideoDlg.lay").read_text()
     for layout in [
         "LAYOUT(CroonVideoDlgLayout",
-        "ITEM(Button, okBtn",
-        "ITEM(Button, cancelBtn",
+        "ITEM(Upp::Button, okBtn",
+        "ITEM(Upp::Button, cancelBtn",
     ]:
         if layout not in video_lay:
             fail(f"missing {layout}")
