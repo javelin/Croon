@@ -16,9 +16,9 @@ def main() -> None:
     lay = (root / "Croon.lay").read_text()
     for needle in [
         "LAYOUT(CroonProgressLayout",
-        "ITEM(Label, monitor",
-        "ITEM(ProgressIndicator, progress",
-        "ITEM(Button, cancelBtn",
+        "ITEM(Upp::Label, monitor",
+        "ITEM(Upp::ProgressIndicator, progress",
+        "ITEM(Upp::Button, cancelBtn",
     ]:
         if needle not in lay:
             fail(f"Croon.lay missing {needle}")
