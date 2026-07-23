@@ -143,7 +143,7 @@ Project::Project(KarData& projectData, VideoDlg& videoDialog) : videoPath(""), d
     
     tab.Add(lyricsEd.HSizePosZ(5, 5).VSizePosZ(5, 5), "Lyrics");
     tab.Add(lrcPreview.HSizePosZ(5, 5).VSizePosZ(5, 5), "LRC Preview");
-    lrcPreview.Background(White()).Margins(UiScaler::X(8)).NoLazy();
+    lrcPreview.Background(GrayColor(90)).Margins(UiScaler::X(8)).NoLazy();
     
     lyricsEd.WhenAction << [this] {
         KillTimeCallback(timerId);

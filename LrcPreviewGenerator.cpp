@@ -60,7 +60,7 @@ String LrcPreviewGenerator::ToQtf(const KarData& data) {
         if (lrcLine.StartsWith("[") && endTimestamp > 0) {
             String timestamp = lrcLine.Mid(0, endTimestamp + 1);
             String text = lrcLine.Mid(endTimestamp + 1);
-            rth.Fmt("@(96.96.96)").Text(timestamp).EFmt()
+            rth.Fmt("@(200.200.200)").Text(timestamp).EFmt()
                .Fmt(LrcPreviewStyle(ResolvePreviewStyle(processedLines, i, data.parts))).Text(text).EFmt()
                .NL();
         }
